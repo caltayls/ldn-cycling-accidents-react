@@ -15,6 +15,8 @@ function handleMouseOver() {
     let name = d3.select(this).attr('name');
     d3.select(this).style('stroke', null);
     d3.select(`.bar-plot [name="${name}"]`).style('stroke', null);
+
+    setBoroHover('All Boroughs');
     
   }
     
