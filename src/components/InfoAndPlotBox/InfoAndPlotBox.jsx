@@ -1,4 +1,5 @@
-import LineAndBar from "../LineAndBar/LineAndBar";
+import MultiLinePlot from "../MultiLinePlot/MultiLinePlot";
+import StackedPlot from "../StackedPlot/StackedPlot";
 
 export default function InfoAndPlotBox({ boroHover, csvData }) {
 
@@ -6,7 +7,8 @@ export default function InfoAndPlotBox({ boroHover, csvData }) {
         <>
 
         <div className="plot">
-            <LineAndBar csvData={csvData}></LineAndBar>    
+            <StackedPlot csvData={csvData}></StackedPlot>    
+            {/* <MultiLinePlot csvData={csvData}></MultiLinePlot> */}
         </div> 
         </>
         

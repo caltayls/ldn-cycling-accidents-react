@@ -16,8 +16,8 @@ export default function MapHexBin({ csvData, projection, width, height, mapSvgRe
   const hex = useMemo(() => (hexbin()
     .extent([width, height])
     .radius(hexRadius)
-    .x(d => projection([+d.long, +d.lat])[0])
-    .y(d => projection([+d.long, +d.lat])[1])
+    .x(d => projection([+d.longitude, +d.latitude])[0])
+    .y(d => projection([+d.longitude, +d.latitude])[1])
   ), [hexRadius]);
 
   const domainExtent = useMemo(() => d3.extent(hex(csvData), d => d.length), [hexRadius, colorScaleType]);
@@ -37,9 +37,6 @@ export default function MapHexBin({ csvData, projection, width, height, mapSvgRe
 
   useEffect (() => {
 
-    // d3.select(mapSvgRef.current).selectAll('.hexagon').remove();
-    // d3.select('#legend svg').remove();
-    // d3.select(`${mapSvgRef.current} .map-outline`).remove();
 
     let svg = d3.select(mapSvgRef.current)
 

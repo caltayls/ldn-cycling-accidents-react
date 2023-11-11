@@ -6,15 +6,17 @@ export default function MapPolygons({ geoJsonData, geoGenerator, mapSvgRef,  fil
 
 function handleMouseOver() {
     let name = d3.select(this).attr('name');
-    d3.select(this).style('stroke', 'red').raise();
-    d3.select(`.bar-plot [name="${name}"]`).style('stroke', 'red');
+    d3.select(this).raise()
+      .style('stroke', 'red');
+
     setBoroHover(name);
   }
 
   function handleMouseLeave() {
     let name = d3.select(this).attr('name');
-    d3.select(this).style('stroke', null);
-    d3.select(`.bar-plot [name="${name}"]`).style('stroke', null);
+    d3.select(this)
+      .style('stroke', null);
+
 
     setBoroHover('All Boroughs');
     
@@ -27,7 +29,7 @@ function handleMouseOver() {
             .selectAll('path')
             .data(geoJsonData.features)
             .join('path')
-                .attr('name', d => d.properties.name.toLowerCase())
+                .attr('name', d => d.properties.name)
                 .attr('d', geoGenerator)
                 .attr('stroke', stroke)
                 .attr('fill', fill)
