@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import MapPolygons from "../MapPolygons/MapPolygons";
 import MapHexBin from "../MapHexbin/MapHexbin";
+import MultiLinePlot from "../MultiLinePlot/MultiLinePlot";
 
 
 
 
-export default function Map({ csvData, geoJsonData, setBoroHover }) {
+export default function Map({ csvData, geoJsonData, setBoroHover, chosenYear, chosenMonth }) {
 
 
   const mapSvgRef = useRef(null);
@@ -19,7 +20,6 @@ export default function Map({ csvData, geoJsonData, setBoroHover }) {
       .fitSize([width, height], geoJsonData)
   ), []);
 
-
   const geoGenerator = d3.geoPath()
     .projection(projection);
 
@@ -31,9 +31,10 @@ export default function Map({ csvData, geoJsonData, setBoroHover }) {
         <svg width={width} height={height}>
           <g ref={mapSvgRef}></g>
         </svg>
+        <MultiLinePlot csvData={csvData} timeUnit='year'></MultiLinePlot>
       </div>
       <MapPolygons id='map-fill' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='none' fill='#440154'></MapPolygons>
-      <MapHexBin csvData={csvData} projection={projection} width={width} height={height} mapSvgRef={mapSvgRef}></MapHexBin>
+      <MapHexBin csvData={csvData} projection={projection} width={width} height={height} mapSvgRef={mapSvgRef} chosenYear={chosenYear} chosenMonth={chosenMonth}></MapHexBin>
       <MapPolygons id='map-outline' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='#ffff' fill='transparent' setBoroHover={setBoroHover}></MapPolygons>
 
     </>

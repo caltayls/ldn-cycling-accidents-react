@@ -8,7 +8,7 @@ import HexTools from "../HexTools/HexTools";
 import HexLegend from "../HexLegend/HexLegend";
 
 
-export default function MapHexBin({ csvData, projection, width, height, mapSvgRef }) {
+export default function MapHexBin({ csvData, projection, width, height, mapSvgRef, chosenYear, chosenMonth }) {
   const [hexRadius, setHexRadius] = useState(4);
   const [colorScaleType, setColorScaleType] = useState('Linear');
 
@@ -36,10 +36,7 @@ export default function MapHexBin({ csvData, projection, width, height, mapSvgRe
 
 
   useEffect (() => {
-
-
     let svg = d3.select(mapSvgRef.current)
-
 
     svg
       .append("g")

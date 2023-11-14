@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
-
+// TODO: fix interactivty 
 export default function MultiLinePlot({ csvData }) {
   const svgRef = useRef(null);
-  const boroObj = d3.rollup(csvData, v=> ({count: v.length}), (d) => d.borough, (d) => d.datetime.getFullYear());
-  console.log(boroObj);
+  const boroObj = d3.rollup(csvData, v=> ({borough: v[0].borough, year: new Date(v[0].datetime.getFullYear(), 0), count: v.length}), (d) => d.borough, (d) => d.datetime.getFullYear());
+  const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => a.year - b.year));
 
   const margin = {
     top: 30,
@@ -12,34 +12,33 @@ export default function MultiLinePlot({ csvData }) {
     left: 50,
     right: 20
   }
-  const height = 400 - margin.top - margin.bottom;
+  const height = 300 - margin.top - margin.bottom;
   const width = 600 - margin.left - margin.right;
 
   // x scale and axis
   let x = d3.scaleTime()
-      .domain(d3.extent(csvData, d => d.datetime))
+      .domain(d3.extent(boroArray.flat(), d => d.year))
       .range([0, width]);
   let xAxisGen = d3.axisBottom(x);
 
 
   // y scale and axis
   let y = d3.scaleLinear()
-      .domain(d3.extent(csvData, d => d.count))
+      .domain(d3.extent(boroArray.flat(), d => d.count))
       .range([height, 0]).nice();
   let yAxisGen = d3.axisLeft(y);
 
 
   // for interaction - convert year and count to x, y
-  let points = csvD.map((d) => {
-    return {
-      borough: d.borough,
-      x: x(d.year),
-      y: y(d.count)
-    }
+  let points = boroArray.map(yearArray => {
+    return yearArray.map(year => {
+      return {
+        borough: year.borough,
+        x: x(year.year),
+        y: y(year.count)
+      };
+    });
   });
-  
-  // format data
-  let groupedData = d3.group(csvData, d => d.borough); 
 
   // add lines
   let lineGenerator = d3.line()
@@ -59,17 +58,40 @@ export default function MultiLinePlot({ csvData }) {
     svg.append('g')
         .attr('stroke-width', 1.5)
         .attr('fill', 'none')
-        .attr('stroke', 'steelblue')
+        .attr('stroke', 'red')
       .selectAll('path')
-      .data(groupedData.values())
+      .data(boroArray)
       .join('path')
         .attr('d', lineGenerator)
         .attr('name', d => d[0].borough)
-        .style("mix-blend-mode", "multiply")
+        // .style("mix-blend-mode", "multiply")
         
         
-        d3.select('#line-plot svg').on('pointermove', lineMoveCursor)
-  })
+    return () => svg.selectAll('*').remove();
+  }, []);
+
+
+  
+
+
+function lineMoveCursor(event) {
+  let [xm, ym] = d3.pointer(event);
+  console.log(xm, ym)
+  // borough of closest data point to pointer
+  let { borough, x, y } = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
+
+  dot
+      .attr('transform', `translate(${x}, ${y})`)
+      .style('fill', 'red');
+
+  d3.selectAll('#line-plot path')
+      .each(function(d) {
+        elementName = d3.select(this).attr('name');
+        if (elementName === borough) {
+          d3.select(this).attr('stroke', 'red')
+        }
+      })
+}
   
   // handling interactivity
   useEffect(() => {
@@ -92,24 +114,3 @@ export default function MultiLinePlot({ csvData }) {
   }
 
 
-
-
-
-function lineMoveCursor(event) {
-  let [xm, ym] = d3.pointer(event);
-  console.log(xm, ym)
-  // borough of closest data point to pointer
-  let { borough, x, y } = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
-
-  dot
-      .attr('transform', `translate(${x}, ${y})`)
-      .style('fill', 'red');
-
-  d3.selectAll('#line-plot path')
-      .each(function(d) {
-        elementName = d3.select(this).attr('name');
-        if (elementName === borough) {
-          d3.select(this).attr('stroke', 'red')
-        }
-      })
-}
