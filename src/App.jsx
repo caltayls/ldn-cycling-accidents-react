@@ -30,8 +30,10 @@ function App() {
   useEffect(() => {
 
     Promise.all([
-      d3.csv('src/assets/final_cycling_data_v2.csv', formatCSV),
-      d3.json('src/assets/ldn_boro_geojson.json')
+      // d3.csv('src/assets/final_cycling_data_v2.csv', formatCSV),
+      d3.csv('/data/final_cycling_data_v2.csv', formatCSV),
+      // d3.json('src/assets/ldn_boro_geojson.json')
+      d3.json('/data/ldn_boro_geojson.json')
     ]).then(([csvD, geoJ]) => {
     
       setGeoJsonData(geoJ);
