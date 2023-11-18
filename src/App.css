@@ -1,0 +1,52 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  row-gap: 25px;
+  column-gap: 100px; 
+}
+
+.title {
+  grid-column: 1 / 2;
+  grid-row: 1;
+  text-align: left;
+}
+
+.title h1 {
+  margin-top: 0;
+  font-size: x-large;
+}
+
+.info-box {
+  grid-column: 1 / 2;
+  grid-row: 2;
+  padding-right: 40%;
+  
+}
+.map-and-accessories {
+  grid-column: 2 / 3;
+  grid-row: 2/4;
+  display: grid;
+  grid-template-columns: 8fr 2fr;
+  grid-template-rows: auto;
+  grid-gap: 30px; 
+}
+
+.time-options {
+  display: flex;
+}
+.time-option {
+  margin-right: 30px;
+  width: 150px;
+  text-align: left;
+  color: black;
+  
+  /* overflow-y: auto; */
+
+  /* border: 1px solid #ccc; */
+  /* padding: 10px; */
+}

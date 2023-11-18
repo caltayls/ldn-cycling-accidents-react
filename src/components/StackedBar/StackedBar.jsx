@@ -2,12 +2,12 @@ import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 
 // TODO: fix csv age bands
-export default function StackedBar({ csvData }) {
+export default function StackedBar({ csvData, plotTitle }) {
   
   const svgRef = useRef(null);
   const margin = {
     top: 30,
-    bottom: 50,
+    bottom: 40,
     left: 50,
     right: 20
   }
@@ -87,12 +87,16 @@ export default function StackedBar({ csvData }) {
     svg.append("g")
       .call(d3.axisLeft(y).ticks(null, "s"))
 
+
+
+
     return () => svg.selectAll('*').remove();
   }, [csvData]);
  
   return (
     <div className="stacked-bar age-groups">
-      <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
+      <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom} viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
+        <text fill="white" transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
 
       </svg>

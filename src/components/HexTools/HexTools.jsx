@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import './HexTools.css'
 
 
 export default function HexTools({ hexRadius, setHexRadius, setColorScaleType, mapSvgRef }) {
@@ -38,23 +39,23 @@ export default function HexTools({ hexRadius, setHexRadius, setColorScaleType, m
 
 
 function RadioButtons( { colorRadioChoices, handleChange }) {
-
-    const radioButtons =  colorRadioChoices.map(d => {
-        return (
-            <div key={d}>
-                <input 
-                    type="radio" 
-                    id={d} 
-                    name="colorScale" 
-                    value={d} 
-                    defaultChecked={d==='Linear'} 
-                    onChange={handleChange}
-                >
-                </input>
-                <label htmlFor={d}>{d}</label>
-            </div>
-        )
-    });
-    return radioButtons;
+  return (
+    <div className='radio-buttons'>
+      {colorRadioChoices.map(d => (
+        <div className='radio-button' key={d}>
+          <input 
+            type="radio" 
+            id={d} 
+            name="colorScale" 
+            value={d} 
+            defaultChecked={d==='Linear'} 
+            onChange={handleChange}
+          >
+          </input>
+          <label htmlFor={d}>{d}</label>
+        </div>
+      ))}
+    </div>
+  )
 }
 

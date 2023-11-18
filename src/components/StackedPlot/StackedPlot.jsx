@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import * as d3 from "d3";
 
-export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth }) {
+export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle }) {
   const svgRef = useRef(null);
   const [hoverYear, setHoverYear] = useState('');
 
   const margin = {
     top: 30,
-    bottom: 20,
+    bottom: 40,
     left: 50,
     right: 20
   }
@@ -17,6 +17,8 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   function dateTimeParser(timeUnit, datetimeObj) {
     if (timeUnit === 'hour') {
       return datetimeObj.getHours();
+    } else if (timeUnit === 'day') {
+      return datetimeObj.getDate()
     } else if (timeUnit === 'month') {
       return datetimeObj.getMonth();
     } else if (timeUnit === 'year') {
@@ -30,9 +32,8 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
       d => dateTimeParser(timeUnit, d.datetime), 
       d => d.casualty_severity
     );
-  }, [csvData]); 
+  }, [csvData, timeUnit]); 
 
-  console.log(groupByYearAndSeverity)
 
 
 
@@ -42,12 +43,18 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
       .sort((a, b) => a.datetime - b.datetime);
   }, [csvData]);
 
+  function getTimeSet(timeUnit, array, chosenYear=null, chosenMonth=null) {
+    if (timeUnit === 'day') {
+      const firstDay = new Date(chosenYear, chosenMonth, 1); 
+      const lastDay = new Date(chosenYear, chosenMonth + 1, 0);
+      const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
+      return dateArray
+    }
+    return [...new Set(array.map(d => d.datetime))];
+  }
   
-  console.log(chosenMonth)
-  getTimeSet(timeUnit, severityArray, chosenYear, chosenMonth)
-  const timeSet = [...new Set(severityArray.map(d => d.datetime))];
-
-console.log(timeSet)
+  const timeSet = getTimeSet(timeUnit, severityArray, chosenYear, chosenMonth);
+  
   const series =  useMemo(() => {
     const stack = d3.stack()
       .keys(['Slight', 'Serious', 'Fatal'])
@@ -59,7 +66,6 @@ console.log(timeSet)
     .domain(['Slight', 'Serious', 'Fatal'])
     .range(d3.schemeSpectral[series.length]);
 
-
   const y = useMemo(() => {
     return d3.scaleLinear()
       .domain([0, d3.max(series, d => d3.max(d, d => d[1]))]).nice()
@@ -68,8 +74,6 @@ console.log(timeSet)
 
   const yAxisGen = d3.axisLeft(y);
 
-  
-  
   const x = useMemo(() => {
     return d3.scaleLinear()
       .domain(d3.extent(timeSet))
@@ -119,6 +123,7 @@ console.log(timeSet)
         .attr('x1', x1)
         .attr('x2', x2)
         .style('stroke', 'none')  
+    
     return () => svg.selectAll("*").remove();
   }, [csvData])
 
@@ -168,20 +173,10 @@ console.log(timeSet)
 
   return (
     <svg id="line-and-bar" height={height + margin.top + margin.bottom} width={width + margin.left + margin.right}>
+      <text fill="white" transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
       <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
     </svg>
   )
 }
 
-function getTimeSet(timeUnit, array, year=null, month=null) {
-  if (timeUnit === 'day') {
-    const firstDay = new Date(year, month - 1, 1); // months are zero-indexed
-    const lastDay = new Date(year, month, 0);
 
-    const dateArray = d3.range(firstDay.getDate(), lastDay.getDate())
-    console.log(dateArray)
-
-  }
-
-  const timeSet = [...new Set(array.map(d => d.datetime))];
-}

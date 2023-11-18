@@ -1,10 +1,25 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
+import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import * as d3 from "d3";
 // TODO: fix interactivty 
-export default function MultiLinePlot({ csvData }) {
+export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUnit, plotTitle }) {
+  const outerRef = useRef(null);
   const svgRef = useRef(null);
-  const boroObj = d3.rollup(csvData, v=> ({borough: v[0].borough, year: new Date(v[0].datetime.getFullYear(), 0), count: v.length}), (d) => d.borough, (d) => d.datetime.getFullYear());
-  const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => a.year - b.year));
+  const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
+  const boroObj = d3.rollup(
+    csvFiltered, 
+    v=> ({
+      borough: v[0].borough, 
+      datetime: dateTimeParser(timeUnit, v[0].datetime), 
+      count: v.length
+    }), 
+    (d) => d.borough, 
+    (d) => dateTimeParser(timeUnit, d.datetime),
+  );
+  const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime))));
+  const timeSet = getTimeSet(timeUnit, boroArray[0], chosenYear, chosenMonth);
+
+ 
 
   const margin = {
     top: 30,
@@ -12,63 +27,85 @@ export default function MultiLinePlot({ csvData }) {
     left: 50,
     right: 20
   }
-  const height = 300 - margin.top - margin.bottom;
-  const width = 600 - margin.left - margin.right;
+  const height = 300;
+  const width = 600;
 
   // x scale and axis
-  let x = d3.scaleTime()
-      .domain(d3.extent(boroArray.flat(), d => d.year))
-      .range([0, width]);
-  let xAxisGen = d3.axisBottom(x);
+
+  const x = useMemo(() => {
+    return d3.scaleLinear()
+      .domain(d3.extent(timeSet))
+      .range([margin.left, width - margin.right])
+  }, [timeUnit]);
+  
+  const xAxisGen = d3.axisBottom(x)
+    .tickFormat((d) => {
+      return String(d)
+    });
 
 
   // y scale and axis
   let y = d3.scaleLinear()
       .domain(d3.extent(boroArray.flat(), d => d.count))
-      .range([height, 0]).nice();
+      .range([height - margin.bottom, margin.top]).nice();
   let yAxisGen = d3.axisLeft(y);
 
 
   // for interaction - convert year and count to x, y
-  let points = boroArray.map(yearArray => {
-    return yearArray.map(year => {
+  const points = boroArray.map(boro => {
+    return boro.map(year => {
       return {
         borough: year.borough,
-        x: x(year.year),
+        x: x(year.datetime),
         y: y(year.count)
       };
     });
-  });
+  }).flat();
 
   // add lines
   let lineGenerator = d3.line()
-    .x(d => x(d.year))
+    .x(d => x(d.datetime))
     .y(d => y(d.count));
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current)
+    const svg = d3.select(svgRef.current);
 
-    svg.append('g')
-        .attr('transform', `translate(0, ${height})`)
-        .call(xAxisGen);
-
-    svg.append('g')
-        .call(yAxisGen);
-    
     svg.append('g')
         .attr('stroke-width', 1.5)
         .attr('fill', 'none')
-        .attr('stroke', 'red')
+        .attr('stroke', 'orange')
       .selectAll('path')
       .data(boroArray)
       .join('path')
         .attr('d', lineGenerator)
-        .attr('name', d => d[0].borough)
-        // .style("mix-blend-mode", "multiply")
+        .attr('name', d => d[0].borough);
+    
+    // add x axis
+    svg.append('g')
+      .attr('transform', `translate(0, ${height - margin.bottom})`)
+      .call(xAxisGen);
+
+    // y-axis
+    svg.append('g')
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(yAxisGen);
+
+    // for interactivity
+    svg.append('circle')
+      .attr('class', 'pointer-circle')
+      .attr('r', 10)
+      .style('fill', 'transparent')
+
+    svg
+      .append('text')
+        .text(plotTitle)
+        .attr('fill', 'white')
+        .attr('transform', `translate(${margin.left + 2}, ${margin.top/2})`)
+
         
         
     return () => svg.selectAll('*').remove();
-  }, []);
+  }, [csvFiltered, timeUnit]);
 
 
   
@@ -80,37 +117,51 @@ function lineMoveCursor(event) {
   // borough of closest data point to pointer
   let { borough, x, y } = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
 
-  dot
+  d3.select(svgRef.current).select('circle')
       .attr('transform', `translate(${x}, ${y})`)
       .style('fill', 'red');
 
-  d3.selectAll('#line-plot path')
-      .each(function(d) {
-        elementName = d3.select(this).attr('name');
-        if (elementName === borough) {
-          d3.select(this).attr('stroke', 'red')
-        }
-      })
+
 }
   
   // handling interactivity
   useEffect(() => {
     // dot for line hover
-    const dot = d3.select(svgRef.current)
-    .append('circle')
-      .attr('r', 10)
-      .style('fill', 'transparent');
-  })
+
+      
+
+
+      d3.select(outerRef.current)
+      .on('pointermove', lineMoveCursor)
+  }, [csvFiltered])
+
   return (
     <div className="multi-line-plot">
-      <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}>
-        <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
+      <svg ref={outerRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+        <g ref={svgRef}></g>
       </svg>
     </div>
   )
 
   
 
+}
+
+function filterCSV(csv, chosenYear, chosenMonth, boroHover='') {
+  let csvFiltered = csv;
+  if (boroHover) {
+  csvFiltered = boroHover === 'All Boroughs'
+    ? csv
+    : csv.filter(d => d.borough === boroHover);
   }
 
+  csvFiltered = chosenYear === 'All Years'
+    ? csvFiltered
+    : csvFiltered.filter(d => d.datetime.getFullYear() === chosenYear);
 
+  csvFiltered = chosenMonth === 'All Months'
+    ? csvFiltered
+    : csvFiltered.filter(d => d.datetime.getMonth() === chosenMonth);
+
+  return csvFiltered
+}
