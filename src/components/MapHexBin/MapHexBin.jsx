@@ -18,9 +18,9 @@ export default function MapHexBin({ csvData, projection, width, height, mapSvgRe
     .radius(hexRadius)
     .x(d => projection([+d.longitude, +d.latitude])[0])
     .y(d => projection([+d.longitude, +d.latitude])[1])
-  ), [hexRadius]);
+  ), [hexRadius, csvData]);
 
-  const domainExtent = useMemo(() => d3.extent(hex(csvData), d => d.length), [hexRadius, colorScaleType]);
+  const domainExtent = useMemo(() => d3.extent(hex(csvData), d => d.length), [hexRadius, colorScaleType, csvData]);
     
   // hex color scales
   const logScale = d3.scaleLog()
@@ -33,6 +33,11 @@ export default function MapHexBin({ csvData, projection, width, height, mapSvgRe
     colorScaleType === 'Linear'? linearScale(d): logScale(d)
   ));
 
+  function handleHexChange(e) {
+    setTimeout(() => {
+        d3.select(mapSvgRef.current).select('#map-outline').raise();
+      }, 1);
+}
 
 
   useEffect (() => {
@@ -48,11 +53,15 @@ export default function MapHexBin({ csvData, projection, width, height, mapSvgRe
         .attr('size', d => d.length)
         .attr("d", d => `M${d.x},${d.y}${hex.hexagon()}`)
         .style('fill', d => colorScale(d.length));
+
+    // ensure map outline is always on top of hex bins
+    svg.select("#map-outline").raise();
       
     // createLegend(domainExtent, colorScale) 
     return () => {d3.select(mapSvgRef.current).selectAll('.hexagon').remove()}
-    }, [hexRadius, colorScaleType])
-  
+    }, [hexRadius, colorScaleType, csvData])
+
+
     
     return (
     <>

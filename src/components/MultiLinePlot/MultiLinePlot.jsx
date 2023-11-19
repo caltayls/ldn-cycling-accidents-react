@@ -1,5 +1,6 @@
 import { useEffect, useRef, useMemo } from "react";
 import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
+import { filterCSV } from "../utils/filterCSV"
 import * as d3 from "d3";
 // TODO: fix interactivty 
 export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUnit, plotTitle }) {
@@ -145,23 +146,4 @@ function lineMoveCursor(event) {
 
   
 
-}
-
-function filterCSV(csv, chosenYear, chosenMonth, boroHover='') {
-  let csvFiltered = csv;
-  if (boroHover) {
-  csvFiltered = boroHover === 'All Boroughs'
-    ? csv
-    : csv.filter(d => d.borough === boroHover);
-  }
-
-  csvFiltered = chosenYear === 'All Years'
-    ? csvFiltered
-    : csvFiltered.filter(d => d.datetime.getFullYear() === chosenYear);
-
-  csvFiltered = chosenMonth === 'All Months'
-    ? csvFiltered
-    : csvFiltered.filter(d => d.datetime.getMonth() === chosenMonth);
-
-  return csvFiltered
 }

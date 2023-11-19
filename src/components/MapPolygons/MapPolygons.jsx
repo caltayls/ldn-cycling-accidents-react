@@ -36,9 +36,8 @@ function handleMouseOver() {
                 .on('mouseover', handleMouseOver)
                 .on('mouseleave', handleMouseLeave);
     
-        return () => {
-            d3.select(mapSvgRef.current).selectAll('*').remove();
-            };
+        return () => d3.select(mapSvgRef.current).selectAll('*').remove();
+            
         }, []);
             
 }

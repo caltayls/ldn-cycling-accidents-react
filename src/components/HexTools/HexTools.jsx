@@ -15,9 +15,6 @@ export default function HexTools({ hexRadius, setHexRadius, setColorScaleType, m
 
     function handleScaleChange(e) {
         setColorScaleType(e.target.value)
-        setTimeout(() => {
-            d3.select(mapSvgRef.current).select('#map-outline').raise();
-          }, 1);
     }
 
     return (

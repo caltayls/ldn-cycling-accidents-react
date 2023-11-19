@@ -10,17 +10,16 @@ import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
 function App() {
   const [csvData, setCsvData] = useState([]);
   const [geoJsonData, setGeoJsonData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-
-  const isProduction = import.meta.env.MODE === 'production';
-  const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
+  const [isLoading, setIsLoading] = useState(true);
 
   const [boroHover, setBoroHover] = useState('All Boroughs');
   const [chosenYear, setChosenYear] = useState('All Years');
   const [chosenMonth, setChosenMonth] = useState('All Months');
 
-  console.log(chosenYear);
+  const isProduction = import.meta.env.MODE === 'production';
+  const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
+
+
 
   const csvFiltered = filterCSV(csvData, boroHover, chosenYear, chosenMonth);
   
@@ -42,13 +41,13 @@ function App() {
     
       setGeoJsonData(geoJ);
       setCsvData(csvD);
-      setLoading(false);
+      setIsLoading(false);
     });
   }, []);
 
 
 
-  if (loading) return <></>;
+  if (isLoading) return <></>;
 
   return (
     <>
@@ -62,6 +61,7 @@ function App() {
             // ? csvData
             // : csvData.filter(d => d.datetime.getFullYear() === chosenYear)} 
           geoJsonData={geoJsonData} 
+          boroHover={boroHover}
           setBoroHover={setBoroHover} 
           chosenYear={chosenYear} 
           chosenMonth={chosenMonth} 
@@ -85,17 +85,21 @@ function App() {
       <div className='time-options'>
         <div className='time-option year'>
           <Select 
-            // value={chosenYear}
+            value={chosenYear}
+            isClearable={true}
+            // defaultValue={chosenYear}
             onChange={handleYearChange}
             options={yearArray.map(d => ({value: d, label: d}))} 
-            placeholder='All Years'>
+            placeholder={chosenYear}
+            >
           </Select>
         </div>
         <div className='time-option month'>
           <Select 
+            value={chosenMonth}
             onChange={handleMonthChange}
             options={monthArray.map(d => ({value: d, label: d}))} 
-            placeholder='All Months'>
+            placeholder={chosenMonth}>
           </Select>
         </div>
       </div>
