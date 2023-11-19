@@ -12,6 +12,10 @@ function App() {
   const [geoJsonData, setGeoJsonData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
+  const isProduction = import.meta.env.MODE === 'production';
+  const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
+
   const [boroHover, setBoroHover] = useState('All Boroughs');
   const [chosenYear, setChosenYear] = useState('All Years');
   const [chosenMonth, setChosenMonth] = useState('All Months');
@@ -31,9 +35,9 @@ function App() {
 
     Promise.all([
       // d3.csv('src/assets/final_cycling_data_v2.csv', formatCSV),
-      d3.csv('/data/final_cycling_data_v2.csv', formatCSV),
+      d3.csv(urlBase + 'data/final_cycling_data_v2.csv', formatCSV),
       // d3.json('src/assets/ldn_boro_geojson.json')
-      d3.json('/data/ldn_boro_geojson.json')
+      d3.json(urlBase + 'data/ldn_boro_geojson.json')
     ]).then(([csvD, geoJ]) => {
     
       setGeoJsonData(geoJ);
