@@ -30,13 +30,11 @@ export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, cho
 
   return (
     <>
-      <div className='map-features'>
+    <div className="map-features">
         <svg width={width} height={height}>
           <g ref={mapSvgRef}></g>
         </svg>
-        <MapPolygons id='map-fill' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='none' fill='#440154'></MapPolygons>
-        <MapPolygons id='map-outline' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='#ffff' fill='transparent' setBoroHover={setBoroHover}></MapPolygons>
-        <MapHexBin csvData={csvFiltered} projection={projection} width={width} height={height} mapSvgRef={mapSvgRef} chosenYear={chosenYear} chosenMonth={chosenMonth}></MapHexBin>
+        </div>
         
         <MultiLinePlot 
           csvData={csvData} 
@@ -48,7 +46,11 @@ export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, cho
           
           plotTitle={"Trends in Accidents Across London Boroughs Over Time"}
         ></MultiLinePlot>
-      </div>
+
+<MapPolygons id='map-fill' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='none' fill='#440154'></MapPolygons>
+        <MapPolygons id='map-outline' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='#ffff' fill='transparent' setBoroHover={setBoroHover}></MapPolygons>
+        <MapHexBin csvData={csvFiltered} projection={projection} width={width} height={height} mapSvgRef={mapSvgRef} chosenYear={chosenYear} chosenMonth={chosenMonth}></MapHexBin>
+      
       
       
 
