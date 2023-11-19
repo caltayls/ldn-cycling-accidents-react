@@ -3,7 +3,7 @@ import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { filterCSV } from "../utils/filterCSV"
 import * as d3 from "d3";
 // TODO: fix interactivty 
-export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUnit, plotTitle }) {
+export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUnit, plotTitle, boroHover, setBoroHover, mapDivRef }) {
   const outerRef = useRef(null);
   const svgRef = useRef(null);
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
@@ -19,8 +19,7 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUn
   );
   const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime))));
   const timeSet = getTimeSet(timeUnit, boroArray[0], chosenYear, chosenMonth);
-
- 
+  let highlightedBorough;
 
   const margin = {
     top: 30,
@@ -71,17 +70,21 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUn
   useEffect(() => {
     const svg = d3.select(svgRef.current);
 
+    // add paths
     svg.append('g')
         .attr('stroke-width', 1.5)
         .attr('fill', 'none')
-        .attr('stroke', 'orange')
+        .attr('stroke', 'steelblue')
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
       .selectAll('path')
       .data(boroArray)
       .join('path')
+        .style("mix-blend-mode", "multiply")
         .attr('d', lineGenerator)
         .attr('name', d => d[0].borough);
     
-    // add x axis
+    // add x-axis
     svg.append('g')
       .attr('transform', `translate(0, ${height - margin.bottom})`)
       .call(xAxisGen);
@@ -94,47 +97,82 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUn
     // for interactivity
     svg.append('circle')
       .attr('class', 'pointer-circle')
-      .attr('r', 10)
+      .attr('r', 5)
       .style('fill', 'transparent')
 
     svg
       .append('text')
         .text(plotTitle)
-        .attr('fill', 'white')
+        // .attr('fill', 'white')
         .attr('transform', `translate(${margin.left + 2}, ${margin.top/2})`)
-
-        
         
     return () => svg.selectAll('*').remove();
-  }, [csvFiltered, timeUnit]);
+  }, [timeUnit]);
+
+
+
+
+  // handling interactivity
+
+
 
 
   
+function handleMouseOver() {
 
+  if (highlightedBorough) {
+    d3.select(svgRef.current)
+    .select(`path[name="${highlightedBorough}"]`)
+      .style('stroke', null)
+      .style('stroke-width', null)
+      .style("mix-blend-mode", "multiply");
+    
+    setBoroHover('All Boroughs');
+  }
 
-function lineMoveCursor(event) {
   let [xm, ym] = d3.pointer(event);
-  console.log(xm, ym)
+
   // borough of closest data point to pointer
   let { borough, x, y } = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
+  
+  setBoroHover(borough);
+  highlightedBorough = borough;
 
   d3.select(svgRef.current).select('circle')
       .attr('transform', `translate(${x}, ${y})`)
       .style('fill', 'red');
 
+  d3.select(svgRef.current)
+    .select(`path[name="${borough}"]`).raise()
+      .style('stroke', 'red')
+      .style('stroke-width', 3)
+      .style("mix-blend-mode", "normal");
 
+  setBoroHover(borough);
 }
+
+function handleMouseLeave() {
+  d3.select(svgRef.current)
+    .select(`path[name="${highlightedBorough}"]`)
+      .style('stroke', null)
+      .style('stroke-width', null)
+      .style("mix-blend-mode", null);
   
-  // handling interactivity
+  d3.select(svgRef.current).select('circle')
+    .style('fill', 'transparent');
+
+  setBoroHover('All Boroughs');
+  
+}
   useEffect(() => {
+
     // dot for line hover
+    d3.select(outerRef.current)
+      .on('pointermove', handleMouseOver)
+      .on('mouseleave', handleMouseLeave)
 
-      
-
-
-      d3.select(outerRef.current)
-      .on('pointermove', lineMoveCursor)
-  }, [csvFiltered])
+    return () => d3.select(outerRef.current).on('pointermove', null).on('mouseleave', null)
+  }, [timeUnit])
 
   return (
     <div className="multi-line-plot">
@@ -143,7 +181,4 @@ function lineMoveCursor(event) {
       </svg>
     </div>
   )
-
-  
-
 }

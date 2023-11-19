@@ -52,7 +52,7 @@ export default function StackedBar({ csvData, plotTitle }) {
 
   const color = d3.scaleOrdinal()
       .domain(series.map(d => d.key))
-      .range(d3.schemeSpectral[series.length])
+      .range(d3.schemeTableau10)
       .unknown("#ccc");
 
 
@@ -96,7 +96,7 @@ export default function StackedBar({ csvData, plotTitle }) {
   return (
     <div className="stacked-bar age-groups">
       <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom} viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
-        <text fill="white" transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
+        <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
 
       </svg>

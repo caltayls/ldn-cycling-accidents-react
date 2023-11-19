@@ -64,7 +64,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
 
   const color = d3.scaleOrdinal()
     .domain(['Slight', 'Serious', 'Fatal'])
-    .range(d3.schemeSpectral[series.length]);
+    .range(d3.schemeTableau10);
 
   const y = useMemo(() => {
     return d3.scaleLinear()
@@ -173,7 +173,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
 
   return (
     <svg id="line-and-bar" height={height + margin.top + margin.bottom} width={width + margin.left + margin.right}>
-      <text fill="white" transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
+      <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
       <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
     </svg>
   )

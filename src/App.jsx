@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 
 import * as d3 from "d3";
@@ -16,6 +16,9 @@ function App() {
   const [chosenYear, setChosenYear] = useState('All Years');
   const [chosenMonth, setChosenMonth] = useState('All Months');
 
+  const mapDivRef = useRef(null);
+
+  // this allows data paths to be modified depending on if in production or development
   const isProduction = import.meta.env.MODE === 'production';
   const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
 
@@ -55,17 +58,16 @@ function App() {
         <h1>{boroHover} | {chosenYear} | {chosenMonth === 'All Months'? chosenMonth: new Date(2000, chosenMonth, 1).toLocaleString('en-US', { month: 'long' })}</h1>
 
       </div>
-      <div className='map-and-accessories'>
+      <div ref={mapDivRef} className='map-and-accessories'>
         <Map 
           csvData={csvData}
-            // ? csvData
-            // : csvData.filter(d => d.datetime.getFullYear() === chosenYear)} 
           geoJsonData={geoJsonData} 
           boroHover={boroHover}
           setBoroHover={setBoroHover} 
           chosenYear={chosenYear} 
           chosenMonth={chosenMonth} 
-          timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
+          timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}
+          mapDivRef={mapDivRef} 
         > 
         </Map>
       </div>

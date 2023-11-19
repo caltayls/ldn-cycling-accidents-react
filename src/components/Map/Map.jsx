@@ -9,7 +9,7 @@ import './Map.css';
 
 
 
-export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, chosenYear, chosenMonth, timeUnit }) {
+export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, chosenYear, chosenMonth, timeUnit, mapDivRef }) {
 
 
   const mapSvgRef = useRef(null);
@@ -34,26 +34,22 @@ export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, cho
         <svg width={width} height={height}>
           <g ref={mapSvgRef}></g>
         </svg>
-        </div>
+    </div>
         
-        <MultiLinePlot 
-          csvData={csvData} 
-          timeUnit={timeUnit} 
-          chosenMonth={chosenMonth} 
-          chosenYear={chosenYear}
-          boroHover={boroHover}
-          setBoroHover={setBoroHover}
-          
-          plotTitle={"Trends in Accidents Across London Boroughs Over Time"}
-        ></MultiLinePlot>
+    <MultiLinePlot 
+      csvData={csvData} 
+      timeUnit={timeUnit} 
+      chosenMonth={chosenMonth} 
+      chosenYear={chosenYear}
+      boroHover={boroHover}
+      setBoroHover={setBoroHover}
+      mapDivRef={mapDivRef}
+      plotTitle={"Trends in Accidents Across London Boroughs Over Time"}
+    ></MultiLinePlot>
 
-<MapPolygons id='map-fill' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='none' fill='#440154'></MapPolygons>
-        <MapPolygons id='map-outline' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='#ffff' fill='transparent' setBoroHover={setBoroHover}></MapPolygons>
-        <MapHexBin csvData={csvFiltered} projection={projection} width={width} height={height} mapSvgRef={mapSvgRef} chosenYear={chosenYear} chosenMonth={chosenMonth}></MapHexBin>
-      
-      
-      
-
+    <MapPolygons id='map-fill' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='none' fill='#440154' mapDivRef={mapDivRef}></MapPolygons>
+    <MapPolygons id='map-outline' geoJsonData={geoJsonData} geoGenerator={geoGenerator} mapSvgRef={mapSvgRef} stroke='#ffff' fill='transparent' setBoroHover={setBoroHover} mapDivRef={mapDivRef}></MapPolygons>
+    <MapHexBin csvData={csvFiltered} projection={projection} width={width} height={height} mapSvgRef={mapSvgRef} chosenYear={chosenYear} chosenMonth={chosenMonth} mapDivRef={mapDivRef}></MapHexBin>
     </>
   )
 

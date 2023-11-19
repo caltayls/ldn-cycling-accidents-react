@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import * as d3 from 'd3';
 
-export default function MapPolygons({ geoJsonData, geoGenerator, mapSvgRef,  fill, stroke, id, setBoroHover }) {
+export default function MapPolygons({ geoJsonData, geoGenerator, mapSvgRef,  fill, stroke, id, setBoroHover, mapDivRef }) {
 
 
 function handleMouseOver() {
@@ -10,12 +10,21 @@ function handleMouseOver() {
       .style('stroke', 'red');
 
     setBoroHover(name);
+    d3.select(mapDivRef.current).select(`.multi-line-plot path[name="${name}"]`).raise()
+      .style('stroke', 'red')
+      .style('stroke-width', 3)
+      .style("mix-blend-mode", "normal");
   }
 
   function handleMouseLeave() {
     let name = d3.select(this).attr('name');
     d3.select(this)
       .style('stroke', null);
+
+    d3.select(mapDivRef.current).select(`.multi-line-plot path[name="${name}"]`)
+      .style('stroke', null)
+      .style('stroke-width', null)
+      .style("mix-blend-mode", null);
 
 
     setBoroHover('All Boroughs');
