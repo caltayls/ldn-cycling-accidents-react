@@ -3,7 +3,7 @@ import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { filterCSV } from "../utils/filterCSV"
 import * as d3 from "d3";
 // TODO: fix interactivty 
-export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUnit, plotTitle, boroHover, setBoroHover, mapDivRef }) {
+export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover, mapDivRef }) {
   const outerRef = useRef(null);
   const svgRef = useRef(null);
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
@@ -18,7 +18,9 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUn
     (d) => dateTimeParser(timeUnit, d.datetime),
   );
   const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime))));
-  const timeSet = getTimeSet(timeUnit, boroArray[0], chosenYear, chosenMonth);
+  console.log(boroArray.flat())
+  
+  const timeSet = getTimeSet(timeUnit, boroArray.flat(), chosenYear, chosenMonth); 
   let highlightedBorough;
 
   const margin = {
@@ -35,7 +37,7 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUn
     return d3.scaleLinear()
       .domain(d3.extent(timeSet))
       .range([margin.left, width - margin.right])
-  }, [timeUnit]);
+  }, [timeUnit, severityFilter]);
   
   const xAxisGen = d3.axisBottom(x)
     .tickFormat((d) => {
@@ -45,7 +47,7 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUn
 
   // y scale and axis
   let y = d3.scaleLinear()
-      .domain(d3.extent(boroArray.flat(), d => d.count))
+      .domain([0, d3.max(boroArray.flat(), d => d.count)])
       .range([height - margin.bottom, margin.top]).nice();
   let yAxisGen = d3.axisLeft(y);
 
@@ -110,7 +112,7 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, timeUn
     const tooltip = svg.append("g").attr("id", "multi-line-tool-tip");
         
     return () => svg.selectAll('*').remove();
-  }, [timeUnit]);
+  }, [timeUnit, severityFilter]);
 
 
 
@@ -150,30 +152,30 @@ function handleMouseOver() {
   setBoroHover(borough);
 
   const toolTip = d3.select(outerRef.current).select("#multi-line-tool-tip");
-    // const i = bisect(boroArray.flat(), x.invert(d3.pointer(event)[0]));
-    toolTip
-        .style("display", null)
-        .attr("transform", `translate(${xCoord},${yCoord})`);
 
-    const path = toolTip.selectAll("path")
-      .data([,])
-      .join("path")
-        .attr("fill", "white")
-        .attr("stroke", "black");
+  toolTip
+      .style("display", null)
+      .attr("transform", `translate(${xCoord},${yCoord})`);
 
-    const text = toolTip.selectAll("text")
-      .data([,])
-      .join("text")
-      .call(text => text
-        .selectAll("tspan")
-        .data([x.invert(xCoord), y.invert(yCoord)])
-        .join("tspan")
-          .attr("x", 0)
-          .attr("y", (_, i) => `${i * 1.1}em`)
-          .attr("font-weight", (_, i) => i ? null : "bold")
-          .text(d => d));
+  const path = toolTip.selectAll("path")
+    .data([,])
+    .join("path")
+      .attr("fill", "white")
+      .attr("stroke", "black");
 
-    size(text, path);
+  const text = toolTip.selectAll("text")
+    .data([,])
+    .join("text")
+    .call(text => text
+      .selectAll("tspan")
+      .data([x.invert(xCoord), y.invert(yCoord)])
+      .join("tspan")
+        .attr("x", 0)
+        .attr("y", (_, i) => `${i * 1.1}em`)
+        .attr("font-weight", (_, i) => i ? null : "bold")
+        .text(d => d));
+
+  size(text, path);
 }
 
 function handleMouseLeave() {
@@ -207,7 +209,7 @@ function size(text, path) {
       .on('mouseleave', handleMouseLeave)
 
     return () => svg.on('pointermove', null).on('mouseleave', null)
-  }, [timeUnit])
+  }, [timeUnit, severityFilter])
 
 
   return (

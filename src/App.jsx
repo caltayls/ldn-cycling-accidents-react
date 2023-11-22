@@ -3,18 +3,20 @@ import Select from 'react-select';
 
 import * as d3 from "d3";
 
-import Map from './components/Map/Map';
+import Map from './components/Map/MapLeaflet';
 import './App.css'
 import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
 
 function App() {
   const [csvData, setCsvData] = useState([]);
+
   const [geoJsonData, setGeoJsonData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const [boroHover, setBoroHover] = useState('All Boroughs');
   const [chosenYear, setChosenYear] = useState('All Years');
   const [chosenMonth, setChosenMonth] = useState('All Months');
+  const [severityFilter, setSeverityFilter] = useState('All Severities')
 
   const mapDivRef = useRef(null);
 
@@ -23,12 +25,21 @@ function App() {
   const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
 
 
+  const csvFilterBySeverity = 
+  severityFilter === 'All Severities'
+    ? csvData
+    : csvData.filter(d => d.casualty_severity === severityFilter);
 
-  const csvFiltered = filterCSV(csvData, boroHover, chosenYear, chosenMonth);
+
+  const csvFiltered = filterCSV(csvFilterBySeverity, chosenYear, chosenMonth);
+  const csvFilteredByBoro = csvFiltered.filter(d => d.borough === boroHover);
   
   const yearArray = ['All Years', ...d3.range(2005, 2023)];
   // const monthArray = ['All Months', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const monthArray = ['All Months',  ...d3.range(0, 12)];
+
+  const severityFilterOptions = ['All Severities', 'Slight', 'Serious', 'Fatal'];
+  
 
 
 
@@ -59,22 +70,28 @@ function App() {
 
       </div>
       <div ref={mapDivRef} className='map-and-accessories'>
-        <Map 
-          csvData={csvData}
+        {/* <Map 
+          csvData={csvFilterBySeverity}
           geoJsonData={geoJsonData} 
           boroHover={boroHover}
           setBoroHover={setBoroHover} 
           chosenYear={chosenYear} 
           chosenMonth={chosenMonth} 
+          severityFilter={severityFilter}
           timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}
           mapDivRef={mapDivRef} 
         > 
-        </Map>
+        </Map> */}
+        
+      </div>
+
+      <div className='leaflet-map'>
+        <Map geoJsonData={geoJsonData} csvData={csvFiltered} setBoroHover={setBoroHover}></Map>
       </div>
 
       <div className='info-box'>
         <InfoAndPlotBox 
-          csvData={csvFiltered} 
+          csvData={csvData} 
           boroHover={boroHover} 
           chosenYear={chosenYear} 
           setChosenYear={setChosenYear}
@@ -104,6 +121,14 @@ function App() {
             placeholder={chosenMonth}>
           </Select>
         </div>
+        <div className='filter severity'>
+          <Select 
+              value={severityFilter}
+              onChange={handleSeverityChange}
+              options={severityFilterOptions.map(d => ({value: d, label: d}))} 
+              placeholder={severityFilter}>
+            </Select>
+        </div>
       </div>
     </>
   );
@@ -114,6 +139,10 @@ function App() {
   function handleMonthChange({ value }) {
     setChosenMonth(value)
   }
+  function handleSeverityChange({ value }) {
+    setSeverityFilter(value)
+  }
+
 }
 
 

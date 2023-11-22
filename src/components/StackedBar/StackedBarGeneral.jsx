@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 
 // TODO: fix csv age bands
-export default function StackedBar({ csvData, plotTitle }) {
+export default function StackedBar({ className, csvData, group1, group2, plotTitle }) {
   
   const svgRef = useRef(null);
   const margin = {
@@ -14,28 +14,34 @@ export default function StackedBar({ csvData, plotTitle }) {
   const height = 300 - margin.top - margin.bottom;
   const width = 600 - margin.left - margin.right;
 
-  const ageGenderMap = d3.rollup(
+  const groupedDataMap = d3.rollup(
       csvData, 
-      v => ({ageGroup: v[0].age_binned, sex: v[0].casualty_sex, count: v.length}),
-      d => d.age_binned,
-      d => d.casualty_sex
+      v => ({[group1]: v[0][group1], [group2]: v[0].group2, count: v.length}),
+      d => d[group1],
+      d => d[group2]
   );
 
-  const ageGenderArray = Array.from(ageGenderMap, ([, inner]) => [...inner.values()]).flat()
-    .filter(d => (d.ageGroup !== '') && (d.sex !== 'Unknown') )
+
+
+
+  const groupedDataArray = Array.from(groupedDataMap, ([, inner]) => [...inner.values()]).flat()
+    .filter(d => (d[group1] !== '') && (d[group2] !== 'Unknown') )
+    // .sort((a, b) => a.datetime - b.datetime);
   
+
+
   const ageGroups = [
     '00-04', '05-09', '10-14', '15-19', '20-24', 
     '25-29', '30-34', '35-39', '40-44',  '45-49', 
     '50-54', '55-59', '60-64', '65-69', '70-74', 
     '75-79', '80-84', '85-89', '90-94', '95-99',  
   ]
-  const sex = ['Male', 'Female', 'Unknown']; // need three keys for color. change color scheme later
+  const keys = [...new Set(groupedDataArray.group2)] // need three keys for color. change color scheme later
 
   const series = d3.stack()
-      .keys(sex) // distinct series keys, in input order
+      .keys(keys) // distinct series keys, in input order
       .value(([, D], key) => D.get(key)?.count || 0) // get value for each series key and stack
-    (d3.index(ageGenderArray, d => d.ageGroup, d => d.sex)); // group by stack then series key
+    (d3.index(groupedDataArray, d => d[group1], d => d[group2])); // group by stack then series key
 
   
   // Prepare the scales for positional and color encodings.
@@ -92,7 +98,7 @@ export default function StackedBar({ csvData, plotTitle }) {
   }, [csvData]);
  
   return (
-    <div className="stacked-bar age-groups">
+    <div className={className}>
       <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom} viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
         <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>

@@ -9,10 +9,11 @@ import './Map.css';
 
 
 
-export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, chosenYear, chosenMonth, timeUnit, mapDivRef }) {
+export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, chosenYear, chosenMonth, severityFilter, timeUnit, mapDivRef }) {
 
 
   const mapSvgRef = useRef(null);
+  console.log(csvData)
 
   const width = 600;
   const height = 400;
@@ -31,7 +32,7 @@ export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, cho
   return (
     <>
     <div className="map-features">
-        <svg width={width} height={height}>
+        <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
           <g ref={mapSvgRef}></g>
         </svg>
     </div>
@@ -39,6 +40,7 @@ export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, cho
     <MultiLinePlot 
       csvData={csvData} 
       timeUnit={timeUnit} 
+      severityFilter={severityFilter}
       chosenMonth={chosenMonth} 
       chosenYear={chosenYear}
       boroHover={boroHover}

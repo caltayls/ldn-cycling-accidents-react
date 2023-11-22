@@ -38,8 +38,6 @@ export default function MapHexBin({ csvData, projection, width, height, mapSvgRe
         d3.select(mapSvgRef.current).select('#map-outline').raise();
       }, 1);
 }
-
-
   useEffect (() => {
     let svg = d3.select(mapSvgRef.current)
 

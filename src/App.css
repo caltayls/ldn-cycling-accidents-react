@@ -27,17 +27,26 @@
   padding-right: 40%;
   
 }
-.map-and-accessories {
+/* .map-and-accessories {
   grid-column: 2 / 3;
   grid-row: 2/4;
   display: grid;
   grid-template-columns: 8fr 2fr;
   grid-template-rows: auto;
   grid-gap: 30px; 
+  z-index: 0;
+} */
+
+.leaflet-map {
+  grid-column: 2 / 3;
+  grid-row: 2/4;
 }
 
 .time-options {
+  grid-column: 2 / 3;
+  grid-row: 1;
   display: flex;
+  z-index: 10000;
 }
 .time-option {
   margin-right: 30px;
