@@ -33,6 +33,7 @@ export default function MapLeaflet({ geoJsonData, csvData, setBoroHover, chosenM
     setBoroHover: setBoroHover,
     fill: 'rgb(72, 20, 103)',
     fillOpacity: 0.5,
+    
   });
 
    useMapHexBin({
@@ -49,7 +50,8 @@ export default function MapLeaflet({ geoJsonData, csvData, setBoroHover, chosenM
     setBoroHover: setBoroHover,
     fill: 'red',
     fillOpacity: 0.0,
-    stroke: 'white'
+    stroke: 'white',
+    strokeWidth: 1
   });
 
   // for drawing geojson data
