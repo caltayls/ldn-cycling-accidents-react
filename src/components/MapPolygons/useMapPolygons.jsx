@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from 'd3';
 import * as L from 'leaflet';
 
-export default function useMapPolygons({ className, fill, stroke, strokeWidth, fillOpacity, geoJsonData, setBoroHover, map }) {
+export default function useMapPolygons({ className, fill, stroke, strokeWidth, fillOpacity, geoJsonData, boroHover, setBoroHover, map }) {
+  const boroughHighlightedRef = useRef();
   let isMapMoving = false;
-  let highlightedBoro = '';
+  // let highlightedBoro = '';
+  
   useEffect(() => {
     if (map) {
       const g = d3.select('#overlay-g');
@@ -26,11 +28,13 @@ export default function useMapPolygons({ className, fill, stroke, strokeWidth, f
           });
       if (className === 'outline') {
         areaFills.on('mouseup', function() {
+          
+          // prevent click when dragging map
           if (isMapMoving) {
             isMapMoving=false;
             return
           }
-          highlightedBoro && d3.select(`.${className} [name="${highlightedBoro}"]`)
+          d3.select(`.${className} [name="${boroughHighlightedRef.current}"]`)
             .style('stroke', stroke)
             .style('stroke-width', strokeWidth);
 
@@ -39,7 +43,7 @@ export default function useMapPolygons({ className, fill, stroke, strokeWidth, f
             .style('stroke-width', strokeWidth*2);
           const boroName = d3.select(this).attr('name');
           setBoroHover(boroName);
-          highlightedBoro = boroName;
+          boroughHighlightedRef.current = boroName;
         })
   
         map.on('dragstart', () => isMapMoving=true)
@@ -47,13 +51,42 @@ export default function useMapPolygons({ className, fill, stroke, strokeWidth, f
     }
     return () => d3.select(`#overlay-g .${className}`).remove();
   }, [map])
+
+useEffect (() => {
+  if (map) {
+  d3.select(`.${className} [name="${boroughHighlightedRef.current}"]`)
+    .style('stroke', stroke)
+    .style('stroke-width', strokeWidth);
+  
+  const elementHighlighted = d3.select(`.${className} [name="${boroHover}"]`);
+
+  if (elementHighlighted._groups[0][0] !== null) {
+    elementHighlighted.raise()
+    .style('stroke', 'red')
+    .style('stroke-width', strokeWidth*2);
+
+    const bounds = JSON.parse(elementHighlighted.attr('bounds'))
+    const southwest = L.latLng(bounds._southWest.lng, bounds._southWest.lat);
+    const northeast = L.latLng(bounds._northEast.lng, bounds._northEast.lat);
+    const boundsObj = L.latLngBounds(southwest, northeast);
+    map.fitBounds(boundsObj);
+  } else {
+    const g = d3.select(`#overlay-g`).node();
+    const gBounds = g.getBBox();
+    const topLeft = map.layerPointToLatLng(L.point(gBounds.x, gBounds.y));
+    const bottomRight = map.layerPointToLatLng(L.point(gBounds.x + gBounds.width, gBounds.y + gBounds.height));
+    map.fitBounds(L.latLngBounds(topLeft, bottomRight));
+  }
+  }
+
+  
+  
+
+
+  boroughHighlightedRef.current = boroHover;
+}, [boroHover])
+
+
+
 }
 
-
-          // if (!map.dragging.moving()){
-            // console.log(map.dragging.moving())
-            // const bounds = JSON.parse(d3.select(this).attr('bounds'))
-            // const southwest = L.latLng(bounds._southWest.lng, bounds._southWest.lat);
-            // const northeast = L.latLng(bounds._northEast.lng, bounds._northEast.lat);
-            // const boundsObj = L.latLngBounds(southwest, northeast);
-            // map.fitBounds(boundsObj);

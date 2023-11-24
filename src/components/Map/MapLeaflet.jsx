@@ -9,7 +9,7 @@ import { filterCSV } from '../utils/filterCSV';
 
 import './MapLeaflet.css'
 
-export default function MapLeaflet({ geoJsonData, csvData, setBoroHover, chosenMonth, chosenYear, severityFilter }) {
+export default function MapLeaflet({ geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter }) {
   const [ map, setMap ] = useState('');
   const hexCoordsRef = useRef(''); // ref used to prevent rerendering
   
@@ -31,7 +31,7 @@ export default function MapLeaflet({ geoJsonData, csvData, setBoroHover, chosenM
     className: 'fill', 
     geoJsonData: geoJsonData,
     setBoroHover: setBoroHover,
-    fill: 'rgb(72, 20, 103)',
+    fill: '#bcc7b7',
     fillOpacity: 0.5,
     
   });
@@ -47,6 +47,7 @@ export default function MapLeaflet({ geoJsonData, csvData, setBoroHover, chosenM
     map: map,
     className: 'outline', 
     geoJsonData: geoJsonData,
+    boroHover: boroHover,
     setBoroHover: setBoroHover,
     fill: 'red',
     fillOpacity: 0.0,
@@ -80,7 +81,6 @@ export default function MapLeaflet({ geoJsonData, csvData, setBoroHover, chosenM
           // console.log(point)
           return generateHexagonPath(point.x, point.y, radiusNew+0.3);
         });
-
         g.select('.outline').raise();
       };
 

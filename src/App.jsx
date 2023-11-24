@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 import * as d3 from "d3";
 
-import Map from './components/Map/MapLeaflet';
+import MapLeaflet from './components/Map/MapLeaflet';
 import './App.css'
 import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
 // import MapReactLeaflet from './components/Map/MapReactLeaflet';
@@ -34,6 +34,8 @@ function App() {
   // const monthArray = ['All Months', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const monthArray = ['All Months',  ...d3.range(0, 12)];
   const severityFilterOptions = ['All Severities', 'Slight', 'Serious', 'Fatal'];
+  const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))];
+  
   
 
 
@@ -64,15 +66,16 @@ function App() {
         <h1>{boroHover} | {chosenYear} | {chosenMonth === 'All Months'? chosenMonth: new Date(2000, chosenMonth, 1).toLocaleString('en-US', { month: 'long' })}</h1>
       </div>
       <div className='leaflet-map'>
-        <Map 
+        <MapLeaflet 
           geoJsonData={geoJsonData} 
-          csvData={csvFilterBySeverity} 
+          csvData={csvFilterBySeverity}
+          boroHover={boroHover} 
           setBoroHover={setBoroHover} 
           chosenMonth={chosenMonth} 
           chosenYear={chosenYear}
           severityFilter={severityFilter}
         >
-        </Map>
+        </MapLeaflet>
       </div>
 
       <div className='info-box'>
@@ -87,6 +90,17 @@ function App() {
       </div>
 
       <div className='time-options'>
+        <div className='borough-option'>
+          <Select 
+              value={boroHover}
+              isClearable={true}
+              // defaultValue={chosenYear}
+              onChange={handleBoroughChange}
+              options={boroughs.map(d => ({value: d, label: d}))} 
+              placeholder={boroHover}
+              >
+            </Select>
+        </div>
         <div className='time-option year'>
           <Select 
             value={chosenYear}
@@ -117,15 +131,18 @@ function App() {
       </div>
     </>
   );
-  
+
+  function handleBoroughChange({ value }) {
+    setBoroHover(value);
+  }
   function handleYearChange({ value }) {
-    setChosenYear(value)
+    setChosenYear(value);
   }
   function handleMonthChange({ value }) {
-    setChosenMonth(value)
+    setChosenMonth(value);
   }
   function handleSeverityChange({ value }) {
-    setSeverityFilter(value)
+    setSeverityFilter(value);
   }
 
 }

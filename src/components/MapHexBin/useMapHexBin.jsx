@@ -55,9 +55,7 @@ export default function useMapHexBin({csvData, map, hexCoordsRef}) {
           .attr('size', d => d.length)
           // .attr("d", d => `M${d.x},${d.y}${bins.hexagon()}`)
           .style('fill', d => colorScale(d.length))
-          .style('fill-opacity', 0.5);
-        console.log('usehex')
-  
+          .style('fill-opacity', 0.5);  
     }
    
     return () => g.selectAll('.hexagons').remove()
