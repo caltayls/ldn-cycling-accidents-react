@@ -15,6 +15,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [boroHover, setBoroHover] = useState('All Boroughs');
+  const [isBoroughFilterClicked, setIsBoroughFilterClicked] = useState(false);
   const [chosenYear, setChosenYear] = useState('All Years');
   const [chosenMonth, setChosenMonth] = useState('All Months');
   const [severityFilter, setSeverityFilter] = useState('All Severities')
@@ -22,8 +23,6 @@ function App() {
   // this allows data paths to be modified depending on if in production or development
   const isProduction = import.meta.env.MODE === 'production';
   const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
-
-
   const csvFilterBySeverity = 
   severityFilter === 'All Severities'
     ? csvData
@@ -62,9 +61,7 @@ function App() {
 
   return (
     <>
-      <div className="title">
-        <h1>{boroHover} | {chosenYear} | {chosenMonth === 'All Months'? chosenMonth: new Date(2000, chosenMonth, 1).toLocaleString('en-US', { month: 'long' })}</h1>
-      </div>
+
       <div className='leaflet-map'>
         <MapLeaflet 
           geoJsonData={geoJsonData} 
@@ -74,6 +71,8 @@ function App() {
           chosenMonth={chosenMonth} 
           chosenYear={chosenYear}
           severityFilter={severityFilter}
+          isBoroughFilterClicked={isBoroughFilterClicked}
+          setIsBoroughFilterClicked={setIsBoroughFilterClicked}
         >
         </MapLeaflet>
       </div>
@@ -89,8 +88,8 @@ function App() {
         </InfoAndPlotBox>
       </div>
 
-      <div className='time-options'>
-        <div className='borough-option'>
+      <div className='filter-options'>
+        <div className='filter-option borough'>
           <Select 
               value={boroHover}
               isClearable={true}
@@ -101,7 +100,7 @@ function App() {
               >
             </Select>
         </div>
-        <div className='time-option year'>
+        <div className='filter-option year'>
           <Select 
             value={chosenYear}
             isClearable={true}
@@ -112,7 +111,7 @@ function App() {
             >
           </Select>
         </div>
-        <div className='time-option month'>
+        <div className='filter-option month'>
           <Select 
             value={chosenMonth}
             onChange={handleMonthChange}
@@ -120,7 +119,7 @@ function App() {
             placeholder={chosenMonth}>
           </Select>
         </div>
-        <div className='filter severity'>
+        <div className='filter-option severity'>
           <Select 
               value={severityFilter}
               onChange={handleSeverityChange}
@@ -134,6 +133,7 @@ function App() {
 
   function handleBoroughChange({ value }) {
     setBoroHover(value);
+    setIsBoroughFilterClicked(true);
   }
   function handleYearChange({ value }) {
     setChosenYear(value);

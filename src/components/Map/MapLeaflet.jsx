@@ -9,10 +9,9 @@ import { filterCSV } from '../utils/filterCSV';
 
 import './MapLeaflet.css'
 
-export default function MapLeaflet({ geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter }) {
+export default function MapLeaflet({ geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   const [ map, setMap ] = useState('');
   const hexCoordsRef = useRef(''); // ref used to prevent rerendering
-  
   const csvFiltered = useMemo(() => filterCSV(csvData, chosenYear, chosenMonth), [severityFilter, chosenMonth, chosenYear]);
   const mapRef = useRef(null);
   const zoomInitial = 10;
@@ -32,8 +31,9 @@ export default function MapLeaflet({ geoJsonData, csvData, boroHover, setBoroHov
     geoJsonData: geoJsonData,
     setBoroHover: setBoroHover,
     fill: '#bcc7b7',
-    fillOpacity: 0.5,
-    
+    fillOpacity: 0.2,
+    isBoroughFilterClicked: isBoroughFilterClicked, 
+    setIsBoroughFilterClicked: setIsBoroughFilterClicked 
   });
 
    useMapHexBin({
@@ -52,7 +52,9 @@ export default function MapLeaflet({ geoJsonData, csvData, boroHover, setBoroHov
     fill: 'red',
     fillOpacity: 0.0,
     stroke: 'white',
-    strokeWidth: 1
+    strokeWidth: 1,
+    isBoroughFilterClicked: isBoroughFilterClicked, 
+    setIsBoroughFilterClicked: setIsBoroughFilterClicked
   });
 
   // for drawing geojson data
