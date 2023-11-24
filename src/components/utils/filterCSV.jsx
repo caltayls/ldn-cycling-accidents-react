@@ -1,15 +1,15 @@
-export function filterCSV(csv, chosenYear, chosenMonth, boroHover='', severityFilter='') {
+export function filterCSV(csv, chosenYear, chosenMonth, boroHover='', severity='') {
   let csvFiltered = csv;
   if (boroHover) {
   csvFiltered = boroHover === 'All Boroughs'
-    ? csv
-    : csv.filter(d => d.borough === boroHover);
+    ? csvFiltered
+    : csvFiltered.filter(d => d.borough === boroHover);
   }
 
-  if (severityFilter) {
-    csvFiltered = severityFilter === 'All Severities'
+  if (severity) {
+    csvFiltered = severity === 'All Severities'
     ? csvFiltered
-    : csvFiltered.filter(d => d.casualty_severity === severityFilter);
+    : csvFiltered.filter(d => d.casualty_severity === severity);
   }
 
   csvFiltered = chosenYear === 'All Years'

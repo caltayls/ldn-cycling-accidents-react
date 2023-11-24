@@ -6,11 +6,7 @@ import { filterCSV } from "../utils/filterCSV";
 
 // TODO: Replace stacked plot with stacked bar for days of month data 
 export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChosenYear, chosenMonth, setChosenMonth }) {
-
-
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth, boroHover)
-
-
 
   return (
     <>
@@ -22,8 +18,7 @@ export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChos
         setChosenYear={setChosenYear}
         chosenMonth = {chosenMonth}
         setChosenMonth={setChosenMonth}
-        plotTitle={"Trend in Accidents Over Time"}
-        
+        plotTitle={"Trend in Accidents Over Time"}  
       >
       </StackedPlot>    
       <StackedPlot csvData={csvFiltered} timeUnit='hour' plotTitle={"Accidents by Hour of Day"}></StackedPlot>
@@ -33,5 +28,3 @@ export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChos
   )
 
 }
-
-// for all boros create a line chart with a stacked bar chart
