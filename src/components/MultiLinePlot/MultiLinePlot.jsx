@@ -3,10 +3,11 @@ import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { filterCSV } from "../utils/filterCSV"
 import * as d3 from "d3";
 // TODO: fix interactivty 
-export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover, mapDivRef }) {
+export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
   const outerRef = useRef(null);
   const svgRef = useRef(null);
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
+  
   const boroObj = d3.rollup(
     csvFiltered, 
     v=> ({
@@ -17,12 +18,11 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, severi
     (d) => d.borough, 
     (d) => dateTimeParser(timeUnit, d.datetime),
   );
+
   const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime))));
-  console.log(boroArray.flat())
   
   const timeSet = getTimeSet(timeUnit, boroArray.flat(), chosenYear, chosenMonth); 
-  let highlightedBorough;
-
+ 
   const margin = {
     top: 30,
     bottom: 20,
@@ -71,9 +71,9 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, severi
   useEffect(() => {
     const svg = d3.select(svgRef.current)
 
-
     // add paths
     svg.append('g')
+        .attr('class', 'line-paths')
         .attr('stroke-width', 1.5)
         .attr('fill', 'none')
         .attr('stroke', 'steelblue')
@@ -109,7 +109,7 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, severi
         .attr('transform', `translate(${margin.left + 2}, ${margin.top/2})`)
 
     // Create the tooltip container.
-    const tooltip = svg.append("g").attr("id", "multi-line-tool-tip");
+    svg.append("g").attr("id", "multi-line-tool-tip");
         
     return () => svg.selectAll('*').remove();
   }, [timeUnit, severityFilter]);
@@ -117,53 +117,50 @@ export default function MultiLinePlot({ csvData, chosenYear, chosenMonth, severi
 
 
 
-  // handling interactivity
 
-function handleMouseOver() {
 
-  if (highlightedBorough) {
-    d3.select(svgRef.current)
-    .select(`path[name="${highlightedBorough}"]`)
-      .style('stroke', null)
-      .style('stroke-width', null)
-      .style("mix-blend-mode", "multiply");
-    
-    setBoroHover('All Boroughs');
-  }
+  // // handling interactivity
 
-  let [xm, ym] = d3.pointer(event);
+  // let [xm, ym] = d3.pointer(event);
 
-  // borough of closest data point to pointer
-  let { borough, x: xCoord, y: yCoord } = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
-  
-  setBoroHover(borough);
-  highlightedBorough = borough;
+  // // borough of closest data point to pointer
+  // let { borough} = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
+ 
+useEffect(() => {
 
-  d3.select(svgRef.current).select('circle')
-      .attr('transform', `translate(${xCoord}, ${yCoord})`)
-      .style('fill', 'red');
 
-  d3.select(svgRef.current)
-    .select(`path[name="${borough}"]`).raise()
-      .style('stroke', 'red')
-      .style('stroke-width', 3)
-      .style("mix-blend-mode", "normal");
+}, [])
 
-  setBoroHover(borough);
+  return (
+    <div className="multi-line-plot">
+      <svg ref={outerRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+        <g ref={svgRef}></g>
+      </svg>
+    </div>
+  )
 
-  const toolTip = d3.select(outerRef.current).select("#multi-line-tool-tip");
+}
 
-  toolTip
-      .style("display", null)
-      .attr("transform", `translate(${xCoord},${yCoord})`);
 
-  const path = toolTip.selectAll("path")
+// create tool tip box
+function drawToolTipBox(text, path) {
+  const {x, y, width: w, height: h} = text.node().getBBox();
+  text.attr("transform", `translate(${-w / 2},${15 - y})`);
+  path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
+}
+
+function toolTipGenerator(toolTipElement, x, y, xCoord, yCoord) {
+  toolTipElement
+    .style("display", null)
+    .attr("transform", `translate(${xCoord},${yCoord})`);
+
+  const path = toolTipElement.selectAll("path")
     .data([,])
     .join("path")
       .attr("fill", "white")
       .attr("stroke", "black");
 
-  const text = toolTip.selectAll("text")
+  const text = toolTipElement.selectAll("text")
     .data([,])
     .join("text")
     .call(text => text
@@ -174,50 +171,5 @@ function handleMouseOver() {
         .attr("y", (_, i) => `${i * 1.1}em`)
         .attr("font-weight", (_, i) => i ? null : "bold")
         .text(d => d));
-
-  size(text, path);
-}
-
-function handleMouseLeave() {
-  d3.select(svgRef.current)
-    .select(`path[name="${highlightedBorough}"]`)
-      .style('stroke', null)
-      .style('stroke-width', null)
-      .style("mix-blend-mode", null);
-  
-  // hide circle
-  d3.select(svgRef.current).select('circle')
-    .style('fill', 'transparent');
-
-  // hide tool tip  
-  d3.select(outerRef.current).select("#multi-line-tool-tip").style("display", "none");
-
-  setBoroHover('All Boroughs');
-}
-
-// create tool tip box
-function size(text, path) {
-    const {x, y, width: w, height: h} = text.node().getBBox();
-    text.attr("transform", `translate(${-w / 2},${15 - y})`);
-    path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
-  }
-  useEffect(() => {
-
-    // dot for line hover
-    const svg = d3.select(outerRef.current)
-      .on('pointerenter pointermove', handleMouseOver)
-      .on('mouseleave', handleMouseLeave)
-
-    return () => svg.on('pointermove', null).on('mouseleave', null)
-  }, [timeUnit, severityFilter])
-
-
-  return (
-    <div className="multi-line-plot">
-      <svg ref={outerRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-        <g ref={svgRef}></g>
-      </svg>
-    </div>
-  )
-
+  drawToolTipBox(text, path);
 }

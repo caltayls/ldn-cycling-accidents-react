@@ -6,7 +6,10 @@ import * as d3 from "d3";
 import MapLeaflet from './components/Map/MapLeaflet';
 import './App.css'
 import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
-// import MapReactLeaflet from './components/Map/MapReactLeaflet';
+import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
+import MapAndMultiPlot from './components/MapAndMultiPlot/MapAndMultiPlot';
+
+
 
 function App() {
   const [csvData, setCsvData] = useState([]);
@@ -23,6 +26,7 @@ function App() {
   // this allows data paths to be modified depending on if in production or development
   const isProduction = import.meta.env.MODE === 'production';
   const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
+  
   const csvFilterBySeverity = 
   severityFilter === 'All Severities'
     ? csvData
@@ -35,10 +39,6 @@ function App() {
   const severityFilterOptions = ['All Severities', 'Slight', 'Serious', 'Fatal'];
   const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))];
   
-  
-
-
-
 
   useEffect(() => {
 
@@ -55,28 +55,23 @@ function App() {
     });
   }, []);
 
-
-
   if (isLoading) return <></>;
 
   return (
     <>
-
-      <div className='leaflet-map'>
-        <MapLeaflet 
-          geoJsonData={geoJsonData} 
-          csvData={csvFilterBySeverity}
-          boroHover={boroHover} 
-          setBoroHover={setBoroHover} 
-          chosenMonth={chosenMonth} 
-          chosenYear={chosenYear}
-          severityFilter={severityFilter}
-          isBoroughFilterClicked={isBoroughFilterClicked}
-          setIsBoroughFilterClicked={setIsBoroughFilterClicked}
-        >
-        </MapLeaflet>
-      </div>
-
+      
+      <MapAndMultiPlot
+        geoJsonData={geoJsonData}
+        csvData={csvData}
+        csvFilterBySeverity={csvFilterBySeverity} 
+        boroHover={boroHover}
+        setBoroHover={setBoroHover}
+        chosenMonth={chosenMonth}
+        chosenYear={chosenYear}
+        severityFilter={severityFilter}
+        isBoroughFilterClicked={isBoroughFilterClicked}
+        setIsBoroughFilterClicked={setIsBoroughFilterClicked}
+      ></MapAndMultiPlot>
       <div className='info-box'>
         <InfoAndPlotBox 
           csvData={csvFilterBySeverity} 
