@@ -84,8 +84,12 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
       .join('path')
         .style("mix-blend-mode", "multiply")
         .attr('d', lineGenerator)
-        .attr('name', d => d[0].borough);
-    
+        .attr('name', d => d[0].borough)
+
+    svg.select(`[name="${boroHover}"]`).raise()
+        .style('stroke', 'red')
+        .style('stroke-width', 3)
+        .style("mix-blend-mode", "normal");
     // add x-axis
     svg.append('g')
       .attr('transform', `translate(0, ${height - margin.bottom})`)
@@ -112,7 +116,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
     svg.append("g").attr("id", "multi-line-tool-tip");
         
     return () => svg.selectAll('*').remove();
-  }, [timeUnit, severityFilter]);
+  }, [timeUnit, severityFilter, chosenMonth, chosenYear]);
 
 
 
@@ -121,15 +125,93 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
   // // handling interactivity
 
-  // let [xm, ym] = d3.pointer(event);
+  function handleMouseOver() {
 
-  // // borough of closest data point to pointer
-  // let { borough} = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
+    let [xm, ym] = d3.pointer(event);
+    // borough of closest data point to pointer
+    let { borough, x: xCoord, y: yCoord} = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
+    if (boroHover !== 'All Boroughs') {
+
+      let { borough, x: xCoord, y: yCoord} = d3.least(points.filter(d => d.borough === boroHover), d => Math.abs(d.x - xm));
+
+      let pointerCircle = d3.select('.pointer-circle')
+        .attr('cx', xCoord)
+        .attr('cy', yCoord)
+        .style('stroke', 'red')
+
+      let toolTip = d3.select('#multi-line-tool-tip')
+          .attr('display', null);
+      toolTipGenerator(toolTip, x, y, xCoord, yCoord)
+    } 
+
+  }
+
+  function handleMouseLeave() {
+    let pointerCircle = d3.select('.pointer-circle')
+    .style('stroke', null)
+
+    let toolTip = d3.select('#multi-line-tool-tip')
+      .attr('display', 'none');
+  }
+
+  function handleClick() {
+    let [xm, ym] = d3.pointer(event);
+    // borough of closest data point to pointer
+    let { borough, x: xCoord, y: yCoord} = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
+
+    if (boroHover !== 'All Boroughs') { // removes already selected borough
+      
+      // remove plot highlight
+      d3.select(`g.line-paths path[name="${ boroughHighlightedRef.current}"]`)
+      .style('stroke', 'steelblue')
+      .style('stroke-width', 1.5)
+      .style("mix-blend-mode", "multiply");
+
+      // remove map highlight
+      d3.select(`.outline [name="${boroughHighlightedRef.current}"]`)
+      .style('stroke', 'white')
+      .style('stroke-width', 1);
+
+      //hide circle
+      let pointerCircle = d3.select('.pointer-circle')
+      .style('stroke', null)
+  
+      // hise tool tip
+      let toolTip = d3.select('#multi-line-tool-tip')
+        .attr('display', 'none');
+
+      boroughHighlightedRef.current = '';
+      setBoroHover('All Boroughs');
+    } else {
+      d3.select(`g.line-paths [name="${borough}"]`).raise()
+          .style('stroke', 'red')
+          .style('stroke-width', 3)
+          .style("mix-blend-mode", "normal");
+
+      d3.select(`.outline [name="${borough}"]`).raise()
+          .style('stroke', 'red')
+          .style('stroke-width', 2);
+
+      let pointerCircle = d3.select('.pointer-circle')
+      .attr('cx', xCoord)
+      .attr('cy', yCoord)
+      .style('stroke', 'red')
+  
+      let toolTip = d3.select('#multi-line-tool-tip')
+        .attr('display', null)
+        .attr("transform", `translate(${xCoord},${yCoord})`);;
+
+      setBoroHover(borough);
+    }
+
+  }
+
  
 useEffect(() => {
+  const svg = d3.select(outerRef.current);
+  svg.on('click', handleClick).on('mouseover', handleMouseOver).on('mouseleave', handleMouseLeave)
 
-
-}, [])
+}, [boroHover])
 
   return (
     <div className="multi-line-plot">

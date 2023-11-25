@@ -26,7 +26,7 @@ export default function useMapPolygons({ boroughHighlightedRef, className, fill,
     d3.select(`.multi-line-plot svg g.line-paths path[name="${boroName}`).raise()
       .style('stroke', 'red')
       .style('stroke-width', 3)
-      .style("mix-blend-mode", "normal");;
+      .style("mix-blend-mode", "normal");
 
       d3.select(`.multi-line-plot svg g.line-paths path[name="${ boroughHighlightedRef.current}`)
       .style('stroke', 'steelblue')
