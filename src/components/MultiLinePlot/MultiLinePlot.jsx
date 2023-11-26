@@ -41,6 +41,11 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
   
   const xAxisGen = d3.axisBottom(x)
     .tickFormat((d) => {
+      
+      if (timeUnit === 'month') {
+        const monthName = new Date(2000, d).toLocaleDateString('default', { month: 'short' });
+        return monthName
+      }
       return String(d)
     });
 
@@ -211,10 +216,10 @@ useEffect(() => {
   const svg = d3.select(outerRef.current);
   svg.on('click', handleClick).on('mouseover', handleMouseOver).on('mouseleave', handleMouseLeave)
 
-}, [boroHover])
+}, [boroHover, chosenMonth, chosenYear])
 
   return (
-    <div className="multi-line-plot">
+    <div className="multi-line-plot" width="100%">
       <svg ref={outerRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
         <g ref={svgRef}></g>
       </svg>

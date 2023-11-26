@@ -75,9 +75,10 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   const yAxisGen = d3.axisLeft(y);
 
   const x = useMemo(() => {
-    return d3.scaleLinear()
-      .domain(d3.extent(timeSet))
+    return d3.scaleBand()
+      .domain(timeSet)
       .range([0, width])
+      .padding(0.03);
   }, [timeUnit]);
 
   const xAxisGen = d3.axisBottom(x)
@@ -90,10 +91,10 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
     });
 
   // for stacked plot
-  const area = d3.area()
-    .x(d => x(d.data[0]))
-    .y0(d => y(d[0]))
-    .y1(d => y(d[1]));
+  // const area = d3.area()
+  //   .x(d => x(d.data[0]))
+  //   .y0(d => y(d[0]))
+  //   .y1(d => y(d[1]));
 
   // coordinates for plot interactivity
   const [x1, x2] = x.range();
@@ -111,14 +112,18 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
         .attr('transform', `translate(0, ${height})`)
         .call(xAxisGen);
 
-    svg.append("g")
-      .selectAll('path')
-        .data(series)
-        .join("path")
-        .attr('class', d => d.key)
+    svg.selectAll()
+      .data(series)
+      .join("g")
         .attr("fill", d => color(d.key))
-        .attr("d", area);
-        
+      .selectAll("rect")
+      .data(D => D.map(d => (d.key = D.key, d)))
+      .join("rect")
+        .attr('class', d => d.data[0])
+        .attr("x", d => x(d.data[0]))
+        .attr("y", d => y(d[1]))
+        .attr("height", d => y(d[0]) - y(d[1]))
+        .attr("width", x.bandwidth())
         
     svg.append('line')
         .attr('id', 'follow-cursor')
@@ -132,47 +137,47 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   }, [csvData])
 
 
-  function handleMouseMove(event) {
+  // function handleMouseMove(event) {
     
-    let [xm, ] = d3.pointer(event);
-    let closestYear = d3.least(yearsGridCoords, (x) => Math.abs(x - xm));
-    let svg = d3.select(svgRef.current);
+  //   let [xm, ] = d3.pointer(event);
+  //   let closestYear = d3.least(yearsGridCoords, (x) => Math.abs(x - xm));
+  //   let svg = d3.select(svgRef.current);
   
-    svg.select('#follow-cursor')
-        .raise()
-        .style('stroke', 'red')
-        .attr('x1', closestYear)
-        .attr('x2', closestYear);
-  }
+  //   svg.select('#follow-cursor')
+  //       .raise()
+  //       .style('stroke', 'red')
+  //       .attr('x1', closestYear)
+  //       .attr('x2', closestYear);
+  // }
     
-  function handleMouseLeave() {
-    let svg = d3.select(svgRef.current);
-    svg.select("#follow-cursor").style('stroke', null);
-  }
+  // function handleMouseLeave() {
+  //   let svg = d3.select(svgRef.current);
+  //   svg.select("#follow-cursor").style('stroke', null);
+  // }
 
-  function handleClick(event) {
-    let [xm, ] = d3.pointer(event);
-    let closestYearCoords = d3.least(yearsGridCoords, (x) => Math.abs(x - xm));
-    let closestTime = Math.ceil(x.invert(closestYearCoords));
-    if (timeUnit === 'year') {
-      setChosenYear(closestTime)
-    } else if (timeUnit === 'month') {
-      setChosenMonth(closestTime)
-    }
+  // function handleClick(event) {
+  //   let [xm, ] = d3.pointer(event);
+  //   let closestYearCoords = d3.least(yearsGridCoords, (x) => Math.abs(x - xm));
+  //   let closestTime = Math.ceil(x.invert(closestYearCoords));
+  //   if (timeUnit === 'year') {
+  //     setChosenYear(closestTime)
+  //   } else if (timeUnit === 'month') {
+  //     setChosenMonth(closestTime)
+  //   }
 
-  }
+  // }
     
-  // handling interactivity
-  useEffect(() => {
-    const svg = d3.select(svgRef.current);
+  // // handling interactivity
+  // useEffect(() => {
+  //   const svg = d3.select(svgRef.current);
   
-    svg
-      .on('mousemove', handleMouseMove)
-      .on('mouseleave', handleMouseLeave)
-      .on('click', handleClick);
+  //   svg
+  //     .on('mousemove', handleMouseMove)
+  //     .on('mouseleave', handleMouseLeave)
+  //     .on('click', handleClick);
   
-    return () => svg.on('mouseover', null).on('mouseleave', null);
-  }, [timeUnit])
+  //   return () => svg.on('mouseover', null).on('mouseleave', null);
+  // }, [timeUnit])
 
 
   return (
@@ -181,7 +186,6 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
       <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
       <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
     </svg>
-    {console.log(csvData[0].datetime.toLocaleString('default', { month: 'long' }))}
     </>
   )
 }

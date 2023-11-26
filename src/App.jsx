@@ -34,10 +34,10 @@ function App() {
 
 
   const yearArray = ['All Years', ...d3.range(2005, 2023)];
-  // const monthArray = ['All Months', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const monthNamesArray = ['All Months', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const monthArray = ['All Months',  ...d3.range(0, 12)];
   const severityFilterOptions = ['All Severities', 'Slight', 'Serious', 'Fatal'];
-  const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))];
+  const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))].sort();
   
 
   useEffect(() => {
@@ -108,10 +108,10 @@ function App() {
         </div>
         <div className='filter-option month'>
           <Select 
-            value={chosenMonth}
+            value={monthNamesArray[chosenMonth + 1]}
             onChange={handleMonthChange}
-            options={monthArray.map(d => ({value: d, label: d}))} 
-            placeholder={chosenMonth}>
+            options={monthNamesArray.map(d => ({value: d, label: d}))} 
+            placeholder={monthNamesArray[chosenMonth + 1]}>
           </Select>
         </div>
         <div className='filter-option severity'>
@@ -134,7 +134,8 @@ function App() {
     setChosenYear(value);
   }
   function handleMonthChange({ value }) {
-    setChosenMonth(value);
+    let monthIndex = monthNamesArray.indexOf(value);
+    setChosenMonth(monthArray[monthNamesArray.indexOf(value)]);
   }
   function handleSeverityChange({ value }) {
     setSeverityFilter(value);
