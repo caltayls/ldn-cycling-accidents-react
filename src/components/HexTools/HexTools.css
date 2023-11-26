@@ -11,11 +11,12 @@
   background-color: #fff;
   border-bottom: 1px solid #ccc;
   font-size: 12px;
+
 }
 
 
 .hexTools:hover {
-  opacity: 0.9; /* Change the opacity value when hovering */
+  opacity: 1; /* Change the opacity value when hovering */
 }
 
 .hexTools h4 {
@@ -25,4 +26,8 @@
 
 .radio-buttons .radio-button {
   display: flex;
+}
+
+input {
+  margin-left: 0;
 }

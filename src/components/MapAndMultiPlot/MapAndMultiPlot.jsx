@@ -26,7 +26,7 @@ export default function MapAndMultiPlot({ geoJsonData, csvData, csvFilterBySever
       </div>
       <div className='multi-line-plot'>
         <MultiLinePlot 
-        csvData={csvData} 
+        csvData={csvFilterBySeverity} 
         timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
         severityFilter={severityFilter}
         chosenMonth={chosenMonth} 

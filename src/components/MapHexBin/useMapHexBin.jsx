@@ -4,8 +4,8 @@ import { hexbin } from "d3-hexbin";
 import * as L from 'leaflet';
 
 
-export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius}) {
-  const [colorScaleType, setColorScaleType] = useState('Linear');
+export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, colorScaleType}) {
+  
 
   
   useEffect(() => {
@@ -61,5 +61,5 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius}) {
    
     return () => g.selectAll('.hexagons').remove()
 
-  }, [map, csvData, hexRadius])
+  }, [map, csvData, hexRadius, colorScaleType])
 }

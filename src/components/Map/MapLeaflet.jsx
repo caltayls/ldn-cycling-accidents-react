@@ -12,7 +12,11 @@ import './MapLeaflet.css'
 
 export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   const [ map, setMap ] = useState('');
+  
+  // adjust hex state 
   const [hexRadius, setHexRadius] = useState(5);
+  const [colorScaleType, setColorScaleType] = useState('Linear');
+
   const hexCoordsRef = useRef(''); // ref used to prevent rerendering
   const csvFiltered = useMemo(() => filterCSV(csvData, chosenYear, chosenMonth), [severityFilter, chosenMonth, chosenYear]);
   const mapRef = useRef(null);
@@ -47,6 +51,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     zoomInitial: zoomInitial,
     hexCoordsRef: hexCoordsRef,
     hexRadius: hexRadius,
+    colorScaleType: colorScaleType
 
   });
 
@@ -105,12 +110,12 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
         g.selectAll('.hexagons path').remove()
       };
     }
-  }, [map, csvFiltered, hexRadius]);
+  }, [map, csvFiltered, hexRadius, colorScaleType]);
  
   return (
     <>
   <div id='map-container' ref={mapRef} style={{ position: 'absolute', top: 0, left: 0, height: '400px', width: '100%', zIndex:1 }}></div>
-  <HexTools setHexRadius={setHexRadius} style={{ position: 'absolute', top: 0, right: 0, zIndex:2}}></HexTools>
+  <HexTools setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', top: 0, right: 0, zIndex:2}}></HexTools>
     
     </>
   );
