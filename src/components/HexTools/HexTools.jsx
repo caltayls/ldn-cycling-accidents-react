@@ -1,14 +1,15 @@
 import * as d3 from 'd3';
 import './HexTools.css'
+import { useEffect } from 'react';
 
 
-export default function HexTools({ hexRadius, setHexRadius, setColorScaleType, mapSvgRef }) {
+export default function HexTools({map, hexRadius, setHexRadius, setColorScaleType, style}) {
     const colorRadioChoices = ['Linear', 'Logarithmic'];
 
     function handleRadiusChange(e) {
         setHexRadius(e.target.value)
         setTimeout(() => {
-            d3.select(mapSvgRef.current).select('#map-outline').raise();
+            d3.select('#leaflet-container .outline').raise();
           }, 1);
     }
 
@@ -17,9 +18,10 @@ export default function HexTools({ hexRadius, setHexRadius, setColorScaleType, m
         setColorScaleType(e.target.value)
     }
 
+
     return (
     
-        <div className="hexTools">
+        <div className="hexTools" style={style}>
            <div className="radiusSlider">
             <h4>Hex size</h4>
             <input type="range" min="1" max="8" value={hexRadius} step={0.5}

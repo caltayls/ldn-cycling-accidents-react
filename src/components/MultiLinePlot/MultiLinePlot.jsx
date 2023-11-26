@@ -130,7 +130,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
   // // handling interactivity
 
-  function handleMouseOver() {
+  function handleMouseMove() {
 
     let [xm, ym] = d3.pointer(event);
     // borough of closest data point to pointer
@@ -140,6 +140,8 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
       let { borough, x: xCoord, y: yCoord} = d3.least(points.filter(d => d.borough === boroHover), d => Math.abs(d.x - xm));
 
       let pointerCircle = d3.select('.pointer-circle')
+        .attr('display', null)
+        .transition()  
         .attr('cx', xCoord)
         .attr('cy', yCoord)
         .style('stroke', 'red')
@@ -153,7 +155,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
   function handleMouseLeave() {
     let pointerCircle = d3.select('.pointer-circle')
-    .style('stroke', null)
+    .style('display', 'none')
 
     let toolTip = d3.select('#multi-line-tool-tip')
       .attr('display', 'none');
@@ -179,9 +181,10 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
       //hide circle
       let pointerCircle = d3.select('.pointer-circle')
-      .style('stroke', null)
+        .style('stroke', null)
+        .attr('display', 'none');
   
-      // hise tool tip
+      // hide tool tip
       let toolTip = d3.select('#multi-line-tool-tip')
         .attr('display', 'none');
 
@@ -198,13 +201,14 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
           .style('stroke-width', 2);
 
       let pointerCircle = d3.select('.pointer-circle')
-      .attr('cx', xCoord)
-      .attr('cy', yCoord)
-      .style('stroke', 'red')
+        .attr('display', null)
+        .attr('cx', xCoord)
+        .attr('cy', yCoord)
+        .style('stroke', 'red')
   
       let toolTip = d3.select('#multi-line-tool-tip')
         .attr('display', null)
-        .attr("transform", `translate(${xCoord},${yCoord})`);;
+        .attr("transform", `translate(${xCoord},${yCoord})`);
 
       setBoroHover(borough);
     }
@@ -214,7 +218,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
  
 useEffect(() => {
   const svg = d3.select(outerRef.current);
-  svg.on('click', handleClick).on('mouseover', handleMouseOver).on('mouseleave', handleMouseLeave)
+  svg.on('click', handleClick).on('mousemove', handleMouseMove).on('mouseleave', handleMouseLeave)
 
 }, [boroHover, chosenMonth, chosenYear])
 
@@ -239,6 +243,7 @@ function drawToolTipBox(text, path) {
 function toolTipGenerator(toolTipElement, x, y, xCoord, yCoord) {
   toolTipElement
     .style("display", null)
+    .transition()
     .attr("transform", `translate(${xCoord},${yCoord})`);
 
   const path = toolTipElement.selectAll("path")

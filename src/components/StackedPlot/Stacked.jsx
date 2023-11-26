@@ -1,28 +1,34 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import * as d3 from "d3";
 
-export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle }) {
+export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, inputWidth, id }) {
   const svgRef = useRef(null);
   const [hoverYear, setHoverYear] = useState('');
 
   const margin = {
     top: 30,
     bottom: 40,
-    left: 50,
+    left: 35,
     right: 20
   }
   const height = 250 - margin.top - margin.bottom;
-  const width = 600 - margin.left - margin.right;
+  const width = inputWidth - margin.left - margin.right;
+
+  const weekDays = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun',];
 
   function dateTimeParser(timeUnit, datetimeObj) {
     if (timeUnit === 'hour') {
       return datetimeObj.getHours();
     } else if (timeUnit === 'day') {
-      return datetimeObj.getDate()
+      return datetimeObj.getDate();
     } else if (timeUnit === 'month') {
       return datetimeObj.getMonth();
     } else if (timeUnit === 'year') {
       return datetimeObj.getFullYear();
+    } else if (timeUnit === 'weekday') {
+      let sunFirstIndex = datetimeObj.getDay();
+      let monFirstIndex = (sunFirstIndex + 6) % 7; // sunday is first day by default - change to mon first
+      return monFirstIndex;
     }
   }
   const groupByYearAndSeverity = useMemo(() => {
@@ -66,6 +72,8 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
     .domain(['Slight', 'Serious', 'Fatal'])
     .range(d3.schemeTableau10);
 
+
+  // vertical
   const y = useMemo(() => {
     return d3.scaleLinear()
       .domain([0, d3.max(series, d => d3.max(d, d => d[1]))]).nice()
@@ -82,13 +90,20 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   }, [timeUnit]);
 
   const xAxisGen = d3.axisBottom(x)
+    .tickSizeOuter(0)
     .tickFormat((d) => {
       if (timeUnit === 'month') {
         const monthName = new Date(2000, d).toLocaleString('default', { month: 'short' });
         return monthName
+      } else if (timeUnit === 'weekday') {
+        return weekDays[d]
       }
       return String(d)
     });
+
+  if (timeUnit === 'hour') { 
+    xAxisGen.tickValues(d3.range(0, 22, 3))
+  }
 
   // for stacked plot
   // const area = d3.area()
@@ -104,9 +119,8 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   useEffect(() => {
     let svg = d3.select(svgRef.current);
 
-    svg
-      .append('g')
-        .call(yAxisGen);
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(null, "s"))
     svg
       .append('g')
         .attr('transform', `translate(0, ${height})`)
@@ -181,12 +195,12 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
 
 
   return (
-    <>
-    <svg id="line-and-bar" height={height + margin.top + margin.bottom} width={width + margin.left + margin.right}>
-      <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
-      <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
-    </svg>
-    </>
+    <div className="svg-container" width="100%">
+      <svg id={id} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right}>
+        <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
+        <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
+      </svg>
+    </div>
   )
 }
 

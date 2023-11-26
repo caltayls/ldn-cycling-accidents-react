@@ -108,10 +108,10 @@ function App() {
         </div>
         <div className='filter-option month'>
           <Select 
-            value={monthNamesArray[chosenMonth + 1]}
+            value={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}
             onChange={handleMonthChange}
             options={monthNamesArray.map(d => ({value: d, label: d}))} 
-            placeholder={monthNamesArray[chosenMonth + 1]}>
+            placeholder={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}>
           </Select>
         </div>
         <div className='filter-option severity'>

@@ -4,7 +4,7 @@ import { hexbin } from "d3-hexbin";
 import * as L from 'leaflet';
 
 
-export default function useMapHexBin({csvData, map, hexCoordsRef}) {
+export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius}) {
   const [colorScaleType, setColorScaleType] = useState('Linear');
 
   
@@ -13,8 +13,9 @@ export default function useMapHexBin({csvData, map, hexCoordsRef}) {
     if (map) {     
       const zoomInitial = 10;
       const zoom = map.getZoom();
-      const fixedMapRadius = 5 / 2 ** zoomInitial;
+      const fixedMapRadius = hexRadius / 2 ** zoomInitial;
       const radius = fixedMapRadius * 2 ** zoom;
+      console.log(radius)
 
       const bins = hexbin()
       .radius(radius)
@@ -60,5 +61,5 @@ export default function useMapHexBin({csvData, map, hexCoordsRef}) {
    
     return () => g.selectAll('.hexagons').remove()
 
-  }, [map, csvData])
+  }, [map, csvData, hexRadius])
 }

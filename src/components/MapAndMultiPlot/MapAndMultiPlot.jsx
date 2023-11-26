@@ -9,7 +9,7 @@ export default function MapAndMultiPlot({ geoJsonData, csvData, csvFilterBySever
 
   return (
     <>
-      <div className='leaflet-map'>
+      <div className='leaflet-map' style={{position:'relative', height: 400}}>
         <MapLeaflet 
           geoJsonData={geoJsonData} 
           csvData={csvFilterBySeverity}

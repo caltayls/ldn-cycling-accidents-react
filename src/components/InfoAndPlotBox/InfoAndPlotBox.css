@@ -1,0 +1,16 @@
+.hour-and-weekday {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto;
+
+}
+
+.svg-container>#weekday-bar {
+  grid-column: 1 / 2;
+}
+
+.svg-container>#day-bar {
+  grid-column: 2 / 3;
+
+}

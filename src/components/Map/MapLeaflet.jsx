@@ -5,16 +5,21 @@ import * as L from 'leaflet';
 import useMapPolygons from '../MapPolygons/useMapPolygons';
 import useLeafletMap from '../LeafletMap/useLeafletMap';
 import useMapHexBin from '../MapHexBin/useMapHexBin';
+import HexTools from '../HexTools/HexTools';
 import { filterCSV } from '../utils/filterCSV';
 
 import './MapLeaflet.css'
 
 export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   const [ map, setMap ] = useState('');
+  const [hexRadius, setHexRadius] = useState(5);
   const hexCoordsRef = useRef(''); // ref used to prevent rerendering
   const csvFiltered = useMemo(() => filterCSV(csvData, chosenYear, chosenMonth), [severityFilter, chosenMonth, chosenYear]);
   const mapRef = useRef(null);
   const zoomInitial = 10;
+
+  console.log(hexRadius)
+
  
   // used to give map object state
   L.Map.addInitHook(function() {setMap(this)});
@@ -30,7 +35,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     className: 'fill', 
     geoJsonData: geoJsonData,
     setBoroHover: setBoroHover,
-    fill: '#bcc7b7',
+    fill: '#9ea39b',
     fillOpacity: 0.2,
     isBoroughFilterClicked: isBoroughFilterClicked, 
     setIsBoroughFilterClicked: setIsBoroughFilterClicked 
@@ -41,6 +46,8 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     map: map,
     zoomInitial: zoomInitial,
     hexCoordsRef: hexCoordsRef,
+    hexRadius: hexRadius,
+
   });
 
   useMapPolygons({
@@ -68,9 +75,10 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
 
   // path drawer and zoom handler
   useEffect(() => {
+
     if (map && hexCoordsRef.current) {
       const g = d3.select('#overlay-g');
-      const fixedMapRadius = 5 / 2 ** zoomInitial;
+      const fixedMapRadius = hexRadius / 2 ** zoomInitial;
       const onZoom = () => {
         
         g.selectAll('.polygons path').attr('d', pathCreator);
@@ -97,11 +105,13 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
         g.selectAll('.hexagons path').remove()
       };
     }
-  }, [map, csvFiltered]);
+  }, [map, csvFiltered, hexRadius]);
  
   return (
     <>
-    <div id='map-container' ref={mapRef} style={{ height: '400px', width: '100%' }}></div>
+  <div id='map-container' ref={mapRef} style={{ position: 'absolute', top: 0, left: 0, height: '400px', width: '100%', zIndex:1 }}></div>
+  <HexTools setHexRadius={setHexRadius} style={{ position: 'absolute', top: 0, right: 0, zIndex:2}}></HexTools>
+    
     </>
   );
 }
