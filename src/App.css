@@ -28,7 +28,6 @@ background: green;
 position: sticky;
 top: 0; */
 
-.grid {}
 
 .grid-item {
   border-radius: 10px; /* Adjust the border-radius for rounded corners */
@@ -119,7 +118,7 @@ top: 0; */
 
 .filter-option {
   margin-right: 30px;
-  width: 150px;
+  min-width: 150px;
   text-align: left;
   color: black;
   white-space: nowrap;
