@@ -12,7 +12,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
     left: 35,
     right: 20
   }
-  const height = 250 - margin.top - margin.bottom;
+  const height = 180 - margin.top - margin.bottom;
   const width = inputWidth - margin.left - margin.right;
 
   const weekDays = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun',];
@@ -67,7 +67,6 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
       .rangeRound([height, 0])
   }, [csvData]);
 
-  const yAxisGen = d3.axisLeft(y);
 
   const x = useMemo(() => {
     return d3.scaleBand()
@@ -106,8 +105,11 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   useEffect(() => {
     let svg = d3.select(svgRef.current);
 
+    // y axis
     svg.append("g")
-      .call(d3.axisLeft(y).ticks(null, "s"))
+      .call(d3.axisLeft(y).tickSizeOuter(0).tickValues(y.ticks(5).slice(1)).ticks(5, "s"));
+    
+    //x axis 
     svg
       .append('g')
         .attr('transform', `translate(0, ${height})`)
@@ -183,7 +185,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
 
   return (
     <div className="svg-container" width="100%">
-      <svg id={id} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right}>
+      <svg id={id} height={height + margin.top + margin.bottom} width="100%" viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
         <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
       </svg>

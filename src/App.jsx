@@ -8,6 +8,7 @@ import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
 import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
 import MapAndMultiPlot from './components/MapAndMultiPlot/MapAndMultiPlot';
 import HorizontalBar from './components/HorizontalBar/HorizontalBar';
+import StackedBar from './components/StackedBar/StackedBar';
 import { filterCSV } from './components/utils/filterCSV';
 
 import './App.css'
@@ -106,8 +107,7 @@ function App() {
         </div>
       </div>
       <div className='split-container'>
-        <div className='square'></div>
-        <div className='left-side split'>
+        <div className='left-side split grid'>
           <MapAndMultiPlot
               geoJsonData={geoJsonData}
               csvData={csvData}
@@ -121,24 +121,27 @@ function App() {
               setIsBoroughFilterClicked={setIsBoroughFilterClicked}
           ></MapAndMultiPlot>
         </div>
-        <div className='right-side split'>
-          <div className='grid-container'>
-            <div className='info-box'>
-              <InfoAndPlotBox 
-                csvData={csvFiltered} 
-                boroHover={boroHover} 
-                chosenYear={chosenYear} 
-                setChosenYear={setChosenYear}
-                chosenMonth={chosenMonth}
-                setChosenMonth={setChosenMonth}>
-              </InfoAndPlotBox>
-            </div>
-            <HorizontalBar 
+        <div className='right-side split grid'>
+          <div className='info-box grid-item'>
+            <InfoAndPlotBox 
               csvData={csvFiltered} 
-              chosenMonth={chosenMonth} 
+              boroHover={boroHover} 
               chosenYear={chosenYear} 
-              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
-            </HorizontalBar>
+              setChosenYear={setChosenYear}
+              chosenMonth={chosenMonth}
+              setChosenMonth={setChosenMonth}>
+            </InfoAndPlotBox>
+          </div>
+          <HorizontalBar 
+            plotTitle={'London Boroughs: Cycling Incidents'}
+            severityFilter={severityFilter}
+            csvData={csvFilterBySeverity} 
+            chosenMonth={chosenMonth} 
+            chosenYear={chosenYear} 
+            timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
+          </HorizontalBar>
+          <div className="grid-item">
+            <StackedBar csvData={csvData} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></StackedBar>
           </div>
         </div>
       </div>

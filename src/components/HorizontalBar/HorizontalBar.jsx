@@ -1,23 +1,25 @@
 import { useEffect, useRef, useMemo } from "react";
 import * as d3 from "d3";
 import { dateTimeParser } from "../utils/datetime_utils";
+import { filterCSV } from "../utils/filterCSV";
 
 
-export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear  }) {
+export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle }) {
 
   const gRef = useRef(null);
+  const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
 
   const margin = {
-    top: 0,
-    bottom: 10,
-    left: 30,
+    top: 20,
+    bottom: 40,
+    left: 5,
     right: 10
   }
-  const height = 400 - margin.top - margin.bottom;
+  const height = 450 - margin.top - margin.bottom;
   const width = 600 - margin.left - margin.right;
 
   const incidentCount = d3.rollup(
-      csvData, 
+    csvFiltered, 
       v => ({borough: v[0].borough, casualty_severity: v[0].casualty_severity, count: v.length}), 
       d => d.borough, 
       d => d.casualty_severity
@@ -46,12 +48,12 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   const timeSet = getTimeSet(timeUnit, incidentArray, chosenYear, chosenMonth);
   // console.log(d3.index(incidentArray, d => d.borough, d => d.casualty_severity))
 
-  const series =  useMemo(() => {
-    const stack = d3.stack()
+ 
+  const stack = d3.stack()
       .keys(['Slight', 'Serious', 'Fatal'])
       .value(([, group], key) => group.get(key)?.count || 0) // make sure conditional is included when data is missing - some groups don't have 'Fatal' count
-    return stack(d3.index(incidentArray, d => d.borough, d => d.casualty_severity));
-  }, [csvData]); 
+  const series =  stack(d3.index(incidentArray, d => d.borough, d => d.casualty_severity));
+
 
   const color = d3.scaleOrdinal()
     .domain(['Slight', 'Serious', 'Fatal'])
@@ -102,7 +104,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
     return () => svg.selectAll('*').remove()
 
 
-  }, [])
+  }, [timeUnit, severityFilter, chosenMonth, chosenYear])
 
   // // update bars when data changes
   // useEffect(() => {
@@ -117,9 +119,9 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   
 
   return (
-    <div className="horizontal-bar" width="100%">
-      <svg id={'id'} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right}>
-        {/* <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{'plotTitle'}</text> */}
+    <div className="horizontal-bar grid-item" width="100%">
+      <svg id={'id'} height="100%" width="100%" viewBox={`0 0 ${width} ${height}`}>
+        <text transform={`translate(${margin.left + 2}, ${margin.top})`}>{plotTitle}</text>
         <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
       </svg>
     </div>

@@ -8,11 +8,17 @@
   justify-content: center; 
 } */
 
+body {
+  background: rgb(225, 224, 222);
+}
+
 .split-container {
   display: flex;
-  justify-content:space-between;
-  height: 1200px;
-  margin: 1em;
+  justify-content:center;
+  height: 1100px; /*need to specify height for sticky to work*/
+  /* margin: 1em; */
+  margin: auto 5%;
+  background: rgb(225, 224, 222);
 }
 
 
@@ -22,59 +28,70 @@ background: green;
 position: sticky;
 top: 0; */
 
+.grid {}
+
+.grid-item {
+  border-radius: 10px; /* Adjust the border-radius for rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
+  padding: 20px; /* Adjust the padding inside each cell */
+  background-color: #fff; /* Background color for each cell */
+  box-sizing: border-box;
+}
+
 .left-side {
+  padding-top: 10px;
+  margin-right: 10px;
   width: 45%;
   height: 100px;
   position: sticky;
   top: 78px; /*height on select box*/
-}
-
-
-.right-side {
-
-  width: 45%;
-  height: 100px;
-
-
-
-}
-
-
-
-/* .grid-container {
   display: grid;
+  row-gap: 20px;
   justify-content: center;
-  margin: 0 2%;
-  grid-template-columns: repeat(2, 50%);
-  grid-template-rows: auto;
-  row-gap: 25px;
-  column-gap: 10px; */
-/* } */
-
-
-
+  /* background: green; */
+}
 
 .leaflet-map {
+  box-sizing: border-box;
   grid-column: 1 ;
   grid-row: 1;
-}
+  height: 380px;
+  background: #fff;
 
 
-.horizontal-bar {
-  grid-column: 2;
-  grid-row: 1;
 }
 
 .multi-line-plot {
   grid-column: 1;
   grid-row: 2;
+  background: #fff;
 }
 
 
 
+
+.right-side {
+  padding-top: 10px;
+  width: 45%;
+  height: 100px;
+  display: grid;
+  justify-content: center;
+  align-items: start;
+  row-gap: 20px;
+  /* background: blue; */
+
+}
+
+.horizontal-bar {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+
 .info-box {
-  grid-column: 2 / 3;
-  grid-row: 3 / 5;
+  width: 100%;
+  grid-column: 1;
+  grid-row: 2;
 }
 
 

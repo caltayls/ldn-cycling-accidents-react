@@ -27,12 +27,12 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
   const timeSet = getTimeSet(timeUnit, boroArray.flat(), chosenYear, chosenMonth); 
  
   const margin = {
-    top: 30,
+    top: 25,
     bottom: 20,
     left: 25,
     right: 15
   }
-  const height = 300;
+  const height = 200;
   const width = 600;
 
   // x scale and axis
@@ -227,7 +227,7 @@ useEffect(() => {
 
   return (
     <div ref={divRef} className="multi-line-plot" width="100%" style={{position:'relative'}}>
-      <svg ref={outerRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      <svg ref={outerRef} width='100%' height={height} viewBox={`0 0 ${width} ${height}`}>
         <g ref={svgRef}></g>
       </svg>
     </div>

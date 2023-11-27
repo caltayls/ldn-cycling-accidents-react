@@ -11,7 +11,7 @@ export default function StackedBar({ csvData, plotTitle }) {
     left: 50,
     right: 20
   }
-  const height = 300 - margin.top - margin.bottom;
+  const height = 200 - margin.top - margin.bottom;
   const width = 600 - margin.left - margin.right;
 
   const ageGenderMap = d3.rollup(
@@ -93,7 +93,7 @@ export default function StackedBar({ csvData, plotTitle }) {
  
   return (
     <div className="stacked-bar age-groups">
-      <svg width={width + margin.left + margin.right} height={height + margin.top + margin.bottom} viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
+      <svg width="100%" height="{height + margin.top + margin.bottom}" viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
         <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
 

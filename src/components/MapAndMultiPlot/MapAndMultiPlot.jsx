@@ -9,7 +9,7 @@ export default function MapAndMultiPlot({ geoJsonData, csvData, csvFilterBySever
 
   return (
     <>
-      <div className='leaflet-map' style={{position:'relative', height: 400}}>
+      <div className='leaflet-map grid-item' style={{position:'relative', height: 400, width:"100%"}}>
         <MapLeaflet 
           geoJsonData={geoJsonData} 
           csvData={csvFilterBySeverity}
@@ -24,7 +24,7 @@ export default function MapAndMultiPlot({ geoJsonData, csvData, csvFilterBySever
         >
         </MapLeaflet>
       </div>
-      <div className='multi-line-plot'>
+      <div className='multi-line-plot grid-item'>
         <MultiLinePlot 
         csvData={csvFilterBySeverity} 
         timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 

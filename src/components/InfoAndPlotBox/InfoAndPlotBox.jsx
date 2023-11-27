@@ -29,8 +29,9 @@ export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChos
         <StackedPlot id={'day-bar'} csvData={csvData} timeUnit='hour' plotTitle={"Accidents by Hour of Day"} inputWidth={300}></StackedPlot>
       </div>    
 
-      <StackedBar csvData={csvData} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></StackedBar>
+      
     </div> 
+
     </>  
   )
 

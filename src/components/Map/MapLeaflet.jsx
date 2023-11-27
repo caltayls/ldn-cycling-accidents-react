@@ -114,8 +114,9 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
  
   return (
     <>
-  <div id='map-container' ref={mapRef} style={{ position: 'absolute', top: 0, left: 0, height: '400px', width: '100%', zIndex:1 }}></div>
-  <HexTools setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', top: 0, right: 0, zIndex:2}}></HexTools>
+   {/* <div id='map-container' className='grid-item' ref={mapRef} style={{ position: 'absolute', top: 10, left: 10, height: '360px', width:'100%', zIndex:1, margin:0}}></div> */}
+  <HexTools setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', right: 0,  zIndex:2}}></HexTools> 
+  <div id='map-container' ref={mapRef} style={{height: '360px', width:'100%', zIndex:1, margin:0}}></div>
     
     </>
   );
