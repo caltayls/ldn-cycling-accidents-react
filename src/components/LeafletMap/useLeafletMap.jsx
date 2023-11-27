@@ -4,9 +4,6 @@ import * as d3 from 'd3';
 
 export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
 
-
-  
-
   useEffect(() => {
 
     const map = L.map(mapRef.current, {

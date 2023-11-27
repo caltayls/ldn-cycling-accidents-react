@@ -4,11 +4,13 @@ import Select from 'react-select';
 import * as d3 from "d3";
 
 import MapLeaflet from './components/Map/MapLeaflet';
-import './App.css'
 import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
 import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
 import MapAndMultiPlot from './components/MapAndMultiPlot/MapAndMultiPlot';
+import HorizontalBar from './components/HorizontalBar/HorizontalBar';
+import { filterCSV } from './components/utils/filterCSV';
 
+import './App.css'
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
   severityFilter === 'All Severities'
     ? csvData
     : csvData.filter(d => d.casualty_severity === severityFilter);
+  
+  const csvFiltered = filterCSV(csvFilterBySeverity, chosenYear, chosenMonth, boroHover)
 
 
   const yearArray = ['All Years', ...d3.range(2005, 2023)];
@@ -59,68 +63,83 @@ function App() {
 
   return (
     <>
-      
-      <MapAndMultiPlot
-        geoJsonData={geoJsonData}
-        csvData={csvData}
-        csvFilterBySeverity={csvFilterBySeverity} 
-        boroHover={boroHover}
-        setBoroHover={setBoroHover}
-        chosenMonth={chosenMonth}
-        chosenYear={chosenYear}
-        severityFilter={severityFilter}
-        isBoroughFilterClicked={isBoroughFilterClicked}
-        setIsBoroughFilterClicked={setIsBoroughFilterClicked}
-      ></MapAndMultiPlot>
-      <div className='info-box'>
-        <InfoAndPlotBox 
-          csvData={csvFilterBySeverity} 
-          boroHover={boroHover} 
-          chosenYear={chosenYear} 
-          setChosenYear={setChosenYear}
-          chosenMonth={chosenMonth}
-          setChosenMonth={setChosenMonth}>
-        </InfoAndPlotBox>
-      </div>
-
       <div className='filter-options'>
-        <div className='filter-option borough'>
-          <Select 
-              value={boroHover}
+        <div className='filter-container'>
+          <div className='filter-option borough'>
+            <Select 
+                value={boroHover}
+                isClearable={true}
+                // defaultValue={chosenYear}
+                onChange={handleBoroughChange}
+                options={boroughs.map(d => ({value: d, label: d}))} 
+                placeholder={boroHover}
+                >
+              </Select>
+          </div>
+          <div className='filter-option year'>
+            <Select 
+              value={chosenYear}
               isClearable={true}
               // defaultValue={chosenYear}
-              onChange={handleBoroughChange}
-              options={boroughs.map(d => ({value: d, label: d}))} 
-              placeholder={boroHover}
+              onChange={handleYearChange}
+              options={yearArray.map(d => ({value: d, label: d}))} 
+              placeholder={chosenYear}
               >
             </Select>
-        </div>
-        <div className='filter-option year'>
-          <Select 
-            value={chosenYear}
-            isClearable={true}
-            // defaultValue={chosenYear}
-            onChange={handleYearChange}
-            options={yearArray.map(d => ({value: d, label: d}))} 
-            placeholder={chosenYear}
-            >
-          </Select>
-        </div>
-        <div className='filter-option month'>
-          <Select 
-            value={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}
-            onChange={handleMonthChange}
-            options={monthNamesArray.map(d => ({value: d, label: d}))} 
-            placeholder={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}>
-          </Select>
-        </div>
-        <div className='filter-option severity'>
-          <Select 
-              value={severityFilter}
-              onChange={handleSeverityChange}
-              options={severityFilterOptions.map(d => ({value: d, label: d}))} 
-              placeholder={severityFilter}>
+          </div>
+          <div className='filter-option month'>
+            <Select 
+              value={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}
+              onChange={handleMonthChange}
+              options={monthNamesArray.map(d => ({value: d, label: d}))} 
+              placeholder={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}>
             </Select>
+          </div>
+          <div className='filter-option severity'>
+            <Select 
+                value={severityFilter}
+                onChange={handleSeverityChange}
+                options={severityFilterOptions.map(d => ({value: d, label: d}))} 
+                placeholder={severityFilter}>
+              </Select>
+          </div>
+        </div>
+      </div>
+      <div className='split-container'>
+        <div className='square'></div>
+        <div className='left-side split'>
+          <MapAndMultiPlot
+              geoJsonData={geoJsonData}
+              csvData={csvData}
+              csvFilterBySeverity={csvFilterBySeverity} 
+              boroHover={boroHover}
+              setBoroHover={setBoroHover}
+              chosenMonth={chosenMonth}
+              chosenYear={chosenYear}
+              severityFilter={severityFilter}
+              isBoroughFilterClicked={isBoroughFilterClicked}
+              setIsBoroughFilterClicked={setIsBoroughFilterClicked}
+          ></MapAndMultiPlot>
+        </div>
+        <div className='right-side split'>
+          <div className='grid-container'>
+            <div className='info-box'>
+              <InfoAndPlotBox 
+                csvData={csvFiltered} 
+                boroHover={boroHover} 
+                chosenYear={chosenYear} 
+                setChosenYear={setChosenYear}
+                chosenMonth={chosenMonth}
+                setChosenMonth={setChosenMonth}>
+              </InfoAndPlotBox>
+            </div>
+            <HorizontalBar 
+              csvData={csvFiltered} 
+              chosenMonth={chosenMonth} 
+              chosenYear={chosenYear} 
+              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
+            </HorizontalBar>
+          </div>
         </div>
       </div>
     </>

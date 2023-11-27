@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import * as d3 from "d3";
+import { dateTimeParser } from "../utils/datetime_utils";
 
 export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, inputWidth, id }) {
   const svgRef = useRef(null);
@@ -16,21 +17,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
 
   const weekDays = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun',];
 
-  function dateTimeParser(timeUnit, datetimeObj) {
-    if (timeUnit === 'hour') {
-      return datetimeObj.getHours();
-    } else if (timeUnit === 'day') {
-      return datetimeObj.getDate();
-    } else if (timeUnit === 'month') {
-      return datetimeObj.getMonth();
-    } else if (timeUnit === 'year') {
-      return datetimeObj.getFullYear();
-    } else if (timeUnit === 'weekday') {
-      let sunFirstIndex = datetimeObj.getDay();
-      let monFirstIndex = (sunFirstIndex + 6) % 7; // sunday is first day by default - change to mon first
-      return monFirstIndex;
-    }
-  }
+ 
   const groupByYearAndSeverity = useMemo(() => {
     return d3.rollup(
       csvData, 
