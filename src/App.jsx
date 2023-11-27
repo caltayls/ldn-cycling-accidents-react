@@ -141,7 +141,7 @@ function App() {
             timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
           </HorizontalBar>
           <div className="grid-item">
-            <StackedBar csvData={csvData} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></StackedBar>
+            <StackedBar csvData={csvFiltered} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></StackedBar>
           </div>
         </div>
       </div>
