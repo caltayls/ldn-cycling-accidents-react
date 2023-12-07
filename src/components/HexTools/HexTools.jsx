@@ -22,15 +22,18 @@ export default function HexTools({map, hexRadius, setHexRadius, setColorScaleTyp
     return (
     
         <div className="hexTools" style={style}>
+          {/* <div className='hamburger'>
+            <h4>☰</h4>
+          </div> */}
            <div className="radiusSlider">
             <h4>Hex size</h4>
             <input type="range" min="1" max="8" value={hexRadius} step={0.5}
                 onChange={handleRadiusChange}></input> 
            </div>
-           <div className='colorScaleRadio'>
+           {/* <div className='colorScaleRadio'>
             <h4> Colour scale type</h4>
             <RadioButtons handleChange={handleScaleChange} colorRadioChoices={colorRadioChoices}></RadioButtons>
-           </div>
+           </div> */}
         </div>
     )
 

@@ -1,12 +1,11 @@
 .hexTools {
-  display: grid;
-  grid-template-columns: 150px 150px;
+  display: block;
+  /* grid-template-columns: 150px 150px; */
   padding: 1%;
   margin: 1%;
   text-align: left;
-  opacity: 0.3;
 
-  border-radius: 10px; /* Adjust the border-radius for rounded corners */
+  border-radius: 5px; /* Adjust the border-radius for rounded corners */
   border: 2px solid rgba(0,0,0,0.2);
   background-color: #fff;
   border-bottom: 1px solid #ccc;
