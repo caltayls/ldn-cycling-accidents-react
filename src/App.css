@@ -14,10 +14,11 @@ body {
 
 .split-container {
   display: flex;
-  justify-content:center;
+  justify-content:start;
   height: 1100px; /*need to specify height for sticky to work*/
   /* margin: 1em; */
-  margin: auto 5%;
+  margin: auto 0;
+  margin-left: 0;
   background: rgb(225, 224, 222);
 }
 
@@ -40,7 +41,8 @@ top: 0; */
 .left-side {
   padding-top: 10px;
   margin-right: 10px;
-  width: 45%;
+  margin-left: 0;
+  width: 50%;
   height: 100px;
   position: sticky;
   top: 78px; /*height on select box*/
@@ -54,7 +56,8 @@ top: 0; */
   box-sizing: border-box;
   grid-column: 1 ;
   grid-row: 1;
-  height: 380px;
+  height: 20vh;
+  width: 100%;
   background: #fff;
 
 
@@ -64,6 +67,7 @@ top: 0; */
   grid-column: 1;
   grid-row: 2;
   background: #fff;
+  height: 40vh;
 }
 
 
@@ -71,7 +75,7 @@ top: 0; */
 
 .right-side {
   padding-top: 10px;
-  width: 45%;
+  width: 50%;
   height: 100px;
   display: grid;
   justify-content: center;
@@ -84,6 +88,7 @@ top: 0; */
 .horizontal-bar {
   grid-column: 1;
   grid-row: 1;
+  height: 80vh;
 }
 
 

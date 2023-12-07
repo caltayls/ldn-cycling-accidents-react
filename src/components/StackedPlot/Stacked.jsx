@@ -72,7 +72,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
     return d3.scaleBand()
       .domain(timeSet)
       .range([0, width])
-      .padding(0.03);
+      .padding(0.1);
   }, [timeUnit]);
 
   const xAxisGen = d3.axisBottom(x)

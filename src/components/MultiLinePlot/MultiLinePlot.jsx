@@ -3,7 +3,7 @@ import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { filterCSV } from "../utils/filterCSV"
 import * as d3 from "d3";
 // TODO: fix interactivty 
-export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
+export default function MultiLinePlot({ width, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
   const divRef = useRef(null);
   const outerRef = useRef(null);
   const svgRef = useRef(null);
@@ -32,8 +32,8 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
     left: 25,
     right: 15
   }
-  const height = 200;
-  const width = 600;
+  const height = 300;
+ 
 
   // x scale and axis
   const x = useMemo(() => {
@@ -226,11 +226,16 @@ useEffect(() => {
 }, [boroHover, chosenMonth, chosenYear])
 
   return (
-    <div ref={divRef} className="multi-line-plot" width="100%" style={{position:'relative'}}>
-      <svg ref={outerRef} width='100%' height={height} viewBox={`0 0 ${width} ${height}`}>
-        <g ref={svgRef}></g>
-      </svg>
-    </div>
+    // <div ref={divRef} className="multi-line-plot" width="100%" height="20vh">
+    <>
+    
+    <svg ref={outerRef} width='45vw' height="100%" viewBox={`0 0 ${width} ${height}`}>
+      <g ref={svgRef}></g>
+    </svg>
+    
+    </>
+
+    // {/* </div> */}
   )
 
 }

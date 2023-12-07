@@ -15,7 +15,7 @@ export default function Map({ csvData, geoJsonData, boroHover, setBoroHover, cho
   const mapSvgRef = useRef(null);
   console.log(csvData)
 
-  const width = 600;
+  const width = 800;
   const height = 400;
 
   const projection = useMemo(() => (

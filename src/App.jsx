@@ -135,7 +135,8 @@ function App() {
           <HorizontalBar 
             plotTitle={'London Boroughs: Cycling Incidents'}
             severityFilter={severityFilter}
-            csvData={csvFilterBySeverity} 
+            csvData={csvFilterBySeverity}
+            boroHover={boroHover} 
             chosenMonth={chosenMonth} 
             chosenYear={chosenYear} 
             timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>

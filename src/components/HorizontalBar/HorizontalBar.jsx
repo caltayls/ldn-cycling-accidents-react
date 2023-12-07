@@ -4,7 +4,7 @@ import { dateTimeParser } from "../utils/datetime_utils";
 import { filterCSV } from "../utils/filterCSV";
 
 
-export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle }) {
+export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle, boroHover }) {
 
   const gRef = useRef(null);
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
@@ -15,7 +15,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
     left: 5,
     right: 10
   }
-  const height = 450 - margin.top - margin.bottom;
+  const height = 650 - margin.top - margin.bottom;
   const width = 600 - margin.left - margin.right;
 
   const incidentCount = d3.rollup(
@@ -34,6 +34,8 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
     const overallCount = overallCounts.filter(x => x.borough === d.borough)[0].overallCount;
     return {...d, overallCount: overallCount}
   }).sort((a, b) => a.overallCount - b.overallCount)
+
+ 
 
   function getTimeSet(timeUnit, array, chosenYear=null, chosenMonth=null) {
     if (timeUnit === 'day') {
@@ -73,10 +75,10 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
   useEffect(() => {
     const svg = d3.select(gRef.current)
-      .append('svg')
-        .attr('height', height)
-        .attr('width', width)
-      .append('g');
+      // .append('svg')
+      //   .attr('height', height)
+      //   .attr('width', width)
+      // .append('g');
 
     // add x axis
     let xAxis = svg.append('g')
@@ -107,15 +109,40 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   }, [timeUnit, severityFilter, chosenMonth, chosenYear])
 
   // // update bars when data changes
-  // useEffect(() => {
-  //   d3.selectAll('.rankings rect')
-  //     .each(function() {
-  //       let element = d3.select(this); 
-  //       let name = element.attr('name');
-  //       let count = incidentArray.find(d => d.borough === name).count;
-  //       element.transition().attr('width', x(count));
-  //     });
-  // }, [csvData])
+  useEffect(() => {
+    // d3.selectAll('.rankings rect')
+    //   .each(function() {
+    //     let element = d3.select(this); 
+    //     let name = element.attr('name');
+    //     let count = incidentArray.find(d => d.borough === name).count;
+    //     element.transition().attr('width', x(count));
+    //   });
+
+      if (boroHover !== 'All Boroughs') {
+        const boroIncidents = incidentArray.filter(d => d.borough === boroHover)[0];
+        console.log(boroIncidents)
+
+        d3.select(gRef.current)
+          .append('g')
+            .attr('class', 'highlighted')
+          .selectAll('rect')
+          .data([boroIncidents])
+          .join('rect')
+            .attr('x', margin.left)
+            .attr("y", d => y(d.borough))
+            .attr("width", d => x(d.overallCount))
+            .attr("height", y.bandwidth())
+            .attr('stroke', 'red')
+            .attr('stroke-width', 2.5)
+            .attr('fill', 'none')
+          ;
+        
+      }
+
+
+      return () => d3.select('.highlighted').remove()
+
+  }, [boroHover, chosenMonth, chosenYear])
   
 
   return (
