@@ -12,11 +12,11 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   const margin = {
     top: 20,
     bottom: 40,
-    left: 5,
-    right: 10
+    left: 10,
+    right: 25
   }
   const height = 650 - margin.top - margin.bottom;
-  const width = 600 - margin.left - margin.right;
+  const width = 700 - margin.left - margin.right;
 
   const incidentCount = d3.rollup(
     csvFiltered, 
@@ -24,6 +24,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
       d => d.borough, 
       d => d.casualty_severity
     );
+
 
   let incidentArray = Array.from(incidentCount, ([, inner]) => [...inner.values()]).flat()
 
@@ -63,7 +64,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
   const x = d3.scaleLinear()
     .domain([0,d3.max(overallCounts, d => d.overallCount)])
-    .range([0, width]).nice();
+    .range([0, width - margin.right]).nice();
 
   const xAxisGenerator = d3.axisBottom(x)
   .tickSize(-height + margin.bottom + margin.top);
@@ -82,7 +83,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
     // add x axis
     let xAxis = svg.append('g')
-        .attr('transform', `translate(${margin.left},${height - margin.bottom})`)
+        .attr('transform', `translate(${margin.left},${height - margin.bottom + 5})`)
       .call(xAxisGenerator);
       
     xAxis.selectAll(' line')
@@ -102,10 +103,23 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
         .attr("y", d => y(d.data[0]))
         .attr("width", d => x(d[1]) - x(d[0]))
         .attr("height", y.bandwidth());
+
+
+    // add y-labels
+    svg.selectAll()
+      .data(incidentCount.keys())
+      .join('text')
+      .attr('y', d=> y(d))
+      .attr('dy', 11)
+      .attr('x', margin.left)
+      .attr('dx', 2)
+      .attr('text-anchor', 'start')
+      .attr('font-size', 10)
+      .attr('font-weight', 'bold')
+      // .attr('fill', '#3b3b3b')
+      .text(d => d)
     
     return () => svg.selectAll('*').remove()
-
-
   }, [timeUnit, severityFilter, chosenMonth, chosenYear])
 
   // // update bars when data changes
@@ -117,39 +131,31 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
     //     let count = incidentArray.find(d => d.borough === name).count;
     //     element.transition().attr('width', x(count));
     //   });
-
-      if (boroHover !== 'All Boroughs') {
-        const boroIncidents = incidentArray.filter(d => d.borough === boroHover)[0];
-        console.log(boroIncidents)
-
-        d3.select(gRef.current)
-          .append('g')
-            .attr('class', 'highlighted')
-          .selectAll('rect')
-          .data([boroIncidents])
-          .join('rect')
-            .attr('x', margin.left)
-            .attr("y", d => y(d.borough))
-            .attr("width", d => x(d.overallCount))
-            .attr("height", y.bandwidth())
-            .attr('stroke', 'red')
-            .attr('stroke-width', 2.5)
-            .attr('fill', 'none')
-          ;
-        
-      }
-
-
-      return () => d3.select('.highlighted').remove()
-
-  }, [boroHover, chosenMonth, chosenYear])
+    const boroIncidents = incidentArray.filter(d => d.borough === boroHover)[0];
+    if (boroHover !== 'All Boroughs' &&  typeof boroIncidents !== 'undefined') {
+      d3.select(gRef.current)
+        .append('g')
+          .attr('class', 'highlighted')
+        .selectAll('rect')
+        .data([boroIncidents])
+        .join('rect')
+          .attr('x', margin.left)
+          .attr("y", d => y(d.borough))
+          .attr("width", d => x(d.overallCount))
+          .attr("height", y.bandwidth())
+          .attr('stroke', 'red')
+          .attr('stroke-width', 2.5)
+          .attr('fill', 'none');
+    }
+    return () => d3.select('.highlighted').remove()
+  }, [boroHover, chosenMonth, chosenYear, severityFilter])
   
 
   return (
     <div className="horizontal-bar grid-item" width="100%">
-      <svg id={'id'} height="100%" width="100%" viewBox={`0 0 ${width} ${height}`}>
-        <text transform={`translate(${margin.left + 2}, ${margin.top})`}>{plotTitle}</text>
-        <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
+      <svg id={'id'} height="100%" width="100%" viewBox={`0 0 ${width + margin.left + margin.right} ${height}`}>
+        <text transform={`translate(${margin.left}, ${margin.top})`}>{plotTitle}</text>
+        <g ref={gRef} transform={`translate(${0}, ${margin.top})`}></g>
       </svg>
     </div>
   )

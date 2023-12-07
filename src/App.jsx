@@ -9,6 +9,7 @@ import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
 import MapAndMultiPlot from './components/MapAndMultiPlot/MapAndMultiPlot';
 import HorizontalBar from './components/HorizontalBar/HorizontalBar';
 import StackedBar from './components/StackedBar/StackedBar';
+import PopulationPyramid from './components/PopulationPyramid/PopulationPyramid';
 import { filterCSV } from './components/utils/filterCSV';
 
 import './App.css'
@@ -142,7 +143,7 @@ function App() {
             timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
           </HorizontalBar>
           <div className="grid-item">
-            <StackedBar csvData={csvFiltered} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></StackedBar>
+            <PopulationPyramid csvData={csvFiltered} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></PopulationPyramid>
           </div>
         </div>
       </div>

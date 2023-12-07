@@ -1,7 +1,5 @@
-import MultiLinePlot from "../MultiLinePlot/MultiLinePlot";
-import StackedBar from "../StackedBar/StackedBar";
 import StackedPlot from "../StackedPlot/Stacked";
-import { filterCSV } from "../utils/filterCSV";
+
 
 import './InfoAndPlotBox.css';
 

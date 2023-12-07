@@ -105,16 +105,24 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   useEffect(() => {
     let svg = d3.select(svgRef.current);
 
-    // y axis
-    svg.append("g")
-      .call(d3.axisLeft(y).tickSizeOuter(0).tickValues(y.ticks(5).slice(1)).ticks(5, "s"));
     
-    //x axis 
-    svg
+    const yAxis = svg.append("g")
+      .call(d3.axisLeft(y).tickSizeOuter(0).tickValues(y.ticks(5).slice(1)).ticks(5, "s").tickSize(-width));
+    
+    yAxis.select('.domain').remove();
+    yAxis.selectAll(' line').attr('stroke', '#D9D9D9');
+    
+    
+    const xAxis = svg
       .append('g')
         .attr('transform', `translate(0, ${height})`)
         .call(xAxisGen);
+        
+    xAxis.select('.domain').remove();
+    xAxis.selectAll(' line').attr('stroke', '#D9D9D9');
+     
 
+// data
     svg.selectAll()
       .data(series)
       .join("g")
@@ -128,13 +136,13 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
         .attr("height", d => y(d[0]) - y(d[1]))
         .attr("width", x.bandwidth())
         
-    svg.append('line')
-        .attr('id', 'follow-cursor')
-        .attr('y1', y1)
-        .attr('y2', y2)
-        .attr('x1', x1)
-        .attr('x2', x2)
-        .style('stroke', 'none')  
+    // svg.append('line')
+    //     .attr('id', 'follow-cursor')
+    //     .attr('y1', y1)
+    //     .attr('y2', y2)
+    //     .attr('x1', x1)
+    //     .attr('x2', x2)
+    //     .style('stroke', 'none')  
     
     return () => svg.selectAll("*").remove();
   }, [csvData])

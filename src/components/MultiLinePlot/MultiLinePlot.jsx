@@ -79,6 +79,40 @@ export default function MultiLinePlot({ width, boroughHighlightedRef, csvData, c
   useEffect(() => {
     const svg = d3.select(svgRef.current)
 
+
+    // add x-axis
+    const xAxis = svg.append('g')
+      .attr('transform', `translate(0, ${height - margin.bottom})`)
+      .call(xAxisGen);
+
+    xAxis.selectAll(' line')
+      .attr('stroke', '#D9D9D9'); 
+    xAxis.select('.domain').remove();
+
+    // y-axis
+    const yAxis = svg.append('g')
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(yAxisGen.tickSize(-width + margin.left + margin.right));
+
+        yAxis.selectAll(' line')
+        .attr('stroke', '#D9D9D9'); 
+      yAxis.select('.domain').remove();
+
+    // for interactivity
+    svg.append('circle')
+      .attr('class', 'pointer-circle')
+      .attr('r', 5)
+      .style('fill', 'transparent')
+
+    svg
+      .append('text')
+        .text(plotTitle)
+        // .attr('fill', 'white')
+        .attr('transform', `translate(${margin.left + 2}, ${margin.top/2})`)
+
+
+
+    
     // add paths
     svg.append('g')
         .attr('class', 'line-paths')
@@ -98,27 +132,6 @@ export default function MultiLinePlot({ width, boroughHighlightedRef, csvData, c
         .style('stroke', 'red')
         .style('stroke-width', 3)
         .style("mix-blend-mode", "normal");
-    // add x-axis
-    svg.append('g')
-      .attr('transform', `translate(0, ${height - margin.bottom})`)
-      .call(xAxisGen);
-
-    // y-axis
-    svg.append('g')
-        .attr("transform", `translate(${margin.left},0)`)
-        .call(yAxisGen);
-
-    // for interactivity
-    svg.append('circle')
-      .attr('class', 'pointer-circle')
-      .attr('r', 5)
-      .style('fill', 'transparent')
-
-    svg
-      .append('text')
-        .text(plotTitle)
-        // .attr('fill', 'white')
-        .attr('transform', `translate(${margin.left + 2}, ${margin.top/2})`)
     
 
         

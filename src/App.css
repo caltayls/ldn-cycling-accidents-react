@@ -33,9 +33,14 @@ top: 0; */
 .grid-item {
   border-radius: 10px; /* Adjust the border-radius for rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
-  padding: 20px; /* Adjust the padding inside each cell */
+  padding: 20px 0; /* Adjust the padding inside each cell */
   background-color: #fff; /* Background color for each cell */
   box-sizing: border-box;
+}
+
+.grid-item.leaflet-map {
+  padding: 0;
+  border-radius: 10px;
 }
 
 .left-side {
@@ -81,14 +86,19 @@ top: 0; */
   justify-content: center;
   align-items: start;
   row-gap: 20px;
+  
   /* background: blue; */
 
 }
 
+/* .right-side > :last-child {
+  margin-bottom: 100px;
+} */
+
 .horizontal-bar {
   grid-column: 1;
   grid-row: 1;
-  height: 80vh;
+  height: 85vh;
 }
 
 
