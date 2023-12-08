@@ -26,13 +26,13 @@ export default function PopulationPyramid({ csvData, plotTitle }) {
 const { clientHeight, clientWidth } = useContext(WindowContext);
 
 const svgWidth = clientWidth * 0.5; 
-const svgHeight = clientHeight * 0.4;
+const svgHeight = clientHeight * 0.3;
 
     const margin = {
       top: 30,
-      bottom: 40,
+      bottom: 10,
       left: 50,
-      right: 20
+      right: 30
     }
     const height = 350 - margin.top - margin.bottom;
     const width = svgWidth - margin.left - margin.right;

@@ -3,13 +3,14 @@ import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { filterCSV } from "../utils/filterCSV"
 import * as d3 from "d3";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
+import { svg } from "leaflet";
 
 
 
 export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
   const divRef = useRef(null);
   const outerRef = useRef(null);
-  const svgRef = useRef(null);
+  const gRef = useRef(null);
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
   const { clientHeight, clientWidth } = useContext(WindowContext);
   
@@ -31,14 +32,14 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
   const timeSet = getTimeSet(timeUnit, boroArray.flat(), chosenYear, chosenMonth); 
  
-  const svgWidth = clientWidth * 0.5; 
-  const svgHeight = clientHeight * 0.4;
+  const svgWidth = clientWidth * 0.4; 
+  const svgHeight = clientHeight * 0.3;
 
 
   const margin = {
     top: 30,
-    bottom: 40,
-    left: 10,
+    bottom: 30,
+    left: 20,
     right: 20
   }
   const height = svgHeight - margin.top - margin.bottom;
@@ -49,11 +50,10 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
   const x = useMemo(() => {
     return d3.scaleLinear()
       .domain(d3.extent(timeSet))
-      .range([margin.left, width-margin.right])
+      .range([margin.left, width])
   }, [timeUnit, severityFilter, clientWidth]);
 
-  console.log(x.range())
-  
+
   const xAxisGen = d3.axisBottom(x)
     .tickFormat((d) => {
       
@@ -68,7 +68,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
   // y scale and axis
   let y = d3.scaleLinear()
       .domain([0, d3.max(boroArray.flat(), d => d.count)])
-      .range([height - margin.bottom, margin.top]).nice();
+      .range([height, 0]).nice();
   let yAxisGen = d3.axisLeft(y);
 
 
@@ -89,12 +89,12 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
     .y(d => y(d.count));
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current)
+    const g = d3.select(gRef.current)
 
 
     // add x-axis
-    const xAxis = svg.append('g')
-      .attr('transform', `translate(0, ${height - margin.bottom})`)
+    const xAxis = g.append('g')
+      .attr('transform', `translate(0, ${height})`)
       .call(xAxisGen);
 
     xAxis.selectAll(' line')
@@ -102,28 +102,28 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
     xAxis.select('.domain').remove();
 
     // y-axis
-    const yAxis = svg.append('g')
+    const yAxis = g.append('g')
         .attr("transform", `translate(${margin.left},0)`)
-        .call(yAxisGen.tickSize(-width + margin.left + margin.right));
+        .call(yAxisGen.tickSize(-width + margin.left));
 
         yAxis.selectAll(' line')
         .attr('stroke', '#D9D9D9'); 
       yAxis.select('.domain').remove();
 
     // for interactivity
-    svg.append('circle')
+    g.append('circle')
       .attr('class', 'pointer-circle')
       .attr('r', 5)
       .style('fill', 'transparent')
 
-    svg
+    g
       .append('text')
         .text(plotTitle)
         // .attr('fill', 'white')
-        .attr('transform', `translate(${margin.left + 2}, ${margin.top/2})`)
+        .attr('transform', `translate(${0}, ${-margin.top/2})`)
 
     // add paths
-    svg.append('g')
+    g.append('g')
         .attr('class', 'line-paths')
         .attr('stroke-width', 1.5)
         .attr('fill', 'none')
@@ -137,21 +137,21 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
         .attr('d', lineGenerator)
         .attr('name', d => d[0].borough)
 
-    svg.select(`[name="${boroHover}"]`).raise()
+    g.select(`[name="${boroHover}"]`).raise()
         .style('stroke', 'red')
         .style('stroke-width', 3)
         .style("mix-blend-mode", "normal");
     
 
         
-    return () => svg.selectAll('*').remove();
+    return () => g.selectAll('*').remove();
   }, [timeUnit, severityFilter, chosenMonth, chosenYear, clientWidth]);
 
 
   return (
     <>
-    <svg ref={outerRef}  width={width} height="100%" viewBox={`0 0 ${width} ${height}`}>
-      <g ref={svgRef} ></g>
+    <svg ref={outerRef} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+      <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`} ></g>
     </svg>
     </>
   )

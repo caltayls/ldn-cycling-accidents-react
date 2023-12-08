@@ -19,8 +19,9 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
   console.log(clientWidth)
-  const svgWidth = clientWidth * .4; 
-  const height = 650 - margin.top - margin.bottom;
+  const svgWidth = clientWidth * .4;
+  const svgHeight = clientHeight * .8; 
+  const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
 
   const incidentCount = d3.rollup(
@@ -115,7 +116,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
       .data(incidentCount.keys())
       .join('text')
       .attr('y', d=> y(d))
-      .attr('dy', 11)
+      .attr('dy', y.bandwidth()/1.3)
       .attr('x', margin.left)
       .attr('dx', 2)
       .attr('text-anchor', 'start')

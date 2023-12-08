@@ -14,7 +14,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
 
   const margin = {
     top: 30,
-    bottom: 40,
+    bottom: 20,
     left: 10,
     right: 20
   }
