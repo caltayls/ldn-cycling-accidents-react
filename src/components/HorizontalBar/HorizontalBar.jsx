@@ -1,7 +1,8 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useContext } from "react";
 import * as d3 from "d3";
 import { dateTimeParser } from "../utils/datetime_utils";
 import { filterCSV } from "../utils/filterCSV";
+import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
 
 export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle, boroHover }) {
@@ -13,10 +14,14 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
     top: 20,
     bottom: 40,
     left: 10,
-    right: 25
+    right: 10
   }
+
+  const { clientHeight, clientWidth } = useContext(WindowContext);
+  console.log(clientWidth)
+  const svgWidth = clientWidth * .4; 
   const height = 650 - margin.top - margin.bottom;
-  const width = 700 - margin.left - margin.right;
+  const width = svgWidth - margin.left - margin.right;
 
   const incidentCount = d3.rollup(
     csvFiltered, 
@@ -120,7 +125,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
       .text(d => d)
     
     return () => svg.selectAll('*').remove()
-  }, [timeUnit, severityFilter, chosenMonth, chosenYear])
+  }, [timeUnit, severityFilter, chosenMonth, chosenYear, svgWidth])
 
   // // update bars when data changes
   useEffect(() => {
@@ -148,12 +153,12 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
           .attr('fill', 'none');
     }
     return () => d3.select('.highlighted').remove()
-  }, [boroHover, chosenMonth, chosenYear, severityFilter])
+  }, [boroHover, chosenMonth, chosenYear, severityFilter, clientWidth])
   
 
   return (
     <div className="horizontal-bar grid-item" width="100%">
-      <svg id={'id'} height="100%" width="100%" viewBox={`0 0 ${width + margin.left + margin.right} ${height}`}>
+      <svg id={'id'} height="100%" width={svgWidth*1.1} viewBox={`0 0 ${svgWidth} ${height}`}>
         <text transform={`translate(${margin.left}, ${margin.top})`}>{plotTitle}</text>
         <g ref={gRef} transform={`translate(${0}, ${margin.top})`}></g>
       </svg>

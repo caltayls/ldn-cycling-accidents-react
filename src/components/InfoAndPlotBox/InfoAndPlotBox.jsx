@@ -1,11 +1,16 @@
+import { useContext } from "react";
 import StackedPlot from "../StackedPlot/Stacked";
 
 
 import './InfoAndPlotBox.css';
+import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
 
 // TODO: Replace stacked plot with stacked bar for days of month data 
 export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChosenYear, chosenMonth, setChosenMonth }) {
+
+  
+
 
   return (
     <>
@@ -19,12 +24,12 @@ export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChos
         chosenMonth = {chosenMonth}
         setChosenMonth={setChosenMonth}
         plotTitle={"Trend in Accidents Over Time"} 
-        inputWidth ={600} 
+        svgWidthDecimal = {0.44} 
       >
       </StackedPlot>
       <div className="hour-and-weekday">
-        <StackedPlot id={'weekday-bar'} csvData={csvData} timeUnit='weekday' plotTitle={"Accidents by Day of Week"} inputWidth={300} horizontalBar={true}></StackedPlot>
-        <StackedPlot id={'day-bar'} csvData={csvData} timeUnit='hour' plotTitle={"Accidents by Hour of Day"} inputWidth={300}></StackedPlot>
+        <StackedPlot id={'weekday-bar'} csvData={csvData} timeUnit='weekday' plotTitle={"Accidents by Day of Week"} svgWidthDecimal = {0.2}  horizontalBar={true}></StackedPlot>
+        <StackedPlot id={'day-bar'} csvData={csvData} timeUnit='hour' plotTitle={"Accidents by Hour of Day"} svgWidthDecimal = {0.2} ></StackedPlot>
       </div>    
 
       

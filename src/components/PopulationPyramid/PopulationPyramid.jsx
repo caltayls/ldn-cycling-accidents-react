@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+import { WindowContext } from '../WindowContextProvider/WindowContextProvider';
 
 export default function PopulationPyramid({ csvData, plotTitle }) {
 
@@ -21,7 +22,11 @@ export default function PopulationPyramid({ csvData, plotTitle }) {
   const ageGenderArray = Array.from(ageGenderMap, ([, inner]) => [...inner.values()]).flat()
     .filter(d => (d.ageGroup !== '') && (d.sex !== 'Unknown') );
 
-console.log(ageGenderArray)
+
+const { clientHeight, clientWidth } = useContext(WindowContext);
+
+const svgWidth = clientWidth * 0.5; 
+const svgHeight = clientHeight * 0.4;
 
     const margin = {
       top: 30,
@@ -30,7 +35,7 @@ console.log(ageGenderArray)
       right: 20
     }
     const height = 350 - margin.top - margin.bottom;
-    const width = 600 - margin.left - margin.right;
+    const width = svgWidth - margin.left - margin.right;
 
   
 
@@ -122,7 +127,7 @@ console.log(ageGenderArray)
 
     return () => d3.select(gRef.current).selectAll('*').remove();
 
-  }, [csvData])
+  }, [csvData, svgWidth])
 
 
   return (

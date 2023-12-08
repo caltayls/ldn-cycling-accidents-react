@@ -3,6 +3,7 @@ import Select from 'react-select';
 
 import * as d3 from "d3";
 
+import { WindowContextProvider } from './components/WindowContextProvider/WindowContextProvider';
 import MapLeaflet from './components/Map/MapLeaflet';
 import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
 import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
@@ -65,7 +66,8 @@ function App() {
 
   return (
     <>
-      <div className='filter-options'>
+    <WindowContextProvider>
+    <div className='filter-options'>
         <div className='filter-container'>
           <div className='filter-option borough'>
             <Select 
@@ -147,6 +149,7 @@ function App() {
           </div>
         </div>
       </div>
+    </WindowContextProvider>
     </>
   );
 

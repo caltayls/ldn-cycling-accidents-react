@@ -1,19 +1,26 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import * as d3 from "d3";
 import { dateTimeParser } from "../utils/datetime_utils";
+import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
-export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, inputWidth, id }) {
+export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, svgWidthDecimal, id }) {
   const svgRef = useRef(null);
   const [hoverYear, setHoverYear] = useState('');
+  const { clientHeight, clientWidth } = useContext(WindowContext);
+
+
+  const svgWidth = clientWidth * svgWidthDecimal; 
+
 
   const margin = {
     top: 30,
     bottom: 40,
-    left: 35,
+    left: 10,
     right: 20
   }
   const height = 180 - margin.top - margin.bottom;
-  const width = inputWidth - margin.left - margin.right;
+  const width = svgWidth - margin.left - margin.right;
+  
 
   const weekDays = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun',];
 
@@ -73,7 +80,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
       .domain(timeSet)
       .range([0, width])
       .padding(0.1);
-  }, [timeUnit]);
+  }, [timeUnit, clientWidth]);
 
   const xAxisGen = d3.axisBottom(x)
     .tickSizeOuter(0)
@@ -145,55 +152,14 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
     //     .style('stroke', 'none')  
     
     return () => svg.selectAll("*").remove();
-  }, [csvData])
+  }, [csvData, clientWidth])
 
 
-  // function handleMouseMove(event) {
-    
-  //   let [xm, ] = d3.pointer(event);
-  //   let closestYear = d3.least(yearsGridCoords, (x) => Math.abs(x - xm));
-  //   let svg = d3.select(svgRef.current);
-  
-  //   svg.select('#follow-cursor')
-  //       .raise()
-  //       .style('stroke', 'red')
-  //       .attr('x1', closestYear)
-  //       .attr('x2', closestYear);
-  // }
-    
-  // function handleMouseLeave() {
-  //   let svg = d3.select(svgRef.current);
-  //   svg.select("#follow-cursor").style('stroke', null);
-  // }
-
-  // function handleClick(event) {
-  //   let [xm, ] = d3.pointer(event);
-  //   let closestYearCoords = d3.least(yearsGridCoords, (x) => Math.abs(x - xm));
-  //   let closestTime = Math.ceil(x.invert(closestYearCoords));
-  //   if (timeUnit === 'year') {
-  //     setChosenYear(closestTime)
-  //   } else if (timeUnit === 'month') {
-  //     setChosenMonth(closestTime)
-  //   }
-
-  // }
-    
-  // // handling interactivity
-  // useEffect(() => {
-  //   const svg = d3.select(svgRef.current);
-  
-  //   svg
-  //     .on('mousemove', handleMouseMove)
-  //     .on('mouseleave', handleMouseLeave)
-  //     .on('click', handleClick);
-  
-  //   return () => svg.on('mouseover', null).on('mouseleave', null);
-  // }, [timeUnit])
 
 
   return (
     <div className="svg-container" width="100%">
-      <svg id={id} height={height + margin.top + margin.bottom} width="100%" viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
+      <svg id={id} height={height + margin.top + margin.bottom} width={svgWidth*1.1} viewBox={`0 0 ${svgWidth} ${height + margin.top + margin.bottom}`}>
         <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
       </svg>
