@@ -17,11 +17,21 @@ export function dateTimeParser(timeUnit, datetimeObj) {
 }
 
 export function getTimeSet(timeUnit, array, chosenYear=null, chosenMonth=null) {
+  timeUnit = String(timeUnit);
+  
   if (timeUnit === 'day') {
     const firstDay = new Date(chosenYear, chosenMonth, 1); 
     const lastDay = new Date(chosenYear, chosenMonth + 1, 0);
     const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
     return dateArray
-  }
-  return [...new Set(array.map(d => d.datetime))];
+  } else if (timeUnit === 'hour') {
+    return d3.range(0, 24)
+  } else if (timeUnit === 'weekday') {
+    return d3.range(0, 7)
+  } else if (timeUnit === 'month') {
+    return d3.range(0, 12)
+  } else if (timeUnit === 'year') { 
+    return d3.range(2005, 2023)
+  } 
+
 }

@@ -124,7 +124,7 @@ function App() {
           ></MapAndMultiPlot>
         </div>
         <div className='right-side split grid'>
-          <div className='info-box grid-item'>
+          <div className='timedate-box grid-item'>
             <InfoAndPlotBox 
               csvData={csvFiltered} 
               boroHover={boroHover} 

@@ -4,7 +4,7 @@ import { hexbin } from "d3-hexbin";
 import * as L from 'leaflet';
 
 
-export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, colorScaleType}) {
+export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, colorScaleType, setHexDomainExtent}) {
   
 
   
@@ -36,7 +36,8 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, col
       hexCoordsRef.current = hexCoords;
 
 
-      const domainExtent = d3.extent(bins(csvData), d => d.length)
+      const domainExtent = d3.extent(bins(csvData), d => d.length);
+      setHexDomainExtent(domainExtent);
       // hex color scales
       const logScale = d3.scaleLog()
         .domain(domainExtent);

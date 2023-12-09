@@ -32,14 +32,14 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
   const timeSet = getTimeSet(timeUnit, boroArray.flat(), chosenYear, chosenMonth); 
  
-  const svgWidth = clientWidth * 0.4; 
+  const svgWidth = clientWidth * 0.49; 
   const svgHeight = clientHeight * 0.3;
 
 
   const margin = {
     top: 30,
     bottom: 30,
-    left: 20,
+    left: 15,
     right: 20
   }
   const height = svgHeight - margin.top - margin.bottom;

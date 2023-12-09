@@ -21,6 +21,10 @@
 .hexTools h4 {
   margin: 0;
   text-align: left;
+  color: rgb(85, 85, 85);
+  font: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+
 }
 
 .radio-buttons .radio-button {

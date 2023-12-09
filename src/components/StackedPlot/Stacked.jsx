@@ -1,9 +1,9 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import * as d3 from "d3";
-import { dateTimeParser } from "../utils/datetime_utils";
+import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
-export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, svgWidthDecimal, id }) {
+export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, svgWidthDecimal, id }) {
   const svgRef = useRef(null);
   const [hoverYear, setHoverYear] = useState('');
   const { clientHeight, clientWidth } = useContext(WindowContext);
@@ -16,7 +16,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
     top: 30,
     bottom: 20,
     left: 30,
-    right: 20
+    right: 0
   }
   const height = 180 - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -43,24 +43,18 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
       .sort((a, b) => a.datetime - b.datetime);
   }, [csvData]);
 
-  function getTimeSet(timeUnit, array, chosenYear=null, chosenMonth=null) {
-    if (timeUnit === 'day') {
-      const firstDay = new Date(chosenYear, chosenMonth, 1); 
-      const lastDay = new Date(chosenYear, chosenMonth + 1, 0);
-      const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
-      return dateArray
-    }
-    return [...new Set(array.map(d => d.datetime))];
-  }
+
   
   const timeSet = getTimeSet(timeUnit, severityArray, chosenYear, chosenMonth);
+  console.log(timeUnit)
+  console.log(timeSet)
   
   const series =  useMemo(() => {
     const stack = d3.stack()
       .keys(['Slight', 'Serious', 'Fatal'])
       .value(([, group], key) => group.get(key)?.count || 0) // make sure conditional is included when data is missing - some groups don't have 'Fatal' count
     return stack(d3.index(severityArray, d => d.datetime, d => d.casualty_severity));
-  }, [csvData]); 
+  }, [severityArray]); 
 
   const color = d3.scaleOrdinal()
     .domain(['Slight', 'Serious', 'Fatal'])
@@ -72,7 +66,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
     return d3.scaleLinear()
       .domain([0, d3.max(series, d => d3.max(d, d => d[1]))]).nice()
       .rangeRound([height, 0])
-  }, [csvData]);
+  }, [series, height]);
 
 
   const x = useMemo(() => {
@@ -80,7 +74,8 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
       .domain(timeSet)
       .range([0, width])
       .padding(0.1);
-  }, [timeUnit, clientWidth]);
+  }, [csvData, width]);
+
 
   const xAxisGen = d3.axisBottom(x)
     .tickSizeOuter(0)

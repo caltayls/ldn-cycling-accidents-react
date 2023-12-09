@@ -8,7 +8,7 @@ export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
   useEffect(() => {
 
     const map = L.map(mapRef.current, {
-      zoomSnap: 0.1,
+      zoomSnap: 1,
       // crs: L.CRS.Simple,
     }).setView([51.505, -0.09], zoomInitial);
 

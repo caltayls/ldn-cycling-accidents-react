@@ -9,6 +9,7 @@ import HexTools from '../HexTools/HexTools';
 import { filterCSV } from '../utils/filterCSV';
 
 import './MapLeaflet.css'
+import HexLegend from '../HexLegend/HexLegend';
 
 export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   const [ map, setMap ] = useState('');
@@ -16,6 +17,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
   // adjust hex state 
   const [hexRadius, setHexRadius] = useState(5);
   const [colorScaleType, setColorScaleType] = useState('Linear');
+  const [hexDomainExtent, setHexDomainExtent] = useState([]);
 
   const hexCoordsRef = useRef(''); // ref used to prevent rerendering
   const csvFiltered = useMemo(() => filterCSV(csvData, chosenYear, chosenMonth), [severityFilter, chosenMonth, chosenYear]);
@@ -51,7 +53,8 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     zoomInitial: zoomInitial,
     hexCoordsRef: hexCoordsRef,
     hexRadius: hexRadius,
-    colorScaleType: colorScaleType
+    colorScaleType: colorScaleType,
+    setHexDomainExtent: setHexDomainExtent,
 
   });
 
@@ -115,7 +118,8 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
   return (
     <>
    {/* <div id='map-container' className='grid-item' ref={mapRef} style={{ position: 'absolute', top: 10, left: 10, height: '360px', width:'100%', zIndex:1, margin:0}}></div> */}
-  <HexTools setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', right: 20,  zIndex:2}}></HexTools> 
+  <HexTools setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', right: 3,  zIndex:2}}></HexTools> 
+  <HexLegend domainExtent={hexDomainExtent} style={{ position: 'absolute', left: 3, bottom: 1,  zIndex:3}}></HexLegend>
   <div id='map-container' ref={mapRef} style={{height: '100%', width:'100%', zIndex:1, margin:0}}></div>
     
     </>

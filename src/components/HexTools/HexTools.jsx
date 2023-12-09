@@ -26,7 +26,7 @@ export default function HexTools({map, hexRadius, setHexRadius, setColorScaleTyp
             <h4>☰</h4>
           </div> */}
            <div className="radiusSlider">
-            <h4>Hex size</h4>
+            <h4>Hexagon size</h4>
             <input type="range" min="1" max="8" value={hexRadius} step={0.5}
                 onChange={handleRadiusChange}></input> 
            </div>

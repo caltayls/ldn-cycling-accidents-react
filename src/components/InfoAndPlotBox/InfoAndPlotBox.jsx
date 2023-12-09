@@ -18,6 +18,7 @@ export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChos
       <StackedPlot 
         id={'time-bar'}
         csvData={csvData} 
+        boroHover={boroHover}
         timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
         chosenYear={chosenYear}
         setChosenYear={setChosenYear}
@@ -27,9 +28,20 @@ export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChos
         svgWidthDecimal = {0.44} 
       >
       </StackedPlot>
+      {chosenYear === 'All Years' && (
+        <StackedPlot 
+          id={'month-bar'} 
+          csvData={csvData} 
+          boroHover={boroHover} 
+          timeUnit='month' 
+          plotTitle={"Accidents by Month"} 
+          svgWidthDecimal = {0.44}  
+          horizontalBar={true}>
+        </StackedPlot>
+      )}
       <div className="hour-and-weekday">
-        <StackedPlot id={'weekday-bar'} csvData={csvData} timeUnit='weekday' plotTitle={"Accidents by Day of Week"} svgWidthDecimal = {0.2}  horizontalBar={true}></StackedPlot>
-        <StackedPlot id={'day-bar'} csvData={csvData} timeUnit='hour' plotTitle={"Accidents by Hour of Day"} svgWidthDecimal = {0.2} ></StackedPlot>
+        <StackedPlot id={'weekday-bar'} csvData={csvData} boroHover={boroHover} timeUnit='weekday' plotTitle={"Accidents by Day of Week"} svgWidthDecimal = {0.2}  horizontalBar={true}></StackedPlot>
+        <StackedPlot id={'day-bar'} csvData={csvData} boroHover={boroHover} timeUnit='hour' plotTitle={"Accidents by Hour of Day"} svgWidthDecimal = {0.2} ></StackedPlot>
       </div>    
 
       

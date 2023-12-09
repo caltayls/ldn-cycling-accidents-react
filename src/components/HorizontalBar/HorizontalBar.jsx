@@ -13,13 +13,13 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   const margin = {
     top: 20,
     bottom: 40,
-    left: 150,
+    left: 135,
     right: 20
   }
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
   console.log(clientWidth)
-  const svgWidth = clientWidth * .4;
+  const svgWidth = clientWidth * .44;
   const svgHeight = clientHeight * .8; 
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -93,11 +93,12 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
     
     // yAxis.select('.domain').remove();
     yAxis.selectAll(' line').attr('stroke', '#D9D9D9');
+    yAxis.select('.domain').remove();
 
     // add x axis
     let xAxis = svg.append('g')
         .attr('transform', `translate(${margin.left},${height - margin.bottom + 5})`)
-      .call(xAxisGenerator);
+      .call(xAxisGenerator.ticks(5, "s"));
       
     xAxis.selectAll(' line')
       .attr('stroke', '#D9D9D9'); 
