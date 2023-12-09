@@ -11,15 +11,14 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
 
   const margin = {
-    top: 20,
-    bottom: 40,
+    top: 40,
+    bottom: 20,
     left: 135,
-    right: 20
+    right: 10
   }
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
-  console.log(clientWidth)
-  const svgWidth = clientWidth * .44;
+  const svgWidth = clientWidth * .3;
   const svgHeight = clientHeight * .8; 
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -55,9 +54,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   }
     
   const timeSet = getTimeSet(timeUnit, incidentArray, chosenYear, chosenMonth);
-  // console.log(d3.index(incidentArray, d => d.borough, d => d.casualty_severity))
 
- 
   const stack = d3.stack()
       .keys(['Slight', 'Serious', 'Fatal'])
       .value(([, group], key) => group.get(key)?.count || 0) // make sure conditional is included when data is missing - some groups don't have 'Fatal' count
@@ -70,14 +67,14 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
   const x = d3.scaleLinear()
     .domain([0,d3.max(overallCounts, d => d.overallCount)])
-    .range([0, width - margin.right]).nice();
+    .range([0, width]).nice();
 
   const xAxisGenerator = d3.axisBottom(x)
-  .tickSize(-height + margin.bottom + margin.top);
+  .tickSize(-height);
 
   const y = d3.scaleBand()
     .domain([...new Set(incidentArray.map(d => d.borough))])
-    .range([(height - margin.bottom), margin.top])
+    .range([height, 0])
     .paddingInner(0.1);
 
   useEffect(() => {
@@ -97,7 +94,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
     // add x axis
     let xAxis = svg.append('g')
-        .attr('transform', `translate(${margin.left},${height - margin.bottom + 5})`)
+        .attr('transform', `translate(${margin.left},${height+4})`)
       .call(xAxisGenerator.ticks(5, "s"));
       
     xAxis.selectAll(' line')
@@ -166,9 +163,9 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   
 
   return (
-    <div className="horizontal-bar grid-item" width="100%">
-      <svg id={'id'} height="100%" width={svgWidth*1.1} viewBox={`0 0 ${svgWidth} ${height}`}>
-        <text transform={`translate(${10}, ${margin.top - 5})`}>{plotTitle}</text>
+    <div className="horizontal-bar" width="50%">
+      <svg id={'id'} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+        <text transform={`translate(${10}, ${margin.top/3})`}>{plotTitle}</text>
         <g ref={gRef} transform={`translate(${0}, ${margin.top})`}></g>
       </svg>
     </div>

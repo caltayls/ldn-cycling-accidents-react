@@ -15,7 +15,7 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, col
       const zoom = map.getZoom();
       const fixedMapRadius = hexRadius / 2 ** zoomInitial;
       const radius = fixedMapRadius * 2 ** zoom;
-      console.log(radius)
+
 
       const bins = hexbin()
       .radius(radius)

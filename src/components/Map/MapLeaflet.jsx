@@ -24,9 +24,6 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
   const mapRef = useRef(null);
   const zoomInitial = 10;
 
-  console.log(hexRadius)
-
- 
   // used to give map object state
   L.Map.addInitHook(function() {setMap(this)});
 

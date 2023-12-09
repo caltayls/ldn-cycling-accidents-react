@@ -10,6 +10,7 @@ import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
 import MapAndMultiPlot from './components/MapAndMultiPlot/MapAndMultiPlot';
 import HorizontalBar from './components/HorizontalBar/HorizontalBar';
 import PopulationPyramid from './components/PopulationPyramid/PopulationPyramid';
+import MultiLinePlotVertical from './components/MultiLinePlot/MultiLinePlotVertical';
 import { filterCSV } from './components/utils/filterCSV';
 
 import './App.css'
@@ -124,6 +125,28 @@ function App() {
           ></MapAndMultiPlot>
         </div>
         <div className='right-side split grid'>
+        <div className='borough-data grid-item'>
+            <HorizontalBar 
+              plotTitle={'London Boroughs: Cycling Incidents'}
+              severityFilter={severityFilter}
+              csvData={csvFilterBySeverity}
+              boroHover={boroHover} 
+              chosenMonth={chosenMonth} 
+              chosenYear={chosenYear} 
+              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
+            </HorizontalBar>
+
+            <MultiLinePlotVertical 
+              csvData={csvFilterBySeverity} 
+              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
+              severityFilter={severityFilter}
+              chosenMonth={chosenMonth} 
+              chosenYear={chosenYear}
+              boroHover={boroHover}
+              setBoroHover={setBoroHover}
+              plotTitle={"Trends in Accidents Across London Boroughs Over Time"}
+            ></MultiLinePlotVertical>
+          </div>
           <div className='timedate-box grid-item'>
             <InfoAndPlotBox 
               csvData={csvFiltered} 
@@ -134,15 +157,7 @@ function App() {
               setChosenMonth={setChosenMonth}>
             </InfoAndPlotBox>
           </div>
-          <HorizontalBar 
-            plotTitle={'London Boroughs: Cycling Incidents'}
-            severityFilter={severityFilter}
-            csvData={csvFilterBySeverity}
-            boroHover={boroHover} 
-            chosenMonth={chosenMonth} 
-            chosenYear={chosenYear} 
-            timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
-          </HorizontalBar>
+
           <div className="grid-item">
             <PopulationPyramid csvData={csvFiltered} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></PopulationPyramid>
           </div>

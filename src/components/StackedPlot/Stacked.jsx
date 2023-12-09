@@ -16,7 +16,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     top: 30,
     bottom: 20,
     left: 30,
-    right: 0
+    right: 30
   }
   const height = 180 - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -46,8 +46,6 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
   
   const timeSet = getTimeSet(timeUnit, severityArray, chosenYear, chosenMonth);
-  console.log(timeUnit)
-  console.log(timeSet)
   
   const series =  useMemo(() => {
     const stack = d3.stack()
