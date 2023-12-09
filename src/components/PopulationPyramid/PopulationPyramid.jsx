@@ -30,7 +30,7 @@ const svgHeight = clientHeight * 0.3;
 
     const margin = {
       top: 30,
-      bottom: 10,
+      bottom: 15,
       left: 50,
       right: 30
     }
@@ -133,7 +133,7 @@ const svgHeight = clientHeight * 0.3;
   return (
     <>
     <svg width="100%" height="{height + margin.top + margin.bottom}" viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
-        <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
+        <text transform={`translate(${10}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
     </svg>
     </>

@@ -15,7 +15,7 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
   const margin = {
     top: 30,
     bottom: 20,
-    left: 10,
+    left: 30,
     right: 20
   }
   const height = 180 - margin.top - margin.bottom;
@@ -159,8 +159,8 @@ export default function StackedPlot({ csvData, timeUnit, chosenYear, setChosenYe
 
   return (
     <div className="svg-container" width="100%">
-      <svg id={id} height={height + margin.top + margin.bottom} width={svgWidth*1.1} viewBox={`0 0 ${svgWidth} ${height + margin.top + margin.bottom}`}>
-        <text transform={`translate(${margin.left + 2}, ${margin.top/2})`}>{plotTitle}</text>
+      <svg id={id} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
+        <text transform={`translate(${10}, ${margin.top/2})`}>{plotTitle}</text>
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
       </svg>
     </div>

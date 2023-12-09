@@ -120,7 +120,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
       .append('text')
         .text(plotTitle)
         // .attr('fill', 'white')
-        .attr('transform', `translate(${0}, ${-margin.top/2})`)
+        .attr('transform', `translate(${0}, ${-margin.top/2 - 2})`)
 
     // add paths
     g.append('g')

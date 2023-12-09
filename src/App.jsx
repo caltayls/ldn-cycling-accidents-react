@@ -9,7 +9,6 @@ import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
 import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
 import MapAndMultiPlot from './components/MapAndMultiPlot/MapAndMultiPlot';
 import HorizontalBar from './components/HorizontalBar/HorizontalBar';
-import StackedBar from './components/StackedBar/StackedBar';
 import PopulationPyramid from './components/PopulationPyramid/PopulationPyramid';
 import { filterCSV } from './components/utils/filterCSV';
 

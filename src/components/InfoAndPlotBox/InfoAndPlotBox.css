@@ -4,6 +4,7 @@
   justify-content: center;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
+  row-gap: 10px;
 
 }
 
@@ -14,5 +15,10 @@
 .svg-container>#day-bar {
   grid-column: 2 / 3;
 
+}
+
+
+#time-bar {
+  padding-bottom: 30px;
 }
 

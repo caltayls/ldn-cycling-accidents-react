@@ -13,8 +13,8 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   const margin = {
     top: 20,
     bottom: 40,
-    left: 10,
-    right: 10
+    left: 150,
+    right: 20
   }
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
@@ -87,6 +87,13 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
       //   .attr('width', width)
       // .append('g');
 
+      const yAxis = svg.append("g")
+      .attr('transform', `translate(${margin.left},${0})`)
+      .call(d3.axisLeft(y).tickSizeOuter(0));
+    
+    // yAxis.select('.domain').remove();
+    yAxis.selectAll(' line').attr('stroke', '#D9D9D9');
+
     // add x axis
     let xAxis = svg.append('g')
         .attr('transform', `translate(${margin.left},${height - margin.bottom + 5})`)
@@ -111,19 +118,19 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
         .attr("height", y.bandwidth());
 
 
-    // add y-labels
-    svg.selectAll()
-      .data(incidentCount.keys())
-      .join('text')
-      .attr('y', d=> y(d))
-      .attr('dy', y.bandwidth()/1.3)
-      .attr('x', margin.left)
-      .attr('dx', 2)
-      .attr('text-anchor', 'start')
-      .attr('font-size', 10)
-      .attr('font-weight', 'bold')
-      // .attr('fill', '#3b3b3b')
-      .text(d => d)
+    // // add y-labels
+    // svg.selectAll()
+    //   .data(incidentCount.keys())
+    //   .join('text')
+    //   .attr('y', d=> y(d))
+    //   .attr('dy', y.bandwidth()/1.3)
+    //   .attr('x', margin.left)
+    //   .attr('dx', -5)
+    //   .attr('text-anchor', 'end')
+    //   .attr('font-size', 10)
+    //   // .attr('font-weight', 'bold')
+    //   // .attr('fill', '#3b3b3b')
+    //   .text(d => d)
     
     return () => svg.selectAll('*').remove()
   }, [timeUnit, severityFilter, chosenMonth, chosenYear, svgWidth])
@@ -160,7 +167,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   return (
     <div className="horizontal-bar grid-item" width="100%">
       <svg id={'id'} height="100%" width={svgWidth*1.1} viewBox={`0 0 ${svgWidth} ${height}`}>
-        <text transform={`translate(${margin.left}, ${margin.top})`}>{plotTitle}</text>
+        <text transform={`translate(${10}, ${margin.top - 5})`}>{plotTitle}</text>
         <g ref={gRef} transform={`translate(${0}, ${margin.top})`}></g>
       </svg>
     </div>

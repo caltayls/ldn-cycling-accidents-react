@@ -40,7 +40,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     geoJsonData: geoJsonData,
     setBoroHover: setBoroHover,
     fill: '#9ea39b',
-    fillOpacity: 0.2,
+    fillOpacity: 0.1,
     isBoroughFilterClicked: isBoroughFilterClicked, 
     setIsBoroughFilterClicked: setIsBoroughFilterClicked 
   });
@@ -63,7 +63,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     setBoroHover: setBoroHover,
     fill: 'red',
     fillOpacity: 0.0,
-    stroke: 'white',
+    stroke: '#717171',
     strokeWidth: 1,
     isBoroughFilterClicked: isBoroughFilterClicked, 
     setIsBoroughFilterClicked: setIsBoroughFilterClicked,
