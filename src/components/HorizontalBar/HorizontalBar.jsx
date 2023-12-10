@@ -41,7 +41,6 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
     return {...d, overallCount: overallCount}
   }).sort((a, b) => a.overallCount - b.overallCount)
 
- 
 
   function getTimeSet(timeUnit, array, chosenYear=null, chosenMonth=null) {
     if (timeUnit === 'day') {
@@ -135,13 +134,6 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
   // // update bars when data changes
   useEffect(() => {
-    // d3.selectAll('.rankings rect')
-    //   .each(function() {
-    //     let element = d3.select(this); 
-    //     let name = element.attr('name');
-    //     let count = incidentArray.find(d => d.borough === name).count;
-    //     element.transition().attr('width', x(count));
-    //   });
     const boroIncidents = incidentArray.filter(d => d.borough === boroHover)[0];
     if (boroHover !== 'All Boroughs' &&  typeof boroIncidents !== 'undefined') {
       d3.select(gRef.current)

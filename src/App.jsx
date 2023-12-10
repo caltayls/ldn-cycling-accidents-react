@@ -22,6 +22,7 @@ function App() {
   const [geoJsonData, setGeoJsonData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [incidentCountArray, setIncidentCountArray] = useState([]);
   const [boroHover, setBoroHover] = useState('All Boroughs');
   const [isBoroughFilterClicked, setIsBoroughFilterClicked] = useState(false);
   const [chosenYear, setChosenYear] = useState('All Years');
@@ -133,7 +134,8 @@ function App() {
               boroHover={boroHover} 
               chosenMonth={chosenMonth} 
               chosenYear={chosenYear} 
-              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}>
+              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}
+              setIncidentCountArray= {setIncidentCountArray}>
             </HorizontalBar>
 
             <MultiLinePlotVertical 
