@@ -16,6 +16,7 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
     Fatal: useRef(null),
   }
 
+
  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
 
   useEffect(() => {
@@ -23,12 +24,12 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
 
     return () => d3.selectAll('.summary-line g').remove();
 
-  }, [boroHover])
+  }, [boroHover, chosenYear, chosenMonth])
 
 
   return (
     <div id='summary-box'>
-      <h1>{boroHover}</h1>
+      <h1>{boroHover}{chosenYear !== 'All Years' && ` | ${chosenYear}`}{chosenMonth !== 'All Months' && ` | ${new Date(2000, chosenMonth).toLocaleString('default', { month: 'long' })}`}</h1>
       <table>
         <thead>
           <tr>
@@ -47,7 +48,6 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
           {Object.keys(svgRefs).map(d => {
             let { boroRanks } = getArrayAndCount(d, 'All Boroughs')
             if (d === 'All') boroRanks = boroRanks.filter(d => d.casualty_severity === 'Serious');
-            console.log(boroRanks.findIndex(d => d.borough === boroHover))
             const { incidentCount } = getArrayAndCount(d, boroHover);
             const { incidentCount: allBoroIncidentCount} = getArrayAndCount(d, 'All Boroughs');
 
@@ -130,7 +130,7 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
 
   function getArrayAndCount(severity='All', borough) {
 
-    const  csvFiltered = filterCSV(csvData, 'All Years', 'All Months', borough, severity !== 'All'? severity: '');
+    const  csvFiltered = filterCSV(csvData, chosenYear, chosenMonth, borough, severity !== 'All'? severity: '');
     
     const boroObj = d3.rollup(
       csvFiltered, 

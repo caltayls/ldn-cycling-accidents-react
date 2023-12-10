@@ -23,6 +23,7 @@ export function getTimeSet(timeUnit, chosenYear=null, chosenMonth=null) {
     const firstDay = new Date(chosenYear, chosenMonth, 1); 
     const lastDay = new Date(chosenYear, chosenMonth + 1, 0);
     const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
+    console.log(dateArray)
     return dateArray
   } else if (timeUnit === 'hour') {
     return d3.range(0, 24)

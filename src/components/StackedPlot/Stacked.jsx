@@ -45,7 +45,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
 
   
-  const timeSet = getTimeSet(timeUnit, severityArray, chosenYear, chosenMonth);
+  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth);
   
   const series =  useMemo(() => {
     const stack = d3.stack()
@@ -65,7 +65,6 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
       .domain([0, d3.max(series, d => d3.max(d, d => d[1]))]).nice()
       .rangeRound([height, 0])
   }, [series, height]);
-
 
   const x = useMemo(() => {
     return d3.scaleBand()
