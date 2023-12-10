@@ -46,6 +46,8 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
   
   const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth);
+  console.log('timeSet', timeSet)
+
   
   const series =  useMemo(() => {
     const stack = d3.stack()
@@ -71,7 +73,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
       .domain(timeSet)
       .range([0, width])
       .padding(0.1);
-  }, [csvData, width]);
+  }, [csvData, width, timeSet]);
 
 
   const xAxisGen = d3.axisBottom(x)
@@ -144,7 +146,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     //     .style('stroke', 'none')  
     
     return () => svg.selectAll("*").remove();
-  }, [csvData, clientWidth])
+  }, [csvData, clientWidth, timeSet])
 
 
 

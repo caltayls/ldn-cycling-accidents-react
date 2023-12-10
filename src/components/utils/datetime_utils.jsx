@@ -20,10 +20,11 @@ export function getTimeSet(timeUnit, chosenYear=null, chosenMonth=null) {
   timeUnit = String(timeUnit);
   
   if (timeUnit === 'day') {
-    const firstDay = new Date(chosenYear, chosenMonth, 1); 
-    const lastDay = new Date(chosenYear, chosenMonth + 1, 0);
+    chosenYear = chosenYear === null? 2000: chosenYear;
+    const firstDay = new Date(2000, chosenMonth, 1); 
+    const lastDay = new Date(2000, chosenMonth + 1, 0);
     const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
-    console.log(dateArray)
+
     return dateArray
   } else if (timeUnit === 'hour') {
     return d3.range(0, 24)

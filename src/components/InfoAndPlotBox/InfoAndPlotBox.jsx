@@ -30,11 +30,11 @@ export default function InfoAndPlotBox({ csvData, boroHover, chosenYear, setChos
       </StackedPlot>
       {chosenYear === 'All Years' && (
         <StackedPlot 
-          id={'month-bar'} 
+          id={chosenMonth === 'All Months'? 'month-bar': 'day-bar'} 
           csvData={csvData} 
           boroHover={boroHover} 
-          timeUnit='month' 
-          plotTitle={"Accidents by Month"} 
+          timeUnit={chosenMonth === 'All Months'? 'month': 'day'} 
+          plotTitle={chosenMonth === 'All Months'? "Accidents by Month": "Accidents by Day"} 
           svgWidthDecimal = {0.44}  
           horizontalBar={true}>
         </StackedPlot>
