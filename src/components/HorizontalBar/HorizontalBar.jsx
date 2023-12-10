@@ -67,7 +67,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
   const x = d3.scaleLinear()
     .domain([0,d3.max(overallCounts, d => d.overallCount)])
-    .range([0, width]).nice();
+    .range([0, width]);
 
   const xAxisGenerator = d3.axisBottom(x)
   .tickSize(-height);
@@ -94,7 +94,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
     // add x axis
     let xAxis = svg.append('g')
-        .attr('transform', `translate(${margin.left},${height+4})`)
+        .attr('transform', `translate(${margin.left},${height+8})`)
       .call(xAxisGenerator.ticks(5, "s"));
       
     xAxis.selectAll(' line')

@@ -30,7 +30,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
   
 
 
-  const timeSet = getTimeSet(timeUnit, boroArray.flat(), chosenYear, chosenMonth); 
+  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
  
   const svgWidth = clientWidth * 0.49; 
   const svgHeight = clientHeight * 0.3;

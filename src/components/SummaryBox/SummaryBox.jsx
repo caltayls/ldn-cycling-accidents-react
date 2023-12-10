@@ -10,54 +10,26 @@ import './SummaryBox.css';
 export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityFilter, timeUnit, boroHover }) {
 
   const svgRefs = {
-    all: useRef(null),
-    slight: useRef(null),
-    severe: useRef(null),
-    fatal: useRef(null),
+    All: useRef(null),
+    Slight: useRef(null),
+    Serious: useRef(null),
+    Fatal: useRef(null),
   }
 
-  const csvFilteredAll = filterCSV(csvData, 'All Years', 'All Months', boroHover);
-  const csvFilteredSlight = filterCSV(csvData, 'All Years', 'All Months', boroHover, 'Slight');
-  const csvFilteredSevere = filterCSV(csvData, 'All Years', 'All Months', boroHover, 'Severe');
-  const csvFilteredFatal = filterCSV(csvData, 'All Years', 'All Months', boroHover, 'Fatal');
+
+ const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
 
 
-
-  const boroObj = d3.rollup(
-    csvFilteredAll, 
-    v=> ({
-      borough: v[0].borough, 
-      datetime: dateTimeParser(timeUnit, v[0].datetime), 
-      count: v.length
-    }), 
-    (d) => d.borough, 
-    (d) => dateTimeParser(timeUnit, d.datetime),
-  );
-
-  const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime))));
-  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
-
-  console.log(d3.sum(boroArray.flat(), d=> d.count))
 
   const width = 100;
   const height = 20;
 
-  const x = d3.scaleLinear()
-    .domain(d3.extent(timeSet))
-    .range([0, width]);
 
-  const y = d3.scaleLinear()
-    .domain(d3.extent(boroArray.flat(), d => d.count))
-    .range([height, 0])
-
-  const lineGen = d3.line()
-    .x(d => x(d.datetime))
-    .y(d => y(d.count));
 
   useEffect(() => {
-    drawLine(svgRefs.all);
+    Object.keys(svgRefs).forEach(d => drawLine(d))
 
-    // return () => svg.selectAll('*').remove();
+    return () => d3.selectAll('.summary-line g').remove();
 
   }, [boroHover])
 
@@ -67,13 +39,16 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
       <h1>{boroHover}</h1>
       <table>
         <tbody>
-          <tr>
-            <th>Total Incidents</th>
-            <td>5</td>
-            <td>      
-                <svg ref={svgRefs.all}></svg>           
-            </td>
-          </tr>
+          {Object.keys(svgRefs).map(d => {
+            const { incidentCount } = getArrayAndCount(d);
+            return (
+              <tr key={d}>
+                <th>{d} Incidents</th>
+                <td>{incidentCount}</td>
+                <td><svg ref={svgRefs[d]}></svg></td>
+              </tr>
+            )
+          })}
         </tbody>
 
 
@@ -82,15 +57,30 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
     </div>
   )
 
-  
-  function drawLine(svgRef) {
+  function drawLine(ref) {
+    const svgRef = svgRefs[ref];
+    const { boroArray } = getArrayAndCount(ref);
+
+    const x = d3.scaleLinear()
+    .domain(d3.extent(timeSet))
+    .range([0, width]);
+
+    const y = d3.scaleLinear()
+      .domain(d3.extent(boroArray.flat(), d => d.count))
+      .range([height, 0]);
+
+    const lineGen = d3.line()
+      .x(d => x(d.datetime))
+      .y(d => y(d.count));
+
     const svg = d3.select(svgRef.current)
+    .attr('class', 'summary-line')
     .attr('width', width)
     .attr('height', height);
 
     svg.append('g')
       .selectAll('path')
-      .data(boroArray)
+      .data([boroArray])
       .join('path')
         .attr('d', lineGen)
         .attr('fill', 'none')
@@ -99,12 +89,32 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
 
 
   function getArrayAndCount(severity='All') {
+
     const  csvFiltered = filterCSV(csvData, 'All Years', 'All Months', boroHover, severity !== 'All'? severity: '');
-    return (
-      {
-        csvFiltered: csvFiltered,
-        incidentCount: d3.sum(csvFiltered.flat(), d=> d.count),
-      })
-  }
+    
+    const boroObj = d3.rollup(
+      csvFiltered, 
+      v=> ({
+        borough: v[0].borough, 
+        datetime: dateTimeParser(timeUnit, v[0].datetime), 
+        count: v.length
+      }), 
+      (d) => d.borough, 
+      (d) => dateTimeParser(timeUnit, d.datetime),
+    );
+
+    const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))); 
+    const boroYears = boroArray.flat().map(d => d.datetime);
+    const yearsToAdd = timeSet.filter(d => !boroYears.includes(d) && d);
+    
+    const boroArrayToAppend = yearsToAdd.map(d => {
+      return {borough: boroHover, datetime: d, count: 0}
+    });
+    const combinedArray = [...boroArray.flat(), ...boroArrayToAppend].sort((a, b) => a.datetime - b.datetime);
+    return ({
+          boroArray: combinedArray,
+          incidentCount: d3.sum(combinedArray.flat(), d=> d.count),
+        })
+    }
   
 }

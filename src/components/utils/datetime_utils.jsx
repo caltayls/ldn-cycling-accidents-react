@@ -16,7 +16,7 @@ export function dateTimeParser(timeUnit, datetimeObj) {
   }
 }
 
-export function getTimeSet(timeUnit, array, chosenYear=null, chosenMonth=null) {
+export function getTimeSet(timeUnit, chosenYear=null, chosenMonth=null) {
   timeUnit = String(timeUnit);
   
   if (timeUnit === 'day') {

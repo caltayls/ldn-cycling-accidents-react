@@ -1,4 +1,4 @@
-export function filterCSV(csv, chosenYear, chosenMonth, boroHover='', severity='') {
+export function filterCSV(csv, chosenYear='All Years', chosenMonth='All Months', boroHover='', severity='') {
   let csvFiltered = csv;
   if (boroHover) {
   csvFiltered = boroHover === 'All Boroughs'

@@ -14,7 +14,7 @@ export default function MultiLinePlotVertical({ boroughHighlightedRef, csvData, 
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
   const { clientHeight, clientWidth } = useContext(WindowContext);
   
-  
+  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
   const boroObj = d3.rollup(
     csvFiltered, 
     v=> ({
@@ -25,22 +25,35 @@ export default function MultiLinePlotVertical({ boroughHighlightedRef, csvData, 
     (d) => d.borough, 
     (d) => dateTimeParser(timeUnit, d.datetime),
   );
+  
+  // create array from map then fill array with datetime intervals that have count of zero.
+  const boroArray = Array.from(boroObj, ([, inner]) => {
+    const boroArray = [...inner.values()];
+    const boroName = boroArray[0].borough;
+    const boroYears = boroArray.flat().map(d => d.datetime);
+    const yearsToAdd = timeSet.filter(d => !boroYears.includes(d) && d);
+    const boroArrayToAppend = yearsToAdd.map(d => {
+      return {borough: boroName, datetime: d, count: 0}
+    });
+    const combinedArray = [...boroArray.flat(), ...boroArrayToAppend]
 
-  const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime))));
+    return combinedArray.sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))
+  });
+
   
 
 
-  const timeSet = getTimeSet(timeUnit, boroArray.flat(), chosenYear, chosenMonth); 
+ 
  
   const svgWidth = clientWidth * 0.15; 
   const svgHeight = clientHeight * 0.8;
 
 
   const margin = {
-    top: 55,
-    bottom: 5,
-    left: 20,
-    right: 50
+    top: 40,
+    bottom: 15,
+    left: 5,
+    right: 60
   }
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
