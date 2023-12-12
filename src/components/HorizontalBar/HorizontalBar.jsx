@@ -8,7 +8,10 @@ import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle, boroHover }) {
 
   const gRef = useRef(null);
+  const boroughNames = new Set(csvData.map(d => d.borough));
+  console.log(boroughNames)
   const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
+  
 
   const margin = {
     top: 40,

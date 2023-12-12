@@ -12,6 +12,8 @@ export default function PopulationPyramid({ csvData, plotTitle }) {
     '75-79', '80-84', '85-89', '90-94', '95-99',  
   ];
 
+  const colorScheme = ['#9A86E9', '#3fb0b3']
+
   const ageGenderMap = d3.rollup(
     csvData, 
     v => ({ageGroup: v[0].age_binned, sex: v[0].casualty_sex, count: v.length}),
@@ -41,11 +43,11 @@ const svgHeight = clientHeight * 0.3;
 
     const xM = d3.scaleLinear()
       .domain([0, d3.max(ageGenderArray, d => d.count)])
-      .range([width / 2, 0]).nice();
+      .range([width/2 - width*.03, 0]).nice();
 
     const xF = d3.scaleLinear()
       .domain(xM.domain())
-      .range([width / 2, width]);
+      .range([width / 2 + width*.03, width]);
 
     const y = d3.scaleBand()
       .domain(ageGroups)
@@ -77,15 +79,15 @@ const svgHeight = clientHeight * 0.3;
         .call(g => g.selectAll(".tick:first-of-type").remove());
   
   
-      const yAxis = g
-          .append('g')
-         .attr("transform", `translate(${0},0)`)
-        .call(d3.axisLeft(y).tickSizeOuter(0))
-        .call(g => g.selectAll(".domain").remove());
+      // const yAxis = g
+      //     .append('g')
+      //    .attr("transform", `translate(${width/2 + width*.025},0)`)
+      //   .call(d3.axisLeft(y).tickSize(0))
+      //   .call(g => g.selectAll(".domain").remove());
 
 
-        yAxis.selectAll(' line')
-        .attr('stroke', '#D9D9D9'); 
+        // yAxis.selectAll(' line')
+        // .attr('stroke', '#D9D9D9'); 
 
         xAxisF.selectAll(' line')
         .attr('stroke', '#D9D9D9'); 
@@ -117,12 +119,26 @@ const svgHeight = clientHeight * 0.3;
     .selectAll("rect")
     .data(ageGenderArray)
     .join("rect")
-      .attr("fill", d => d3.schemeSet1[d.sex === "Male" ? 1 : 0])
+      .attr("fill", d => colorScheme[d.sex === "Male" ? 1 : 0])
       .attr("x", d => d.sex === "Male" ? xM(d.count) : xF(0))
       .attr("y", d => y(d.ageGroup))
       .attr("width", d => d.sex === "Male" ? xM(0) - xM(d.count) : xF(d.count) - xF(0))
       .attr("height", y.bandwidth());
-  
+
+
+    g.append('g')
+      .selectAll('text')
+      .data(ageGroups)
+      .join('text')
+        .attr('x', width/2)
+        .attr('y', d => y(d))
+        .attr('dy', 11)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 10)
+        .text(d => d).raise()
+
+
+
 
 
     return () => d3.select(gRef.current).selectAll('*').remove();

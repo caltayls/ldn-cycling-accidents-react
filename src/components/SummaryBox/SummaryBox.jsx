@@ -28,45 +28,45 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
 
 
   return (
-    <div id='summary-box'>
+    <>
       <h1>{boroHover}{chosenYear !== 'All Years' && ` | ${chosenYear}`}{chosenMonth !== 'All Months' && ` | ${new Date(2000, chosenMonth).toLocaleString('default', { month: 'long' })}`}</h1>
-      <table>
-        <thead>
-          <tr>
-            <th className='align-left'>Incident Type</th>
-            <th>Count</th>
-            <th >Trend</th>
-            {boroHover !== 'All Boroughs' && (            
-              <>
-              <th>Rank</th>
-              <th>% of Incident Type </th>
-              </>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {Object.keys(svgRefs).map(d => {
-            let { boroRanks } = getArrayAndCount(d, 'All Boroughs')
-            if (d === 'All') boroRanks = boroRanks.filter(d => d.casualty_severity === 'Serious');
-            const { incidentCount } = getArrayAndCount(d, boroHover);
-            const { incidentCount: allBoroIncidentCount} = getArrayAndCount(d, 'All Boroughs');
+      <div className='table-container'>
+        <table>
+          <thead>
+            <tr>
+              <th className='align-left'>Incident Type</th>
+              <th>Count</th>
+              <th >Trend</th>
+              {boroHover !== 'All Boroughs' && (            
+                <>
+                <th>Rank</th>
+                <th>% of Incident Type </th>
+                </>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(svgRefs).map(d => {
+              let { boroRanks } = getArrayAndCount(d, 'All Boroughs')
+              if (d === 'All') boroRanks = boroRanks.filter(d => d.casualty_severity === 'Serious');
+              const { incidentCount } = getArrayAndCount(d, boroHover);
+              const { incidentCount: allBoroIncidentCount} = getArrayAndCount(d, 'All Boroughs');
 
-            return (
-              <tr key={d}>
-                <th>{d}</th>
-                <td>{incidentCount.toLocaleString()}</td>
-                <td><svg ref={svgRefs[d]}></svg></td>
-                <td>{boroHover !== 'All Boroughs' && `#${boroRanks.findIndex(d => d.borough === boroHover)+1}`}</td>
-                <td>{boroHover !== 'All Boroughs' && `${Math.round(incidentCount/allBoroIncidentCount*100*10)/10}%`}</td>
-              </tr>
-            )
-          })}
-        </tbody>
+              return (
+                <tr key={d}>
+                  <th>{d}</th>
+                  <td>{incidentCount.toLocaleString()}</td>
+                  <td><svg ref={svgRefs[d]}></svg></td>
+                  <td>{boroHover !== 'All Boroughs' && `#${boroRanks.findIndex(d => d.borough === boroHover)+1}`}</td>
+                  <td>{boroHover !== 'All Boroughs' && `${Math.round(incidentCount/allBoroIncidentCount*100*10)/10}%`}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
 
-
-      </table>
-
-    </div>
+    </>
   )
 
   function drawLine(ref) {

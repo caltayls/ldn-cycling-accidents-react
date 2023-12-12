@@ -39,16 +39,16 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, col
       const domainExtent = d3.extent(bins(csvData), d => d.length);
       setHexDomainExtent(domainExtent);
       // hex color scales
-      const logScale = d3.scaleLog()
-        .domain(domainExtent);
-      const linearScale = d3.scaleLinear()
-        .domain(domainExtent);
-      const colorScale = d3.scaleSequential(d => d3.interpolateViridis(
-        colorScaleType === 'Linear'? linearScale(d): logScale(d)
-      ));
+
+
+
+      const quantColorScale = d3.scaleQuantize()
+        .domain(domainExtent)
+        .range(['rgb(255, 240, 217)', 'rgb(179, 233, 180)', 'rgb(65, 182, 196)', 'rgb(34, 94, 168)', 'rgb(8, 29, 88)']);
     
       g.append("g")
           .attr('class', 'hexagons')
+          .style('opacity', 1)  
           // .attr("class", "hexagon")//.raise()
         .selectAll("path")
         .data(bins(csvData))
@@ -56,8 +56,8 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, col
           .attr('class', 'hex')
           .attr('size', d => d.length)
           // .attr("d", d => `M${d.x},${d.y}${bins.hexagon()}`)
-          .style('fill', d => colorScale(d.length))
-          .style('fill-opacity', 0.5);  
+          .style('fill', d => quantColorScale(d.length))
+
     }
    
     return () => g.selectAll('.hexagons').remove()

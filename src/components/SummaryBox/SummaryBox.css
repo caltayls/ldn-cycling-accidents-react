@@ -4,12 +4,19 @@
 } */
 .summary.grid-item {
   padding: 15px;
-
 }
+
 .summary.grid-item h1 {
   margin: 0;
-  padding: 0 0 20px 0;
+  padding: 0;
   font-size: 35px;
+  
+}
+
+.table-container {
+  height: 80%;
+  display: flex;
+  justify-content: center;
   
 }
 table {

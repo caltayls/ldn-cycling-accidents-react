@@ -46,7 +46,6 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
   
   const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth);
-  console.log('timeSet', timeSet)
 
   
   const series =  useMemo(() => {

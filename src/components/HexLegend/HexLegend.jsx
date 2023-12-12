@@ -17,46 +17,39 @@ export default function HexLegend({ domainExtent, style }) {
     const legendRef = useRef(null);
   
 
-    
-    const legendScale = useMemo(() => {
-      return d3.scaleLinear()
-      .domain([0, domainExtent[1]])
-      .range([0, width]).nice();
+    const quantColorScale = d3.scaleQuantize()
+      .domain(domainExtent)
+      .range(['rgb(255, 240, 217)', 'rgb(179, 233, 180)', 'rgb(65, 182, 196)', 'rgb(34, 94, 168)', 'rgb(8, 29, 88)']);
 
-    }, [domainExtent]); 
+    const legendLabels = [domainExtent[0], ...quantColorScale.thresholds()];
+    const x = d3.scaleLinear(d3.extent(domainExtent), [0, width]);
+    const legendAxis = d3.axisBottom(x);
 
-    
-    const legendRange = useMemo(() => (d3.range(0.001, legendScale.domain()[1], legendScale.domain()[1]/15)), [domainExtent]); 
 
-  
-    const legendAxis = d3.axisBottom(legendScale);
 
-    const colorScale = d3.scaleSequential(d => d3.interpolateViridis(d3.scaleLinear()
-    .domain(domainExtent)(d)));
-    
     useEffect (() => {
 
-        const svg = d3.select(legendRef.current)
-                .attr('height', height + margin.top + margin.bottom)
-                .attr('width', width + margin.left + margin.right)
-            .append('g');
+      const svg = d3.select(legendRef.current)
+          .attr('height', height + margin.top + margin.bottom)
+          .attr('width', width + margin.left + margin.right)
+          .append('g');
     
       const axis = svg
         .append('g')
         .call(legendAxis)
           .attr('transform', `translate(${margin.left+1}, ${20 +margin.bottom})`)
 
-        axis.selectAll('text').attr('font-weight', 'bold')
+      axis.selectAll('text').attr('font-weight', 'bold')
         
     
       svg
         .selectAll('rect')
-        .data(legendRange)
+        .data(legendLabels)
         .join('rect')
-          .attr('x', d => legendScale(d))
-          .attr('width', 20)
+          .attr('x', d => x(d))
+          .attr('width', 55)
           .attr('height', 20)
-          .attr('fill', d => colorScale(d))
+          .attr('fill', d => quantColorScale(d))
           .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
         return () => d3.select(legendRef.current).selectAll('*').remove()
