@@ -7,7 +7,7 @@ import { svg } from "leaflet";
 
 
 
-export default function MultiLinePlotVertical({ widthDecimal, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
+export default function MultiLinePlotVertical({ widthDecimal, heightDecimal, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, boroHover, setBoroHover}) {
   const divRef = useRef(null);
   const outerRef = useRef(null);
   const gRef = useRef(null);
@@ -40,17 +40,12 @@ export default function MultiLinePlotVertical({ widthDecimal, boroughHighlighted
     return combinedArray.sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))
   });
 
-  
-
-
- 
- 
   const svgWidth = clientWidth * widthDecimal; 
-  const svgHeight = clientHeight * 0.8;
+  const svgHeight = clientHeight * heightDecimal;
 
 
   const margin = {
-    top: 40,
+    top: 17,
     bottom: 15,
     left: 15,
     right: 35

@@ -19,7 +19,7 @@ export default function MapAndSummary({ geoJsonData, csvData, csvFilterBySeverit
           chosenMonth={chosenMonth} 
           chosenYear={chosenYear}
           boroHover={boroHover}
-        ></SummaryBox>
+        />
       </div>
       <div className='leaflet-map grid-item'>
         <MapLeaflet 
@@ -33,10 +33,8 @@ export default function MapAndSummary({ geoJsonData, csvData, csvFilterBySeverit
           isBoroughFilterClicked={isBoroughFilterClicked}
           setIsBoroughFilterClicked={setIsBoroughFilterClicked}
           boroughHighlightedRef={boroughHighlightedRef}
-        >
-        </MapLeaflet>
+        />
       </div>
-
     </>
   )
 }

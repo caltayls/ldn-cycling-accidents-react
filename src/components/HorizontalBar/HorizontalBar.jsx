@@ -5,7 +5,7 @@ import { filterCSV } from "../utils/filterCSV";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
 
-export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle, boroHover, widthDecimal }) {
+export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, boroHover, widthDecimal, heightDecimal }) {
 
   const gRef = useRef(null);
   const boroughNames = new Set(csvData.map(d => d.borough));
@@ -14,7 +14,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   
 
   const margin = {
-    top: 40,
+    top: 17,
     bottom: 20,
     left: 135,
     right: 10
@@ -22,7 +22,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
   const svgWidth = clientWidth * widthDecimal;
-  const svgHeight = clientHeight * .8; 
+  const svgHeight = clientHeight * heightDecimal; 
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
 
@@ -145,7 +145,6 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   return (
     <div className="horizontal-bar" width="50%">
       <svg id={'id'} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-        <text transform={`translate(${10}, ${margin.top/3})`}>{plotTitle}</text>
         <g ref={gRef} transform={`translate(${0}, ${margin.top})`}></g>
       </svg>
     </div>

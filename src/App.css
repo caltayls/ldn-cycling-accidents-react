@@ -2,6 +2,20 @@ body {
   background: rgb(225, 224, 222);
 }
 
+.filter-options {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  background-color: #fff;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
 .split-container {
   display: flex;
   justify-content:start;
@@ -18,7 +32,7 @@ body {
   width: 50%;
   height: 100px;
   position: sticky;
-  top: 78px; /*height of select box*/
+  top: 78px; /*height of filter header*/
   display: grid;
   row-gap: 10px;
   justify-content: center;
@@ -45,16 +59,22 @@ body {
   box-sizing: border-box;
 }
 
-.grid-item.borough-data {
-  display: flex;
-}
-
 .grid-item.datetime {
   height: 85vh;
 }
 
 .grid-item.leaflet-map {
+  position: relative;
   padding: 0;
+  width: 48vw;
+  height: 52vh;
+  
+}
+
+.grid-item.summary {
+  padding: 15px;
+  width: 48vw;
+  height: 35vh;
 }
 
 
