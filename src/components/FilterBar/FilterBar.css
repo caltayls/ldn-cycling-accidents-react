@@ -1,0 +1,33 @@
+/* filter styles */
+
+.filter-options {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  background-color: #fff;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.filter-container {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  }
+
+.filter-option {
+  margin-right: 30px;
+  min-width: 200px;
+  text-align: left;
+  color: black;
+  white-space: nowrap;
+}
+
+.filter-option.borough {
+  min-width: 250px;
+}

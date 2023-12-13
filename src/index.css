@@ -7,6 +7,8 @@
   --scrollbar-width: 8px;
   --scrollbar-thumb-color: #b6b6b6;
   --scrollbar-thumb-hover-color: #979797;
+  /* overflow: hidden;
+  scrollbar-gutter: auto; */
 
   /* color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -61,10 +63,11 @@
 
 
 body {
-  /* margin: 0 auto; */
+  margin: 0 0;
   min-width: 320px;
   /* min-height: 100vh;  */
   margin-top: 78px; /*height on select box*/
+  /* overflow: auto; */
 }
 
 h1 {

@@ -26,7 +26,6 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
 
   }, [boroHover, chosenYear, chosenMonth])
 
-
   return (
     <>
       <h1>{boroHover}{chosenYear !== 'All Years' && ` | ${chosenYear}`}{chosenMonth !== 'All Months' && ` | ${new Date(2000, chosenMonth).toLocaleString('default', { month: 'long' })}`}</h1>

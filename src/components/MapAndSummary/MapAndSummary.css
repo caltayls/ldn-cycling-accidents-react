@@ -1,0 +1,10 @@
+.summary {
+  height: 33vh;
+  width: 100%;
+}
+
+.leaflet-map {
+  position: relative;
+  height: 50vh;
+  width: 48vw;
+}

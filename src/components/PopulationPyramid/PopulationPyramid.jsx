@@ -12,7 +12,7 @@ export default function PopulationPyramid({ csvData, plotTitle }) {
     '75-79', '80-84', '85-89', '90-94', '95-99',  
   ];
 
-  const colorScheme = ['#9A86E9', '#3fb0b3']
+  const colorScheme = ['#3fb0b3', '#9A86E9']
 
   const ageGenderMap = d3.rollup(
     csvData, 

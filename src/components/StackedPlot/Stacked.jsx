@@ -10,6 +10,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
 
   const svgWidth = clientWidth * svgWidthDecimal; 
+  const svgHeight = clientHeight * 0.22;
 
 
   const margin = {
@@ -18,7 +19,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     left: 30,
     right: 30
   }
-  const height = 180 - margin.top - margin.bottom;
+  const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
   
 
@@ -145,8 +146,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     //     .style('stroke', 'none')  
     
     return () => svg.selectAll("*").remove();
-  }, [csvData, clientWidth, timeSet])
-
+  }, [clientWidth, timeUnit, csvData])
 
 
 

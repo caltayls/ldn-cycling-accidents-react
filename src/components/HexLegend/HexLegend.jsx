@@ -39,7 +39,9 @@ export default function HexLegend({ domainExtent, style }) {
         .call(legendAxis)
           .attr('transform', `translate(${margin.left+1}, ${20 +margin.bottom})`)
 
-      axis.selectAll('text').attr('font-weight', 'bold')
+      axis.selectAll('text').attr('font-weight', '400');
+
+      axis.select('.domain').attr('stroke-width', 0.8)
         
     
       svg

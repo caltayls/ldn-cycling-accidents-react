@@ -5,7 +5,7 @@ import { filterCSV } from "../utils/filterCSV";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
 
-export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle, boroHover }) {
+export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, plotTitle, boroHover, widthDecimal }) {
 
   const gRef = useRef(null);
   const boroughNames = new Set(csvData.map(d => d.borough));
@@ -21,7 +21,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   }
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
-  const svgWidth = clientWidth * .3;
+  const svgWidth = clientWidth * widthDecimal;
   const svgHeight = clientHeight * .8; 
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -117,21 +117,6 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
         .attr("width", d => x(d[1]) - x(d[0]))
         .attr("height", y.bandwidth());
 
-
-    // // add y-labels
-    // svg.selectAll()
-    //   .data(incidentCount.keys())
-    //   .join('text')
-    //   .attr('y', d=> y(d))
-    //   .attr('dy', y.bandwidth()/1.3)
-    //   .attr('x', margin.left)
-    //   .attr('dx', -5)
-    //   .attr('text-anchor', 'end')
-    //   .attr('font-size', 10)
-    //   // .attr('font-weight', 'bold')
-    //   // .attr('fill', '#3b3b3b')
-    //   .text(d => d)
-    
     return () => svg.selectAll('*').remove()
   }, [timeUnit, severityFilter, chosenMonth, chosenYear, svgWidth])
 

@@ -1,28 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Select from 'react-select';
-
+import { useState, useEffect } from 'react';
 import * as d3 from "d3";
+import './App.css';
 
 import { WindowContextProvider } from './components/WindowContextProvider/WindowContextProvider';
-import MapLeaflet from './components/Map/MapLeaflet';
-import InfoAndPlotBox from './components/InfoAndPlotBox/InfoAndPlotBox';
-import MultiLinePlot from './components/MultiLinePlot/MultiLinePlot';
-import MapAndMultiPlot from './components/MapAndMultiPlot/MapAndMultiPlot';
-import HorizontalBar from './components/HorizontalBar/HorizontalBar';
+import DatetimeContainer from './components/DatetimeContainer/DatetimeContainer';
+import MapAndSummary from './components/MapAndSummary/MapAndSummary';
 import PopulationPyramid from './components/PopulationPyramid/PopulationPyramid';
-import MultiLinePlotVertical from './components/MultiLinePlot/MultiLinePlotVertical';
+import BoroughContainer from './components/BoroughContainer/BoroughContainer';
 import { filterCSV } from './components/utils/filterCSV';
-
-import './App.css'
-
+import FilterBar from './components/FilterBar/FilterBar';
 
 function App() {
   const [csvData, setCsvData] = useState([]);
-
   const [geoJsonData, setGeoJsonData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [incidentCountArray, setIncidentCountArray] = useState([]);
   const [boroHover, setBoroHover] = useState('All Boroughs');
   const [isBoroughFilterClicked, setIsBoroughFilterClicked] = useState(false);
   const [chosenYear, setChosenYear] = useState('All Years');
@@ -40,23 +31,11 @@ function App() {
   
   const csvFiltered = filterCSV(csvFilterBySeverity, chosenYear, chosenMonth, boroHover)
 
-
-  const yearArray = ['All Years', ...d3.range(2005, 2023)];
-  const monthNamesArray = ['All Months', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const monthArray = ['All Months',  ...d3.range(0, 12)];
-  const severityFilterOptions = ['All Severities', 'Slight', 'Serious', 'Fatal'];
-  const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))].sort();
-  
-
   useEffect(() => {
-
     Promise.all([
-      // d3.csv('src/assets/final_cycling_data_v2.csv', formatCSV),
       d3.csv(urlBase + 'data/final_cycling_data_v2.csv', formatCSV),
-      // d3.json('src/assets/ldn_boro_geojson.json')
       d3.json(urlBase + 'data/ldn_boro_geojson.json')
     ]).then(([csvD, geoJ]) => {
-    
       setGeoJsonData(geoJ);
       setCsvData(csvD);
       setIsLoading(false);
@@ -64,55 +43,26 @@ function App() {
   }, []);
 
   if (isLoading) return <></>;
-
   return (
     <>
     <WindowContextProvider>
-    <div className='filter-options'>
-        <div className='filter-container'>
-          <div className='filter-option borough'>
-            <Select 
-                value={boroHover}
-                isClearable={true}
-                // defaultValue={chosenYear}
-                onChange={handleBoroughChange}
-                options={boroughs.map(d => ({value: d, label: d}))} 
-                placeholder={boroHover}
-                >
-              </Select>
-          </div>
-          <div className='filter-option year'>
-            <Select 
-              value={chosenYear}
-              isClearable={true}
-              // defaultValue={chosenYear}
-              onChange={handleYearChange}
-              options={yearArray.map(d => ({value: d, label: d}))} 
-              placeholder={chosenYear}
-              >
-            </Select>
-          </div>
-          <div className='filter-option month'>
-            <Select 
-              value={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}
-              onChange={handleMonthChange}
-              options={monthNamesArray.map(d => ({value: d, label: d}))} 
-              placeholder={ chosenMonth === 'All Months'? chosenMonth: monthNamesArray[chosenMonth + 1]}>
-            </Select>
-          </div>
-          <div className='filter-option severity'>
-            <Select 
-                value={severityFilter}
-                onChange={handleSeverityChange}
-                options={severityFilterOptions.map(d => ({value: d, label: d}))} 
-                placeholder={severityFilter}>
-              </Select>
-          </div>
-        </div>
-      </div>
-      <div className='split-container'>
-        <div className='left-side split grid'>
-          <MapAndMultiPlot
+      <header className='filter-options'>
+        <FilterBar
+          csvData={csvData}
+          boroHover={boroHover}
+          setBoroHover={setBoroHover}
+          setIsBoroughFilterClicked={setIsBoroughFilterClicked}
+          chosenYear={chosenYear}
+          setChosenYear={setChosenYear}
+          chosenMonth={chosenMonth}
+          setChosenMonth={setChosenMonth}
+          severityFilter={severityFilter}
+          setSeverityFilter={setSeverityFilter}
+        />
+      </header>
+      <section className='split-container'>
+        <div className='left-side split-grid'>
+          <MapAndSummary
               geoJsonData={geoJsonData}
               csvData={csvData}
               csvFilterBySeverity={csvFilterBySeverity} 
@@ -123,69 +73,39 @@ function App() {
               severityFilter={severityFilter}
               isBoroughFilterClicked={isBoroughFilterClicked}
               setIsBoroughFilterClicked={setIsBoroughFilterClicked}
-          ></MapAndMultiPlot>
+          ></MapAndSummary>
         </div>
-        <div className='right-side split grid'>
-        <div className='borough-data grid-item'>
-            <HorizontalBar 
-              plotTitle={'London Boroughs: Cycling Incidents'}
-              severityFilter={severityFilter}
-              csvData={csvFilterBySeverity}
-              boroHover={boroHover} 
-              chosenMonth={chosenMonth} 
-              chosenYear={chosenYear} 
-              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}
-              setIncidentCountArray= {setIncidentCountArray}>
-            </HorizontalBar>
-
-            <MultiLinePlotVertical 
-              csvData={csvFilterBySeverity} 
-              timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
-              severityFilter={severityFilter}
-              chosenMonth={chosenMonth} 
-              chosenYear={chosenYear}
-              boroHover={boroHover}
-              setBoroHover={setBoroHover}
-              plotTitle={"Trends in Accidents Across London Boroughs Over Time"}
-            ></MultiLinePlotVertical>
-          </div>
-          <div className='timedate-box grid-item'>
-            <InfoAndPlotBox 
+        <div className='right-side split-grid'>
+          <BoroughContainer
+            severityFilter={severityFilter}
+            csvFilterBySeverity={csvFilterBySeverity}
+            boroHover={boroHover}
+            setBoroHover={setBoroHover}
+            chosenYear={chosenYear}
+            chosenMonth={chosenMonth}
+          />
+          <div className='datetime grid-item'>
+            <DatetimeContainer 
               csvData={csvFiltered} 
               boroHover={boroHover} 
               chosenYear={chosenYear} 
               setChosenYear={setChosenYear}
               chosenMonth={chosenMonth}
-              setChosenMonth={setChosenMonth}>
-            </InfoAndPlotBox>
+              setChosenMonth={setChosenMonth}
+            />
           </div>
-
-          <div className="grid-item">
-            <PopulationPyramid csvData={csvFiltered} plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}></PopulationPyramid>
+          <div className="population-pyramid grid-item">
+            <PopulationPyramid 
+              csvData={csvFiltered} 
+              plotTitle={"Distribution of Cycling Accidents by Age Group and Gender"}
+            />
           </div>
         </div>
-      </div>
+      </section>
     </WindowContextProvider>
     </>
   );
-
-  function handleBoroughChange({ value }) {
-    setBoroHover(value);
-    setIsBoroughFilterClicked(true);
-  }
-  function handleYearChange({ value }) {
-    setChosenYear(value);
-  }
-  function handleMonthChange({ value }) {
-    let monthIndex = monthNamesArray.indexOf(value);
-    setChosenMonth(monthArray[monthNamesArray.indexOf(value)]);
-  }
-  function handleSeverityChange({ value }) {
-    setSeverityFilter(value);
-  }
-
 }
-
 
 function formatCSV(d) {
   return {
@@ -193,6 +113,5 @@ function formatCSV(d) {
     datetime: new Date(d.datetime), 
   }
 }
-
 
 export default App
