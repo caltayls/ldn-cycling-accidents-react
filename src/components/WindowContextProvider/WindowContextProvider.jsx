@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-// export type WindowContextProps = {
-//   clientHeight: number;
-//   clientWidth: number;
-// };
+
 export const WindowContext = React.createContext({ clientHeight: 0, clientWidth: 0, });
 
 export const WindowContextProvider = ({ children }) => {
@@ -12,14 +9,17 @@ export const WindowContextProvider = ({ children }) => {
       window.innerHeight || 0
     );
   }, []);
+  
   const getVw = useCallback(() => {
     return Math.max(
       document.documentElement.clientWidth || 0,
       window.innerWidth || 0
     );
   }, []);
+
   const [clientHeight, setVh] = useState(getVh());
   const [clientWidth, setVw] = useState(getVw());
+
   useEffect(() => {
     const handleResize = () => {
       setVh(getVh());

@@ -20,7 +20,6 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
           timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}
         />
         <MultiLinePlotVertical 
-          widthDecimal={0.18}
           heightDecimal={heightDecimal}
           csvData={csvFilterBySeverity} 
           timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 

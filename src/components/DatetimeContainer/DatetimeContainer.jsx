@@ -9,7 +9,9 @@ import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 // TODO: Replace stacked plot with stacked bar for days of month data 
 export default function DatetimeContainer({ csvData, boroHover, chosenYear, setChosenYear, chosenMonth, setChosenMonth }) {
 
-  const elementWidth = 0.49;
+  const { clientWidth } = useContext(WindowContext);
+  const elementWidth = clientWidth > 960? 0.49: 1;
+  const flexElementWidth = clientWidth > 960? 0.25: 1;
 
 
   return (
@@ -39,8 +41,8 @@ export default function DatetimeContainer({ csvData, boroHover, chosenYear, setC
       </StackedPlot>
     )}
     <div className="hour-and-weekday">
-      <StackedPlot id={'weekday-bar'} csvData={csvData} boroHover={boroHover} timeUnit='weekday' plotTitle={"Accidents by Day of Week"} svgWidthDecimal = {0.25}  horizontalBar={true}></StackedPlot>
-      <StackedPlot id={'day-bar'} csvData={csvData} boroHover={boroHover} timeUnit='hour' plotTitle={"Accidents by Hour of Day"} svgWidthDecimal = {0.25} ></StackedPlot>
+      <StackedPlot id={'weekday-bar'} csvData={csvData} boroHover={boroHover} timeUnit='weekday' plotTitle={"Accidents by Day of Week"} svgWidthDecimal = {flexElementWidth}  horizontalBar={true}></StackedPlot>
+      <StackedPlot id={'day-bar'} csvData={csvData} boroHover={boroHover} timeUnit='hour' plotTitle={"Accidents by Hour of Day"} svgWidthDecimal = {flexElementWidth} ></StackedPlot>
     </div>    
     </>  
   )

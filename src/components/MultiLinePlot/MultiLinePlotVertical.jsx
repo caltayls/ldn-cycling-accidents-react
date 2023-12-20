@@ -40,10 +40,11 @@ export default function MultiLinePlotVertical({ widthDecimal, heightDecimal, bor
     return combinedArray.sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))
   });
 
-  const svgWidth = clientWidth * widthDecimal; 
+  console.log(clientWidth)
+  const svgWidth = clientWidth * (clientWidth > 960? 0.18: 0.4); 
   const svgHeight = clientHeight * heightDecimal;
 
-
+ console.log(svgWidth)
   const margin = {
     top: 17,
     bottom: 15,

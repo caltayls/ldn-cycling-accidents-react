@@ -1,25 +1,34 @@
-.hour-and-weekday {
-  width: 49vw;
-  display: grid;
-  justify-content: center;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
-  row-gap: 10px;
-  margin-left: 0.5%;
-
-}
-
-.svg-container>#weekday-bar {
-  grid-column: 1 / 2;
-}
-
-.svg-container>#day-bar {
-  grid-column: 2 / 3;
-
+@media only screen and (max-width: 960px) {
+  .hour-and-weekday {
+    width: 100vw;
+  }
+  
 }
 
 
-#time-bar, #month-bar {
-  padding-bottom: 30px;
-}
+@media only screen and (min-width: 961px) {
+  .hour-and-weekday {
+    width: 49vw;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    row-gap: 10px;
+    margin-left: 0.5%;
 
+  }
+
+  .svg-container>#weekday-bar {
+    grid-column: 1 / 2;
+  }
+
+  .svg-container>#day-bar {
+    grid-column: 2 / 3;
+
+  }
+
+  #time-bar, #month-bar {
+    padding-bottom: 30px;
+  }
+
+}

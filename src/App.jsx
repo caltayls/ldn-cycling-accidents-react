@@ -42,6 +42,7 @@ function App() {
     });
   }, []);
 
+  // create context for all state in app
   if (isLoading) return <></>;
   return (
     <>

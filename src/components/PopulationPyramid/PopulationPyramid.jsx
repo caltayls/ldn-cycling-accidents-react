@@ -27,8 +27,8 @@ export default function PopulationPyramid({ csvData, plotTitle }) {
 
 const { clientHeight, clientWidth } = useContext(WindowContext);
 
-const svgWidth = clientWidth * 0.5; 
-const svgHeight = clientHeight * 0.3;
+const svgWidth = clientWidth * (clientWidth > 960? 0.5: 0.98); 
+const svgHeight = clientHeight * (clientWidth > 960? 0.3: 0.5); 
 
     const margin = {
       top: 30,
@@ -36,18 +36,18 @@ const svgHeight = clientHeight * 0.3;
       left: 50,
       right: 30
     }
-    const height = 350 - margin.top - margin.bottom;
+    const height = svgHeight - margin.top - margin.bottom;
     const width = svgWidth - margin.left - margin.right;
 
   
 
     const xM = d3.scaleLinear()
       .domain([0, d3.max(ageGenderArray, d => d.count)])
-      .range([width/2 - width*.03, 0]).nice();
+      .range([width/2 - width * (clientWidth > 960? .03: 0.05), 0]).nice();
 
     const xF = d3.scaleLinear()
       .domain(xM.domain())
-      .range([width / 2 + width*.03, width]);
+      .range([width / 2 + width * (clientWidth > 960? .03: 0.05), width]);
 
     const y = d3.scaleBand()
       .domain(ageGroups)
@@ -148,8 +148,9 @@ const svgHeight = clientHeight * 0.3;
 
   return (
     <>
-    <svg width="100%" height="{height + margin.top + margin.bottom}" viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
-        <text transform={`translate(${10}, ${margin.top/2})`}>{plotTitle}</text>
+    <h2>{plotTitle}</h2>
+    <svg height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+        {/* <text transform={`translate(${10}, ${margin.top/2})`}>{plotTitle}</text> */}
         <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
     </svg>
     </>

@@ -2,79 +2,129 @@ body {
   background: rgb(225, 224, 222);
 }
 
-.filter-options {
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  z-index: 10000;
-  padding: 20px;
-  background-color: #fff;
-  left: 50%;
-  transform: translate(-50%, 0);
-}
 
-.split-container {
-  display: flex;
-  justify-content:start;
-  height: 1470px; /*need to specify height for sticky to work*/
-  margin: auto 0;
-  margin-left: 0;
-  background: rgb(225, 224, 222);
-}
 
-.left-side {
-  padding-top: 10px;
-  margin-right: 5px;
-  margin-left: 0;
-  width: 50%;
-  height: 100px;
-  position: sticky;
-  top: 78px; /*height of filter header*/
-  display: grid;
-  row-gap: 10px;
-  justify-content: center;
+@media only screen and (max-width: 960px) {
 
-}
+  body {
+    margin: 0 0;
+  }
 
-.right-side {
-  padding-top: 10px;
-  margin-right: 1%;
-  width: 50vw;
-  height: 100px;
-  display: grid;
-  justify-content: center;
-  align-items: start;
-  row-gap: 5px;
-}
-
-.grid-item {
-  width: 100%;
-  border-radius: 5px; /* Adjust the border-radius for rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
-  padding: 20px 0; /* Adjust the padding inside each cell */
-  background-color: #fff; /* Background color for each cell */
-  box-sizing: border-box;
-}
-
-.grid-item.datetime {
-  height: 85vh;
-}
-
-.grid-item.leaflet-map {
-  position: relative;
-  padding: 0;
-  width: 48vw;
-  height: 52vh;
+  .filter-options {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+    width: 100vw;
+  }
   
-}
+  .grid-item.leaflet-map {
+    position: relative;
+    padding: 0;
+    width: 100vw;
+    margin: 0 auto;
+    height: 80vh;
+    
+  }
 
-.grid-item.summary {
-  padding: 15px;
-  width: 48vw;
-  height: 35vh;
-}
+  .grid-item {
+    width: 100%;
+    background-color: #fff; /* Background color for each cell */
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 20px 1px;
+  }
 
+
+  .grid-item.summary {
+    height: 100%;
+  }
+
+}
+@media only screen and (min-width: 961px) {
+
+  body {
+    margin: 0 0;
+    min-width: 320px;
+    margin-top: 78px; /*height on select box*/
+  }
+
+  .filter-options {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+    background-color: #fff;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+  
+  .split-container {
+    display: flex;
+    justify-content:start;
+    height: 1470px; /*need to specify height for sticky to work*/
+    margin: auto 0;
+    margin-left: 0;
+    background: rgb(225, 224, 222);
+  }
+  
+  .left-side {
+    padding-top: 10px;
+    margin-right: 5px;
+    margin-left: 0;
+    width: 50%;
+    height: 100px;
+    position: sticky;
+    top: 78px; /*height of filter header*/
+    display: grid;
+    row-gap: 10px;
+    justify-content: center;
+  
+  }
+  
+  .right-side {
+    padding-top: 10px;
+    margin-right: 1%;
+    width: 50vw;
+    height: 100px;
+    display: grid;
+    justify-content: center;
+    align-items: start;
+    row-gap: 5px;
+  }
+  
+  .grid-item {
+    width: 100%;
+    border-radius: 5px; /* Adjust the border-radius for rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
+    padding: 20px 0; /* Adjust the padding inside each cell */
+    background-color: #fff; /* Background color for each cell */
+    box-sizing: border-box;
+  }
+  
+  .grid-item.datetime {
+    height: 85vh;
+  }
+  
+  .grid-item.leaflet-map {
+    position: relative;
+    padding: 0;
+    width: 48vw;
+    min-height: 45vh;
+    
+  }
+  
+  .grid-item.summary {
+    padding: 15px;
+    width: 48vw;
+    height: 35vh;
+  }
+  
+  
+
+
+}
 

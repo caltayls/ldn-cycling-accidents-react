@@ -10,12 +10,12 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
 
   const svgWidth = clientWidth * svgWidthDecimal; 
-  const svgHeight = clientHeight * 0.22;
+  const svgHeight = clientHeight * (clientWidth > 960? 0.22: 0.3);
 
 
   const margin = {
     top: 30,
-    bottom: 20,
+    bottom: clientWidth > 960? 20: 40,
     left: 30,
     right: 30
   }
@@ -122,6 +122,11 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     xAxis.select('.domain').remove();
     xAxis.selectAll(' line').attr('stroke', '#D9D9D9');
      
+    if (clientWidth < 961 && timeUnit === 'year') {
+      xAxis.selectAll('text')
+        .attr('transform', 'rotate(-45)')
+        .style("text-anchor", "end");
+    }  
 
 // data
     svg.selectAll()
