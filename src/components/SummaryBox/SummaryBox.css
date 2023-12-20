@@ -5,6 +5,7 @@
   justify-content: center;
   
 }
+
 table {
   width: 100%;
   margin: auto;
@@ -16,9 +17,8 @@ thead th {
   font-weight: 500;
   color: #414042;
   text-align: right;
-  /* padding-bottom: 1px; */
   border-bottom: 2px solid #707071;
-  padding: 0 0 6px 0;
+  padding: 0 5px 6px 5px;
 }
 
 th.align-left {

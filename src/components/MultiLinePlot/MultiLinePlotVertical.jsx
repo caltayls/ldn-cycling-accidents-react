@@ -41,7 +41,7 @@ export default function MultiLinePlotVertical({ widthDecimal, heightDecimal, bor
   });
 
   console.log(clientWidth)
-  const svgWidth = clientWidth * (clientWidth > 960? 0.18: 0.4); 
+  const svgWidth = clientWidth * (clientWidth > 960? 0.18: 0.35); 
   const svgHeight = clientHeight * heightDecimal;
 
  console.log(svgWidth)
@@ -49,7 +49,7 @@ export default function MultiLinePlotVertical({ widthDecimal, heightDecimal, bor
     top: 17,
     bottom: 15,
     left: 15,
-    right: 35
+    right: 30
   }
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;

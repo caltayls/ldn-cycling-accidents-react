@@ -10,8 +10,8 @@ import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 export default function DatetimeContainer({ csvData, boroHover, chosenYear, setChosenYear, chosenMonth, setChosenMonth }) {
 
   const { clientWidth } = useContext(WindowContext);
-  const elementWidth = clientWidth > 960? 0.49: 1;
-  const flexElementWidth = clientWidth > 960? 0.25: 1;
+  const elementWidth = clientWidth > 960? 0.49: 0.9;
+  const flexElementWidth = clientWidth > 960? 0.25: 0.9;
 
 
   return (

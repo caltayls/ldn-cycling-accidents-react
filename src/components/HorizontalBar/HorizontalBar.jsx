@@ -16,12 +16,12 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   const margin = {
     top: 17,
     bottom: 20,
-    left: 135,
+    left: 128,
     right: 10
   }
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
-  const svgWidth = clientWidth * (clientWidth > 960? 0.3: 0.6);
+  const svgWidth = clientWidth * (clientWidth > 960? 0.3: 0.55);
   const svgHeight = clientHeight * heightDecimal; 
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;

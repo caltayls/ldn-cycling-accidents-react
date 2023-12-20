@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import * as d3 from "d3";
 import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
-
+import "./Stacked.css"
 export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, svgWidthDecimal, id }) {
   const svgRef = useRef(null);
   const [hoverYear, setHoverYear] = useState('');
@@ -14,10 +14,10 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
 
   const margin = {
-    top: 30,
-    bottom: clientWidth > 960? 20: 40,
-    left: 30,
-    right: 30
+    top: 5,
+    bottom: timeUnit === 'year' && clientWidth < 450? 40: 20,
+    left: 20,
+    right: 2
   }
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -122,7 +122,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     xAxis.select('.domain').remove();
     xAxis.selectAll(' line').attr('stroke', '#D9D9D9');
      
-    if (clientWidth < 961 && timeUnit === 'year') {
+    if (clientWidth < 450 && timeUnit === 'year') {
       xAxis.selectAll('text')
         .attr('transform', 'rotate(-45)')
         .style("text-anchor", "end");
@@ -157,8 +157,9 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
   return (
     <div className="svg-container" width="100%">
+      <h2>{plotTitle}</h2>
       <svg id={id} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`}>
-        <text transform={`translate(${10}, ${margin.top/2})`}>{plotTitle}</text>
+        {/* <text transform={`translate(${10}, ${margin.top/2})`}>{plotTitle}</text> */}
         <g ref={svgRef} transform={`translate(${margin.left}, ${margin.top})`}></g>
       </svg>
     </div>
