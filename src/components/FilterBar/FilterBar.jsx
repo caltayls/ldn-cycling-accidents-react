@@ -12,6 +12,9 @@ export default function FilterBar({csvData, boroHover, setBoroHover, setIsBoroug
   
   return (
     <div className='filter-container'>
+      <div className='small-screen'>
+        <h2>&#xbb;</h2>
+      </div>
       <div className='filter-option borough'>
         <Select 
             value={boroHover}

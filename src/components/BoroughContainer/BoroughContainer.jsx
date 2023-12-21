@@ -1,4 +1,5 @@
 import HorizontalBar from "../HorizontalBar/HorizontalBar";
+import MultiLinePlot from "../MultiLinePlot/MultiLinePlot";
 import MultiLinePlotVertical from "../MultiLinePlot/MultiLinePlotVertical";
 import "./BoroughContainer.css"
 
@@ -10,7 +11,6 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
       <h2> Cycling Accidents Across London Boroughs</h2>
       <div className="flex-container">
         <HorizontalBar 
-          widthDecimal={0.3}
           heightDecimal={heightDecimal}
           severityFilter={severityFilter}
           csvData={csvFilterBySeverity}
@@ -19,7 +19,8 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
           chosenYear={chosenYear} 
           timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}
         />
-        <MultiLinePlotVertical 
+        <MultiLinePlotVertical
+          className="multi-line boroughs vertical"
           heightDecimal={heightDecimal}
           csvData={csvFilterBySeverity} 
           timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
@@ -30,6 +31,17 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
           setBoroHover={setBoroHover}
         ></MultiLinePlotVertical>
       </div>
+      <MultiLinePlot
+          className="multi-line boroughs horizontal"
+          heightDecimal={heightDecimal}
+          csvData={csvFilterBySeverity} 
+          timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
+          severityFilter={severityFilter}
+          chosenMonth={chosenMonth} 
+          chosenYear={chosenYear}
+          boroHover={boroHover}
+          setBoroHover={setBoroHover}
+        />
     </div>
   )
 }

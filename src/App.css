@@ -31,6 +31,7 @@ body {
     width: 100%;
     background-color: #fff; /* Background color for each cell */
     box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
     margin: 10px 0;
     padding: 20px 0;
     display: flex;
@@ -39,11 +40,9 @@ body {
   }
 
 
-  .grid-item.summary {
+  .grid-item.summary, .borough-data, .population-pyramid {
     height: 100%;
-    padding: 10px 20px 20px 20px;
-
-    
+    padding: 10px 20px 20px 20px;    
   }
 
 }

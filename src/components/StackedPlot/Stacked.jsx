@@ -72,7 +72,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     return d3.scaleBand()
       .domain(timeSet)
       .range([0, width])
-      .padding(0.1);
+      .padding(timeUnit !== 'hour'? 0.1: 0.05);
   }, [csvData, width, timeSet]);
 
 
@@ -127,6 +127,15 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
         .attr('transform', 'rotate(-45)')
         .style("text-anchor", "end");
     }  
+
+    if (timeUnit === 'hour') {
+      xAxis.selectAll('line')
+        .attr('transform', `translate(${-x.bandwidth()/2},0)`)
+
+
+    xAxis.selectAll('text')
+    .attr('transform', `translate(${-x.bandwidth()/2},0)`)
+}
 
 // data
     svg.selectAll()

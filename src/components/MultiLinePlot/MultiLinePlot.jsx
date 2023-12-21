@@ -7,7 +7,7 @@ import { svg } from "leaflet";
 
 
 
-export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
+export default function MultiLinePlot({className, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
   const divRef = useRef(null);
   const outerRef = useRef(null);
   const gRef = useRef(null);
@@ -32,7 +32,7 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
   const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
  
-  const svgWidth = clientWidth * 0.49; 
+  const svgWidth = clientWidth * 0.95; 
   const svgHeight = clientHeight * 0.3;
 
 
@@ -150,9 +150,11 @@ export default function MultiLinePlot({ boroughHighlightedRef, csvData, chosenYe
 
   return (
     <>
-    <svg ref={outerRef} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-      <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`} ></g>
-    </svg>
+    <div className={className} width="100%">
+      <svg ref={outerRef} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+        <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`} ></g>
+      </svg>
+    </div>
     </>
   )
 

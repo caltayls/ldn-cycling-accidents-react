@@ -7,7 +7,7 @@ import { svg } from "leaflet";
 
 
 
-export default function MultiLinePlotVertical({ widthDecimal, heightDecimal, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, boroHover, setBoroHover}) {
+export default function MultiLinePlotVertical({ className, widthDecimal, heightDecimal, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, boroHover, setBoroHover}) {
   const divRef = useRef(null);
   const outerRef = useRef(null);
   const gRef = useRef(null);
@@ -41,7 +41,7 @@ export default function MultiLinePlotVertical({ widthDecimal, heightDecimal, bor
   });
 
   console.log(clientWidth)
-  const svgWidth = clientWidth * (clientWidth > 960? 0.18: 0.35); 
+  const svgWidth = clientWidth * (clientWidth > 960? 0.18: 0.3); 
   const svgHeight = clientHeight * heightDecimal;
 
  console.log(svgWidth)
@@ -150,7 +150,7 @@ export default function MultiLinePlotVertical({ widthDecimal, heightDecimal, bor
 
   return (
     <>
-    <div className="multi-line boroughs" width="50%">
+    <div className={className} width="50%">
       <svg ref={outerRef} height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
         <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`} ></g>
       </svg>

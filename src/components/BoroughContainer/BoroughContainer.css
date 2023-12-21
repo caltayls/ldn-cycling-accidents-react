@@ -2,3 +2,16 @@
   display: flex;
 }
 
+@media only screen and (max-width: 960px) {
+  .borough-data .multi-line.vertical {
+    display: none;
+  }
+
+}
+
+@media only screen and (min-width: 961px) {
+  .borough-data .multi-line.horizontal {
+    display: none;
+  }
+
+}
