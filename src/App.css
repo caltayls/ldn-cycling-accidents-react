@@ -3,7 +3,7 @@ body {
 }
 
 
-
+/* https://www.w3schools.com/howto/howto_js_shrink_header_scroll.asp  <-- for shrinking filterbox on mobile */
 @media only screen and (max-width: 960px) {
 
   body {
@@ -113,7 +113,7 @@ body {
   }
   
   .grid-item.datetime {
-    height: 85vh;
+    height: 100%;
   }
   
   .grid-item.leaflet-map {

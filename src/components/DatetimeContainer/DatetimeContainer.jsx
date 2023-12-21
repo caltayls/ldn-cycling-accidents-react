@@ -11,7 +11,7 @@ export default function DatetimeContainer({ csvData, boroHover, chosenYear, setC
 
   const { clientWidth } = useContext(WindowContext);
   const elementWidth = clientWidth > 960? 0.49: 0.9;
-  const flexElementWidth = clientWidth > 960? 0.25: 0.9;
+  const flexElementWidth = clientWidth > 960? 0.2: 0.9;
 
 
   return (
