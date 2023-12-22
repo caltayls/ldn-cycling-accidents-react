@@ -41,7 +41,7 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
   });
 
   console.log(clientWidth)
-  const svgWidth = clientWidth * (clientWidth > 960? 0.18: 0.3); 
+  const svgWidth = clientWidth * (clientWidth > 960? 0.17: 0.3); 
   const svgHeight = clientHeight * heightDecimal;
 
  console.log(svgWidth)

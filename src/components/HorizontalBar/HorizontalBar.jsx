@@ -21,7 +21,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   }
 
   const { clientHeight, clientWidth } = useContext(WindowContext);
-  const svgWidth = clientWidth * (clientWidth > 960? 0.3: 0.9);
+  const svgWidth = clientWidth * (clientWidth > 960? 0.27: 0.9);
   const svgHeight = clientHeight * heightDecimal; 
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
@@ -77,7 +77,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   const y = d3.scaleBand()
     .domain([...new Set(incidentArray.map(d => d.borough))])
     .range([height, 0])
-    .paddingInner(0.1);
+    .paddingInner(0.2);
 
   useEffect(() => {
     const svg = d3.select(gRef.current)
@@ -91,12 +91,12 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
       .call(d3.axisLeft(y).tickSizeOuter(0));
     
     // yAxis.select('.domain').remove();
-    yAxis.selectAll(' line').attr('stroke', '#D9D9D9');
+    yAxis.selectAll(' line').remove() //.attr('stroke', '#D9D9D9');
     yAxis.select('.domain').remove();
 
     // add x axis
     let xAxis = svg.append('g')
-        .attr('transform', `translate(${margin.left},${height+8})`)
+        .attr('transform', `translate(${margin.left},${height+5})`)
       .call(xAxisGenerator.ticks(5, "s"));
       
     xAxis.selectAll(' line')
@@ -116,6 +116,11 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
         .attr("y", d => y(d.data[0]))
         .attr("width", d => x(d[1]) - x(d[0]))
         .attr("height", y.bandwidth());
+
+
+        svg.selectAll('text')
+          .attr('stroke', '#D9D9D9')
+          .attr('stroke-width', 0.1);
 
     return () => svg.selectAll('*').remove()
   }, [timeUnit, severityFilter, chosenMonth, chosenYear, svgWidth])

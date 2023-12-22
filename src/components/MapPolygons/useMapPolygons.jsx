@@ -13,7 +13,6 @@ export default function useMapPolygons({ boroughHighlightedRef, className, fill,
       isMapMoving=false;
       return
     }
-    console.log(boroughHighlightedRef.current)
     d3.select(`.${className} [name="${boroughHighlightedRef.current}"]`)
       .style('stroke', stroke)
       .style('stroke-width', strokeWidth);
@@ -23,7 +22,7 @@ export default function useMapPolygons({ boroughHighlightedRef, className, fill,
     const boroName = d3.select(this).attr('name');
 
     // multi line plot highlight
-    d3.select(`.multi-line-plot svg g.line-paths path[name="${boroName}`).raise()
+    d3.select(`.multi-line svg g.line-paths path[name="${boroName}`).raise()
       .style('stroke', 'red')
       .style('stroke-width', 3)
       .style("mix-blend-mode", "normal");

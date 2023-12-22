@@ -27,7 +27,7 @@ export default function PopulationPyramid({ csvData, plotTitle }) {
 
 const { clientHeight, clientWidth } = useContext(WindowContext);
 
-const svgWidth = clientWidth * (clientWidth > 960? 0.5: 0.95); 
+const svgWidth = clientWidth * (clientWidth > 960? 0.45: 0.95); 
 const svgHeight = clientHeight * 0.5;
 
     const margin = {
@@ -148,7 +148,9 @@ const svgHeight = clientHeight * 0.5;
 
   return (
     <>
-    <h2>{plotTitle}</h2>
+    <div className='title'>
+      <h2>{plotTitle}</h2>
+    </div>
     <svg height={height + margin.top + margin.bottom} width={width + margin.left + margin.right} viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
         {/* <text transform={`translate(${10}, ${margin.top/2})`}>{plotTitle}</text> */}
         <g ref={gRef} transform={`translate(${margin.left}, ${margin.top})`}></g>

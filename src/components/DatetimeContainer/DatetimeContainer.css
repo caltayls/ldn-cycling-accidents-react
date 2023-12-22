@@ -7,27 +7,18 @@
 
 
 @media only screen and (min-width: 961px) {
+ 
   .hour-and-weekday {
-    width: 49vw;
+    width: 100%;
     padding: 0 10px;
-    display: grid;
-    justify-content: center;
+    display: flex;
+    justify-content: space-around;
     align-items: center;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    row-gap: 10px;
     margin-left: 0.5%;
+    box-sizing: border-box;
 
   }
 
-  .svg-container>#weekday-bar {
-    grid-column: 1 / 2;
-  }
-
-  .svg-container>#day-bar {
-    grid-column: 2 / 3;
-
-  }
 
   #time-bar, #month-bar {
     padding-bottom: 30px;

@@ -8,7 +8,9 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
   
   return (
     <div className='borough-data grid-item'>
-      <h2> Cycling Accidents Across London Boroughs</h2>
+      <div className="title">
+        <h2> Cycling Accidents Across London Boroughs</h2>
+      </div>
       <div className="flex-container">
         <HorizontalBar 
           heightDecimal={heightDecimal}

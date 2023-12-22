@@ -2,6 +2,13 @@ body {
   background: rgb(225, 224, 222);
 }
 
+* {
+  outline: 1px solid red;
+}
+.title { 
+  width: 100%;
+}
+
 
 /* https://www.w3schools.com/howto/howto_js_shrink_header_scroll.asp  <-- for shrinking filterbox on mobile */
 @media only screen and (max-width: 960px) {
@@ -14,7 +21,7 @@ body {
     display: flex;
     justify-content: center;
     background-color: #fff;
-    width: 100vw;
+    width: 100%;
     /* text-align: left; */
   }
   
@@ -50,19 +57,21 @@ body {
 
   body {
     margin: 0 0;
-    min-width: 320px;
+    width: 100%;
     margin-top: 78px; /*height on select box*/
+    box-sizing: border-box;
   }
 
   .filter-options {
     width: 100%;
+    box-sizing: border-box;
     position: fixed;
     top: 0;
     left: 0;
     display: flex;
     justify-content: center;
     z-index: 10000;
-    padding: 20px;
+    padding: 20px 0;
     background-color: #fff;
     left: 50%;
     transform: translate(-50%, 0);
@@ -70,42 +79,36 @@ body {
   
   .split-container {
     display: flex;
-    justify-content:start;
+    justify-content: space-evenly;
+    gap: 10px;
     height: 1470px; /*need to specify height for sticky to work*/
-    margin: auto 0;
-    margin-left: 0;
+    margin: 0 0;
     background: rgb(225, 224, 222);
+    box-sizing: border-box;
   }
   
-  .left-side {
+  .left-side, .right-side {
     padding-top: 10px;
-    margin-right: 5px;
-    margin-left: 0;
-    width: 50%;
-    height: 100px;
-    position: sticky;
+    box-sizing: border-box;
+    width: 48%;
     top: 78px; /*height of filter header*/
-    display: grid;
-    row-gap: 10px;
-    justify-content: center;
-  
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: start;
+  }
+
+  .left-side {
+    position: sticky;
+    height: 100px
   }
   
-  .right-side {
-    padding-top: 10px;
-    margin-right: 1%;
-    width: 50vw;
-    height: 100px;
-    display: grid;
-    justify-content: center;
-    align-items: start;
-    row-gap: 5px;
-  }
+
   
   .grid-item {
     width: 100%;
     border-radius: 5px; /* Adjust the border-radius for rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
     padding: 20px 0; /* Adjust the padding inside each cell */
     background-color: #fff; /* Background color for each cell */
     box-sizing: border-box;
@@ -113,20 +116,30 @@ body {
   
   .grid-item.datetime {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .grid-item.leaflet-map {
     position: relative;
     padding: 0;
-    width: 48vw;
+    width: 100%;
     min-height: 45vh;
     
   }
   
   .grid-item.summary {
     padding: 15px;
-    width: 48vw;
+    width: 100%;
     height: 35vh;
+  }
+
+  .grid-item.population-pyramid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   
   

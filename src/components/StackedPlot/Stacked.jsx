@@ -151,6 +151,9 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
         .attr("height", d => y(d[0]) - y(d[1]))
         .attr("width", x.bandwidth())
         
+        svg.selectAll('text')
+          .attr('stroke', '#D9D9D9')
+          .attr('stroke-width', 0.1);
     // svg.append('line')
     //     .attr('id', 'follow-cursor')
     //     .attr('y1', y1)

@@ -145,7 +145,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
 
         
     return () => g.selectAll('*').remove();
-  }, [timeUnit, severityFilter, chosenMonth, chosenYear, clientWidth]);
+  }, [timeUnit, severityFilter, chosenMonth, chosenYear, clientWidth, boroHover]);
 
 
   return (
