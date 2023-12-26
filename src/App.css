@@ -21,7 +21,7 @@ body {
   .filter-options {
     display: flex;
     justify-content: center;
-    background-color: #fff;
+    background-color: #884848;
     width: 100%;
     /* text-align: left; */
   }
@@ -73,7 +73,7 @@ body {
     justify-content: center;
     z-index: 10000;
     padding: 20px 0;
-    background-color: #fff;
+    background-color: #f8f8f8;
   }
   
   .split-container {
@@ -124,7 +124,7 @@ body {
     position: relative;
     padding: 0;
     width: 100%;
-    min-height: 45vh;
+    min-height: 80vh;
     
   }
   

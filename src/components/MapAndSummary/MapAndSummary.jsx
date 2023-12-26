@@ -11,7 +11,7 @@ export default function MapAndSummary({ geoJsonData, csvData, csvFilterBySeverit
 
   return (
     <>
-      <div className='summary grid-item'>
+      {/* <div className='summary grid-item'>
         <SummaryBox
           csvData={csvData} 
           timeUnit={yearFilter.length === 0? 'year': monthFilter.length === 0? 'month': 'day'} 
@@ -20,7 +20,7 @@ export default function MapAndSummary({ geoJsonData, csvData, csvFilterBySeverit
           yearFilter={yearFilter}
           boroughFilter={boroughFilter}
         />
-      </div>
+      </div> */}
       <div className='leaflet-map grid-item'>
         <MapLeaflet 
           geoJsonData={geoJsonData} 

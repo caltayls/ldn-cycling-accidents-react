@@ -1,9 +1,53 @@
+.header.title {
+  padding: 0 10px;
+}
 
+.header h1 {
+  padding: 0;
+}
+
+
+
+.hamburger {
+  position: fixed;
+  right: 60px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+  transform-origin: 0 50%;
+
+
+
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform:  rotate(45deg);
+  transform-origin: 0 50%;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform:  translateY(4.5px) rotate(-45deg) ;
+}
+
+.bar {
+  display: block;
+  width: 37px;
+  height: 3px;
+  margin: 8px auto;
+  background-color: black;
+}
 
 
 @media only screen and (max-width: 960px) {
   
   .filter-container {
+    background-color: #ededed;
     width: 100vw;
     display: flex;
     flex-direction: column;
@@ -26,21 +70,32 @@
 @media only screen and (min-width: 961px) {
 
   .filter-container {
-    width: 50%;
+    background-color: #f8f8f8;
+    width: 30%;
+    position: fixed;
+    top: 90px;
+    height: 100%;
+    right: -100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: start;
+    z-index: 999;
+    transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
     }
 
-  .filter-container .small-screen {
-    display: none;
+  .filter-container.active {
+    /* transform: translate(-100%, 0); */
+    right: 0;
   }
 
+
+
   .filter-option {
-    margin-right: 30px;
-    min-width: 200px;
+    width: 250px;
     text-align: left;
     color: black;
     white-space: nowrap;
+    margin: 5px auto;
   }
 
   .filter-option.borough {

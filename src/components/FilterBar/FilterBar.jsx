@@ -1,9 +1,10 @@
 import Select from 'react-select';
 import * as d3 from 'd3';
 import './FilterBar.css';
+import { useState } from 'react';
 
 export default function FilterBar({csvData, boroughFilter, setBoroughFilter, setIsBoroughFilterClicked, yearFilter, setYearFilter, monthFilter, setMonthFilter, severityFilter, setSeverityFilter}) {
-  
+  const [menuOpen, setMenuOpen] = useState(false);
   const yearArray = d3.range(2005, 2023);
   const monthNamesArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const monthArray = [d3.range(0, 12)];
@@ -11,15 +12,16 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
   const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))].sort();
   
   return (
-    <div className='filter-container'>
-      <div className='small-screen'>
-
-      </div>
+    <>
+    <div className='header title'>
+    <h1> London Cycling Accidents</h1>
+    </div>
+    
+    <div className={`filter-container ${menuOpen? 'active': ''}`}>
       <div className='filter-option borough'>
         <Select 
             value={boroughFilter}
             isClearable={true}
-            // defaultValue={yearFilter}
             onChange={handleBoroughChange}
             options={boroughs.map(d => ({value: d, label: d}))} 
             placeholder={boroughFilter}
@@ -57,9 +59,19 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
         /> 
       </div>
     </div>
+    <div className={`hamburger ${menuOpen? 'active': ''}`} onClick={handleHamburgerClick}>
+      <span className='bar'/>
+      <span className='bar'/>
+      <span className='bar'/>
+  </div>
+  </>
 
   )
 
+  function handleHamburgerClick() {
+    setMenuOpen(!menuOpen);
+
+  }
 
   function handleBoroughChange({ value }) {
     setBoroughFilter(value);

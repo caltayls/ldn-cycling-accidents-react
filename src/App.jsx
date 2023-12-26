@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import './App.css';
 
 import { WindowContextProvider } from './components/WindowContextProvider/WindowContextProvider';
+import SummaryBox from './components/SummaryBox/SummaryBox';
 import DatetimeContainer from './components/DatetimeContainer/DatetimeContainer';
 import MapAndSummary from './components/MapAndSummary/MapAndSummary';
 import PopulationPyramid from './components/PopulationPyramid/PopulationPyramid';
@@ -77,6 +78,16 @@ function App() {
           ></MapAndSummary>
         </div>
         <div className='right-side split-grid'>
+        <div className='summary grid-item'>
+        <SummaryBox
+          csvData={csvData} 
+          timeUnit={yearFilter.length === 0? 'year': monthFilter.length === 0? 'month': 'day'} 
+          severityFilter={severityFilter}
+          monthFilter={monthFilter} 
+          yearFilter={yearFilter}
+          boroughFilter={boroughFilter}
+        />
+      </div>
           <BoroughContainer
             severityFilter={severityFilter}
             csvFilterBySeverity={csvFilterBySeverity}
