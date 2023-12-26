@@ -3,7 +3,8 @@
 }
 
 .header h1 {
-  padding: 0;
+  padding: 0 0 0 20px;
+  color: rgb(247, 244, 240);
 }
 
 
@@ -15,8 +16,6 @@
 }
 
 .hamburger span {
-  transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
-  transform-origin: 0 50%;
 
 
 
@@ -40,7 +39,11 @@
   width: 37px;
   height: 3px;
   margin: 8px auto;
-  background-color: black;
+  transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+  transform-origin: 0 50%;
+  background-color: rgb(248, 244, 238);
+
+
 }
 
 
@@ -71,9 +74,9 @@
 
   .filter-container {
     background-color: #f8f8f8;
-    width: 30%;
+    /* width: 500px; */
     position: fixed;
-    top: 90px;
+    top: 85px;
     height: 100%;
     right: -100%;
     display: flex;
@@ -81,6 +84,9 @@
     justify-content: start;
     z-index: 999;
     transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+    padding-top: 20px;
+    /* border-left: 2px solid #d4d4d4; */
+    box-shadow: 5px 5px 10px #888888;
     }
 
   .filter-container.active {
@@ -96,6 +102,7 @@
     color: black;
     white-space: nowrap;
     margin: 5px auto;
+    padding: 5px 20px;
   }
 
   .filter-option.borough {
