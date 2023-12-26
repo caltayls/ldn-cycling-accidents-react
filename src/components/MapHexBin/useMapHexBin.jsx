@@ -4,7 +4,7 @@ import { hexbin } from "d3-hexbin";
 import * as L from 'leaflet';
 
 
-export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, colorScaleType, setHexDomainExtent}) {
+export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hexOpacity, colorScaleType, setHexDomainExtent}) {
   
 
   
@@ -48,7 +48,7 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, col
     
       g.append("g")
           .attr('class', 'hexagons')
-          .style('opacity', 1)  
+          .style('opacity', hexOpacity)  
           // .attr("class", "hexagon")//.raise()
         .selectAll("path")
         .data(bins(csvData))
@@ -57,6 +57,7 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, col
           .attr('size', d => d.length)
           // .attr("d", d => `M${d.x},${d.y}${bins.hexagon()}`)
           .style('fill', d => quantColorScale(d.length))
+
 
     }
    

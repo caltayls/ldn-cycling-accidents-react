@@ -25,7 +25,7 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
           className="multi-line boroughs vertical"
           heightDecimal={heightDecimal}
           csvData={csvFilterBySeverity} 
-          timeUnit={yearFilter === 'All Years'? 'year': monthFilter === 'All Months'? 'month': 'day'} 
+          timeUnit={yearFilter.length === 0? 'year': monthFilter.length === 0? 'month': 'day'} 
           severityFilter={severityFilter}
           monthFilter={monthFilter} 
           yearFilter={yearFilter}
@@ -37,7 +37,7 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
           className="multi-line boroughs horizontal"
           heightDecimal={heightDecimal}
           csvData={csvFilterBySeverity} 
-          timeUnit={yearFilter === 'All Years'? 'year': monthFilter === 'All Months'? 'month': 'day'} 
+          timeUnit={yearFilter.length === 0? 'year': monthFilter.length === 0? 'month': 'day'}
           severityFilter={severityFilter}
           monthFilter={monthFilter} 
           yearFilter={yearFilter}

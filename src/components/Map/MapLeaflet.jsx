@@ -16,6 +16,8 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
   
   // adjust hex state 
   const [hexRadius, setHexRadius] = useState(5);
+  const [hexOpacity, setHexOpacity] = useState(1);
+
   const [colorScaleType, setColorScaleType] = useState('Linear');
   const [hexDomainExtent, setHexDomainExtent] = useState([]);
 
@@ -51,6 +53,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     hexCoordsRef: hexCoordsRef,
     hexRadius: hexRadius,
     colorScaleType: colorScaleType,
+    hexOpacity: hexOpacity,
     setHexDomainExtent: setHexDomainExtent,
 
   });
@@ -114,7 +117,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
  
   return (
     <>
-    <HexTools setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', right: 3,  zIndex:2}}></HexTools> 
+    <HexTools hexOpacity={hexOpacity} setHexOpacity={setHexOpacity} setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', right: 3,  zIndex:2}}></HexTools> 
     <HexLegend domainExtent={hexDomainExtent} style={{ position: 'absolute', left: 3, bottom: 1,  zIndex:3}}></HexLegend>
     <div id='map-container' ref={mapRef} style={{height: '100%', width:'100%', zIndex:1, margin:0}}></div>
     </>
