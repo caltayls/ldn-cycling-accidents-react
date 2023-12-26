@@ -10,7 +10,7 @@
  
   .hour-and-weekday {
     width: 100%;
-    padding: 0 10px;
+    /* padding: 0 10px; */
     display: flex;
     justify-content: space-around;
     align-items: center;

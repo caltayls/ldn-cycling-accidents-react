@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import * as d3 from 'd3';
 import * as L from 'leaflet';
 
-export default function useMapPolygons({ boroughHighlightedRef, className, fill, stroke, strokeWidth, fillOpacity, geoJsonData, boroHover, setBoroHover, map, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
+export default function useMapPolygons({ boroughHighlightedRef, className, fill, stroke, strokeWidth, fillOpacity, geoJsonData, boroughFilter, setBoroughFilter, map, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   
   let isMapMoving = false;
   // const boroughHighlightedRef = useRef('');
@@ -32,7 +32,7 @@ export default function useMapPolygons({ boroughHighlightedRef, className, fill,
       .style('stroke-width', 1.5)
       .style("mix-blend-mode", "multiply");
 
-    setBoroHover(boroName);
+    setBoroughFilter(boroName);
     boroughHighlightedRef.current = boroName;
   }
   useEffect(() => {
@@ -69,7 +69,7 @@ useEffect (() => {
       d3.select(`.outline [name="${boroughHighlightedRef.current}"]`)
         .style('stroke', stroke)
         .style('stroke-width', strokeWidth);
-      const elementHighlighted = d3.select(`.${className} [name="${boroHover}"]`);
+      const elementHighlighted = d3.select(`.${className} [name="${boroughFilter}"]`);
       
       if (elementHighlighted._groups[0][0] !== null) {
         elementHighlighted.raise()
@@ -89,7 +89,7 @@ useEffect (() => {
         .style('stroke-width', 1.5)
         .style("mix-blend-mode", "multiply");
 
-        d3.select(`.line-paths path[name="${boroHover}"`).raise()
+        d3.select(`.line-paths path[name="${boroughFilter}"`).raise()
         .style('stroke', 'red')
         .style('stroke-width', 3)
         .style("mix-blend-mode", "normal");
@@ -114,10 +114,10 @@ useEffect (() => {
     }
 
     setIsBoroughFilterClicked(false);
-    boroughHighlightedRef.current = boroHover;
+    boroughHighlightedRef.current = boroughFilter;
   }
 
-}, [boroHover])
+}, [boroughFilter])
 
 
 

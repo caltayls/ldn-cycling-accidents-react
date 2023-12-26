@@ -11,7 +11,7 @@ import { filterCSV } from '../utils/filterCSV';
 import './MapLeaflet.css'
 import HexLegend from '../HexLegend/HexLegend';
 
-export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
+export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroughFilter, setBoroughFilter, monthFilter, yearFilter, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   const [ map, setMap ] = useState('');
   
   // adjust hex state 
@@ -20,7 +20,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
   const [hexDomainExtent, setHexDomainExtent] = useState([]);
 
   const hexCoordsRef = useRef(''); // ref used to prevent rerendering
-  const csvFiltered = useMemo(() => filterCSV(csvData, chosenYear, chosenMonth), [severityFilter, chosenMonth, chosenYear]);
+  const csvFiltered = useMemo(() => filterCSV(csvData, yearFilter, monthFilter), [severityFilter, monthFilter, yearFilter]);
   const mapRef = useRef(null);
   const zoomInitial = 10;
 
@@ -37,7 +37,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     map: map,
     className: 'fill', 
     geoJsonData: geoJsonData,
-    setBoroHover: setBoroHover,
+    setBoroughFilter: setBoroughFilter,
     fill: '#9ea39b',
     fillOpacity: 0.1,
     isBoroughFilterClicked: isBoroughFilterClicked, 
@@ -59,8 +59,8 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     map: map,
     className: 'outline', 
     geoJsonData: geoJsonData,
-    boroHover: boroHover,
-    setBoroHover: setBoroHover,
+    boroughFilter: boroughFilter,
+    setBoroughFilter: setBoroughFilter,
     fill: 'red',
     fillOpacity: 0.0,
     stroke: '#717171',

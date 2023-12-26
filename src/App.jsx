@@ -14,22 +14,22 @@ function App() {
   const [csvData, setCsvData] = useState([]);
   const [geoJsonData, setGeoJsonData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [boroHover, setBoroHover] = useState('All Boroughs');
+  const [boroughFilter, setBoroughFilter] = useState('All Boroughs');
   const [isBoroughFilterClicked, setIsBoroughFilterClicked] = useState(false);
-  const [chosenYear, setChosenYear] = useState('All Years');
-  const [chosenMonth, setChosenMonth] = useState('All Months');
-  const [severityFilter, setSeverityFilter] = useState('All Severities')
+  const [yearFilter, setYearFilter] = useState([]);
+  const [monthFilter, setMonthFilter] = useState([]);
+  const [severityFilter, setSeverityFilter] = useState([])
 
   // this allows data paths to be modified depending on if in production or development
   const isProduction = import.meta.env.MODE === 'production';
   const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
   
   const csvFilterBySeverity = 
-  severityFilter === 'All Severities'
+  severityFilter.length === 0
     ? csvData
     : csvData.filter(d => d.casualty_severity === severityFilter);
   
-  const csvFiltered = filterCSV(csvFilterBySeverity, chosenYear, chosenMonth, boroHover)
+  const csvFiltered = filterCSV(csvFilterBySeverity, yearFilter, monthFilter, boroughFilter)
 
   useEffect(() => {
     Promise.all([
@@ -50,27 +50,27 @@ function App() {
       <header className='filter-options'>
         <FilterBar
           csvData={csvData}
-          boroHover={boroHover}
-          setBoroHover={setBoroHover}
+          boroughFilter={boroughFilter}
+          setBoroughFilter={setBoroughFilter}
           setIsBoroughFilterClicked={setIsBoroughFilterClicked}
-          chosenYear={chosenYear}
-          setChosenYear={setChosenYear}
-          chosenMonth={chosenMonth}
-          setChosenMonth={setChosenMonth}
+          yearFilter={yearFilter}
+          setYearFilter={setYearFilter}
+          monthFilter={monthFilter}
+          setMonthFilter={setMonthFilter}
           severityFilter={severityFilter}
           setSeverityFilter={setSeverityFilter}
         />
       </header>
-      <section className='split-container'>
+      <div className='split-container'>
         <div className='left-side split-grid'>
           <MapAndSummary
               geoJsonData={geoJsonData}
               csvData={csvData}
               csvFilterBySeverity={csvFilterBySeverity} 
-              boroHover={boroHover}
-              setBoroHover={setBoroHover}
-              chosenMonth={chosenMonth}
-              chosenYear={chosenYear}
+              boroughFilter={boroughFilter}
+              setboroughFilter={setBoroughFilter}
+              monthFilter={monthFilter}
+              yearFilter={yearFilter}
               severityFilter={severityFilter}
               isBoroughFilterClicked={isBoroughFilterClicked}
               setIsBoroughFilterClicked={setIsBoroughFilterClicked}
@@ -80,19 +80,19 @@ function App() {
           <BoroughContainer
             severityFilter={severityFilter}
             csvFilterBySeverity={csvFilterBySeverity}
-            boroHover={boroHover}
-            setBoroHover={setBoroHover}
-            chosenYear={chosenYear}
-            chosenMonth={chosenMonth}
+            boroughFilter={boroughFilter}
+            setboroughFilter={setBoroughFilter}
+            yearFilter={yearFilter}
+            monthFilter={monthFilter}
           />
           <div className='datetime grid-item'>
             <DatetimeContainer 
               csvData={csvFiltered} 
-              boroHover={boroHover} 
-              chosenYear={chosenYear} 
-              setChosenYear={setChosenYear}
-              chosenMonth={chosenMonth}
-              setChosenMonth={setChosenMonth}
+              boroughFilter={boroughFilter} 
+              yearFilter={yearFilter} 
+              setYearFilter={setYearFilter}
+              monthFilter={monthFilter}
+              setmonthFilter={setMonthFilter}
             />
           </div>
           <div className="population-pyramid grid-item">
@@ -102,7 +102,7 @@ function App() {
             />
           </div>
         </div>
-      </section>
+      </div>
     </WindowContextProvider>
     </>
   );

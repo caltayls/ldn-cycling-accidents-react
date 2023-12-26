@@ -3,7 +3,7 @@ import MultiLinePlot from "../MultiLinePlot/MultiLinePlot";
 import MultiLinePlotVertical from "../MultiLinePlot/MultiLinePlotVertical";
 import "./BoroughContainer.css"
 
-export default function BoroughContainer({csvFilterBySeverity, severityFilter, boroHover, chosenMonth, chosenYear, setBoroHover}) {
+export default function BoroughContainer({csvFilterBySeverity, severityFilter, boroughFilter, monthFilter, yearFilter, setBoroughFilter}) {
   const heightDecimal = 0.7;
   
   return (
@@ -16,33 +16,33 @@ export default function BoroughContainer({csvFilterBySeverity, severityFilter, b
           heightDecimal={heightDecimal}
           severityFilter={severityFilter}
           csvData={csvFilterBySeverity}
-          boroHover={boroHover} 
-          chosenMonth={chosenMonth} 
-          chosenYear={chosenYear} 
-          timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'}
+          boroughFilter={boroughFilter} 
+          monthFilter={monthFilter} 
+          yearFilter={yearFilter} 
+          timeUnit={yearFilter === 'All Years'? 'year': monthFilter === 'All Months'? 'month': 'day'}
         />
         <MultiLinePlotVertical
           className="multi-line boroughs vertical"
           heightDecimal={heightDecimal}
           csvData={csvFilterBySeverity} 
-          timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
+          timeUnit={yearFilter === 'All Years'? 'year': monthFilter === 'All Months'? 'month': 'day'} 
           severityFilter={severityFilter}
-          chosenMonth={chosenMonth} 
-          chosenYear={chosenYear}
-          boroHover={boroHover}
-          setBoroHover={setBoroHover}
+          monthFilter={monthFilter} 
+          yearFilter={yearFilter}
+          boroughFilter={boroughFilter}
+          setBoroughFilter={setBoroughFilter}
         ></MultiLinePlotVertical>
       </div>
       <MultiLinePlot
           className="multi-line boroughs horizontal"
           heightDecimal={heightDecimal}
           csvData={csvFilterBySeverity} 
-          timeUnit={chosenYear === 'All Years'? 'year': chosenMonth === 'All Months'? 'month': 'day'} 
+          timeUnit={yearFilter === 'All Years'? 'year': monthFilter === 'All Months'? 'month': 'day'} 
           severityFilter={severityFilter}
-          chosenMonth={chosenMonth} 
-          chosenYear={chosenYear}
-          boroHover={boroHover}
-          setBoroHover={setBoroHover}
+          monthFilter={monthFilter} 
+          yearFilter={yearFilter}
+          boroughFilter={boroughFilter}
+          setBoroughFilter={setBoroughFilter}
         />
     </div>
   )

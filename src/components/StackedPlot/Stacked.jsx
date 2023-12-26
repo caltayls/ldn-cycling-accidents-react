@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 import "./Stacked.css"
-export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, svgWidthDecimal, id }) {
+export default function StackedPlot({ csvData, boroughFilter, timeUnit, yearFilter, setYearFilter, monthFilter, setMonthFilter, plotTitle, svgWidthDecimal, id }) {
   const svgRef = useRef(null);
   const [hoverYear, setHoverYear] = useState('');
   const { clientHeight, clientWidth } = useContext(WindowContext);
@@ -46,7 +46,7 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
 
 
   
-  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth);
+  const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter);
 
   
   const series =  useMemo(() => {

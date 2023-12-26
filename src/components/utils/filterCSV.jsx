@@ -1,24 +1,24 @@
-export function filterCSV(csv, chosenYear='All Years', chosenMonth='All Months', boroHover='', severity='') {
+export function filterCSV(csv, yearFilter=[], monthFilter=[], boroughFilter='', severityFilter='') {
   let csvFiltered = csv;
-  if (boroHover) {
-  csvFiltered = boroHover === 'All Boroughs'
+  if (boroughFilter) {
+  csvFiltered = boroughFilter === 'All Boroughs'
     ? csvFiltered
-    : csvFiltered.filter(d => d.borough === boroHover);
+    : csvFiltered.filter(d => boroughFilter.includes(d.borough));
   }
 
-  if (severity) {
-    csvFiltered = severity === 'All Severities'
+  if (severityFilter) {
+    csvFiltered = severityFilter.length === 0
     ? csvFiltered
-    : csvFiltered.filter(d => d.casualty_severity === severity);
+    : csvFiltered.filter(d => severityFilter.includes(d.casualty_severity));
   }
 
-  csvFiltered = chosenYear === 'All Years'
+  csvFiltered = yearFilter.length === 0
     ? csvFiltered
-    : csvFiltered.filter(d => d.datetime.getFullYear() === chosenYear);
+    : csvFiltered.filter(d => yearFilter.includes(d.datetime.getFullYear()));
 
-  csvFiltered = chosenMonth === 'All Months'
+  csvFiltered = monthFilter.length === 0
     ? csvFiltered
-    : csvFiltered.filter(d => d.datetime.getMonth() === chosenMonth);
+    : csvFiltered.filter(d => monthFilter.includes(d.datetime.getMonth()));
 
 
   return csvFiltered

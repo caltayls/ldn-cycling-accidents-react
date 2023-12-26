@@ -5,12 +5,11 @@ import { filterCSV } from "../utils/filterCSV";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
 
-export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYear, severityFilter, boroHover, widthDecimal, heightDecimal }) {
+export default function HorizontalBar({ csvData, timeUnit, monthFilter, yearFilter, severityFilter, boroughFilter, widthDecimal, heightDecimal }) {
 
   const gRef = useRef(null);
   const boroughNames = new Set(csvData.map(d => d.borough));
-  console.log(boroughNames)
-  const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
+  const csvFiltered = filterCSV(csvData, yearFilter, monthFilter);
   
 
   const margin = {
@@ -45,17 +44,17 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
   }).sort((a, b) => a.overallCount - b.overallCount)
 
 
-  function getTimeSet(timeUnit, array, chosenYear=null, chosenMonth=null) {
+  function getTimeSet(timeUnit, array, yearFilter=null, monthFilter=null) {
     if (timeUnit === 'day') {
-      const firstDay = new Date(chosenYear, chosenMonth, 1); 
-      const lastDay = new Date(chosenYear, chosenMonth + 1, 0);
+      const firstDay = new Date(yearFilter, monthFilter, 1); 
+      const lastDay = new Date(yearFilter, monthFilter + 1, 0);
       const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
       return dateArray
     }
     return [...new Set(array.map(d => d.datetime))];
   }
     
-  const timeSet = getTimeSet(timeUnit, incidentArray, chosenYear, chosenMonth);
+  const timeSet = getTimeSet(timeUnit, incidentArray, yearFilter, monthFilter);
 
   const stack = d3.stack()
       .keys(['Slight', 'Serious', 'Fatal'])
@@ -123,12 +122,12 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
           .attr('stroke-width', 0.1);
 
     return () => svg.selectAll('*').remove()
-  }, [timeUnit, severityFilter, chosenMonth, chosenYear, svgWidth])
+  }, [timeUnit, severityFilter, monthFilter, yearFilter, svgWidth])
 
   // // update bars when data changes
   useEffect(() => {
-    const boroIncidents = incidentArray.filter(d => d.borough === boroHover)[0];
-    if (boroHover !== 'All Boroughs' &&  typeof boroIncidents !== 'undefined') {
+    const boroIncidents = incidentArray.filter(d => d.borough === boroughFilter)[0];
+    if (boroughFilter !== 'All Boroughs' &&  typeof boroIncidents !== 'undefined') {
       d3.select(gRef.current)
         .append('g')
           .attr('class', 'highlighted')
@@ -144,7 +143,7 @@ export default function HorizontalBar({ csvData, timeUnit, chosenMonth, chosenYe
           .attr('fill', 'none');
     }
     return () => d3.select('.highlighted').remove()
-  }, [boroHover, chosenMonth, chosenYear, severityFilter, clientWidth])
+  }, [boroughFilter, monthFilter, yearFilter, severityFilter, clientWidth])
   
 
   return (
