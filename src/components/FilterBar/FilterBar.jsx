@@ -16,6 +16,7 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
     <div className='header title'>
     <h1> London Cycling Accidents</h1>
     </div>
+    <div className='bluebar'></div>
     
     <div className={`filter-container ${menuOpen? 'active': ''}`}>
       <div className='filter-option borough'>

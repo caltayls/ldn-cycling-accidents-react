@@ -30,15 +30,15 @@
   background-color: #f8f8f8;
   /* width: 500px; */
   position: fixed;
-  top: 85px;
+  top: 0px;
   height: 100%;
   right: -100%;
   display: flex;
   flex-direction: column;
   justify-content: start;
-  z-index: 999;
+  z-index: 5;
   transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
-  padding-top: 20px;
+  padding-top: 60px;
   border-left: 1px solid #d4d4d4;
   /* box-shadow: 5px 5px 10px #888888; */
   }
@@ -83,6 +83,15 @@
     justify-content: center;
     align-items: center;
     z-index: 10000;
+    transition: all 0.6s cubic-bezier(0.77,0.2,0.05,1.0);
+
+  }
+
+  .hamburger.active {
+    right: 220px;
+    border: none;
+    background-color: #f8f8f8;
+
   }
 
   .bar {
@@ -103,13 +112,16 @@
 
 
 @media only screen and (min-width: 961px) {
-  .header.title {
+  .title {
     padding: 0 10px;
+    z-index: 11;
+
   }
   
   .header h1 {
     padding: 0 0 0 20px;
     color: rgb(247, 244, 240);
+    
   }
 
   .bar {
@@ -128,5 +140,33 @@
     cursor: pointer;
     z-index: 10000;
   }
+
+  .bluebar {
+    position: absolute;
+    background-color: rgb(8, 29, 88);
+    top: 0;
+    width: 100%;
+    height: 72px;
+    z-index: 10;
+  }
+
+
+  .filter-container {
+    background-color: #f8f8f8;
+    /* width: 500px; */
+    position: fixed;
+    top: 0px;
+    height: 100%;
+    right: -100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    z-index: 5;
+    transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+    padding-top: 90px;
+    border-left: 1px solid #d4d4d4;
+    /* box-shadow: 5px 5px 10px #888888; */
+    }
+  
 
 }

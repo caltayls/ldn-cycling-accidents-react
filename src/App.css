@@ -74,10 +74,10 @@
     top: 0;
     left: 0;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     z-index: 10000;
     padding: 20px 0;
-    background-color: rgb(8, 29, 88)
+    background-color: transparent;
   }
   
   .split-container {
