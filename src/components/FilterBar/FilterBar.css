@@ -38,7 +38,7 @@
   justify-content: start;
   z-index: 5;
   transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
-  padding-top: 60px;
+  padding-top: 80px;
   border-left: 1px solid #d4d4d4;
   /* box-shadow: 5px 5px 10px #888888; */
   }
@@ -90,7 +90,7 @@
   .hamburger.active {
     right: 220px;
     border: none;
-    background-color: #f8f8f8;
+    background-color: transparent;
 
   }
 

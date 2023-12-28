@@ -13,6 +13,12 @@
 
   body {
     margin: 0 0;
+    height: 100%;
+  }
+  html, body, #map {
+    height: 100%;
+    width: 100vw;
+
   }
 
   .filter-options {
@@ -52,9 +58,21 @@
   }
 
 
-  .grid-item.summary, .borough-data, .population-pyramid {
+  .summary, .borough-data, .population-pyramid {
     height: 100%;
     padding: 10px 20px 20px 20px;    
+  }
+
+  .right-side {
+    display: none;
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    right: 0;
+    background-color: rgb(222, 222, 223);
+    z-index: 10000;
+    overflow-y: scroll;
+
   }
 
 }
@@ -63,7 +81,7 @@
   body {
     margin: 0 0;
     width: 100%;
-    margin-top: 78px; /*height on select box*/
+    margin-top: 70px; /*height on select box*/
     box-sizing: border-box;
   }
 
