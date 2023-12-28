@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useContext } from 'react';
 import { hexbin } from "d3-hexbin";
 import * as d3 from 'd3'; 
 import * as L from 'leaflet';
@@ -10,17 +10,22 @@ import { filterCSV } from '../utils/filterCSV';
 
 import './MapLeaflet.css'
 import HexLegend from '../HexLegend/HexLegend';
+import { WindowContext } from '../WindowContextProvider/WindowContextProvider';
 
-export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroHover, setBoroHover, chosenMonth, chosenYear, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
+export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroughFilter, setBoroughFilter, monthFilter, yearFilter, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   const [ map, setMap ] = useState('');
+
+  const { clientWidth } = useContext(WindowContext);
   
   // adjust hex state 
   const [hexRadius, setHexRadius] = useState(5);
+  const [hexOpacity, setHexOpacity] = useState(1);
+
   const [colorScaleType, setColorScaleType] = useState('Linear');
   const [hexDomainExtent, setHexDomainExtent] = useState([]);
 
   const hexCoordsRef = useRef(''); // ref used to prevent rerendering
-  const csvFiltered = useMemo(() => filterCSV(csvData, chosenYear, chosenMonth), [severityFilter, chosenMonth, chosenYear]);
+  const csvFiltered = useMemo(() => filterCSV(csvData, yearFilter, monthFilter), [severityFilter, monthFilter, yearFilter]);
   const mapRef = useRef(null);
   const zoomInitial = 10;
 
@@ -37,7 +42,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     map: map,
     className: 'fill', 
     geoJsonData: geoJsonData,
-    setBoroHover: setBoroHover,
+    setBoroughFilter: setBoroughFilter,
     fill: '#9ea39b',
     fillOpacity: 0.1,
     isBoroughFilterClicked: isBoroughFilterClicked, 
@@ -51,6 +56,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     hexCoordsRef: hexCoordsRef,
     hexRadius: hexRadius,
     colorScaleType: colorScaleType,
+    hexOpacity: hexOpacity,
     setHexDomainExtent: setHexDomainExtent,
 
   });
@@ -59,8 +65,8 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
     map: map,
     className: 'outline', 
     geoJsonData: geoJsonData,
-    boroHover: boroHover,
-    setBoroHover: setBoroHover,
+    boroughFilter: boroughFilter,
+    setBoroughFilter: setBoroughFilter,
     fill: 'red',
     fillOpacity: 0.0,
     stroke: '#717171',
@@ -111,10 +117,12 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
       };
     }
   }, [map, csvFiltered, hexRadius, colorScaleType]);
+
+  let hexToolsPosition = clientWidth < 961? {left: 3}: {right: 3};
  
   return (
     <>
-    <HexTools setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', right: 3,  zIndex:2}}></HexTools> 
+    <HexTools hexOpacity={hexOpacity} setHexOpacity={setHexOpacity} setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', ...hexToolsPosition,  zIndex:2}}></HexTools> 
     <HexLegend domainExtent={hexDomainExtent} style={{ position: 'absolute', left: 3, bottom: 1,  zIndex:3}}></HexLegend>
     <div id='map-container' ref={mapRef} style={{height: '100%', width:'100%', zIndex:1, margin:0}}></div>
     </>

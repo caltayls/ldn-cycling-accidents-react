@@ -7,11 +7,11 @@ import { svg } from "leaflet";
 
 
 
-export default function MultiLinePlot({className, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, plotTitle, boroHover, setBoroHover}) {
+export default function MultiLinePlot({className, boroughHighlightedRef, csvData, yearFilter, monthFilter, severityFilter, timeUnit, plotTitle, boroughFilter, setboroughFilter}) {
   const divRef = useRef(null);
   const outerRef = useRef(null);
   const gRef = useRef(null);
-  const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
+  const csvFiltered = filterCSV(csvData, yearFilter, monthFilter);
   const { clientHeight, clientWidth } = useContext(WindowContext);
   
   
@@ -30,7 +30,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
   
 
 
-  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
+  const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter); 
  
   const svgWidth = clientWidth * 0.95; 
   const svgHeight = clientHeight * 0.3;
@@ -137,7 +137,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
         .attr('d', lineGenerator)
         .attr('name', d => d[0].borough)
 
-    g.select(`[name="${boroHover}"]`).raise()
+    g.select(`[name="${boroughFilter}"]`).raise()
         .style('stroke', 'red')
         .style('stroke-width', 3)
         .style("mix-blend-mode", "normal");
@@ -145,7 +145,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
 
         
     return () => g.selectAll('*').remove();
-  }, [timeUnit, severityFilter, chosenMonth, chosenYear, clientWidth, boroHover]);
+  }, [timeUnit, severityFilter, monthFilter, yearFilter, clientWidth, boroughFilter]);
 
 
   return (
@@ -177,9 +177,9 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
   //   let [xm, ym] = d3.pointer(event);
   //   // borough of closest data point to pointer
   //   let { borough, x: xCoord, y: yCoord} = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
-  //   if (boroHover !== 'All Boroughs') {
+  //   if (boroughFilter !== 'All Boroughs') {
 
-  //     let { borough, x: xCoord, y: yCoord} = d3.least(points.filter(d => d.borough === boroHover), d => Math.abs(d.x - xm));
+  //     let { borough, x: xCoord, y: yCoord} = d3.least(points.filter(d => d.borough === boroughFilter), d => Math.abs(d.x - xm));
 
   //     let pointerCircle = d3.select('.pointer-circle')
   //       .attr('display', null)
@@ -191,7 +191,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
 
 
   //     const yearArr = boroArray.flat().filter(d => d.datetime === x.invert(xCoord)).sort((a,b) => a.count - b.count);      
-  //     let boroughRank = yearArr.findIndex(d => d.borough === boroHover);
+  //     let boroughRank = yearArr.findIndex(d => d.borough === boroughFilter);
 
 
 
@@ -213,7 +213,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
 //   // borough of closest data point to pointer
 //   let { borough, x: xCoord, y: yCoord} = d3.least(points, d => Math.hypot(d.x - xm, d.y - ym));
 
-//   if (boroHover !== 'All Boroughs') { // removes already selected borough
+//   if (boroughFilter !== 'All Boroughs') { // removes already selected borough
     
 //     // remove plot highlight
 //     d3.select(`g.line-paths path[name="${ boroughHighlightedRef.current}"]`)
@@ -234,7 +234,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
 
 
 //     boroughHighlightedRef.current = '';
-//     setBoroHover('All Boroughs');
+//     setboroughFilter('All Boroughs');
 //   } else {
 //     d3.select(`g.line-paths [name="${borough}"]`).raise()
 //         .style('stroke', 'red')
@@ -253,7 +253,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
 
 
 
-//     setBoroHover(borough);
+//     setboroughFilter(borough);
 //   }
 
 // }
@@ -265,4 +265,4 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
 
 // // return () => svg.off('click', handleClick).off('mousemove', handleMouseMove).off('mouseleave', handleMouseLeave)
 
-// }, [boroHover, chosenMonth, chosenYear, clientWidth])
+// }, [boroughFilter, monthFilter, yearFilter, clientWidth])

@@ -16,16 +16,14 @@ export function dateTimeParser(timeUnit, datetimeObj) {
   }
 }
 
-export function getTimeSet(timeUnit, chosenYear=null, chosenMonth=null) {
+export function getTimeSet(timeUnit, yearFilter=null, monthFilter=null) {
   timeUnit = String(timeUnit);
   
   if (timeUnit === 'day') {
-    chosenYear = chosenYear === null? 2000: chosenYear;
-    const firstDay = new Date(2000, chosenMonth, 1); 
-    const lastDay = new Date(2000, chosenMonth + 1, 0);
-    const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
-
+    const lastDay = [31];
+    const dateArray = d3.range(1, Math.max(...lastDay)+1);
     return dateArray
+
   } else if (timeUnit === 'hour') {
     return d3.range(0, 24)
   } else if (timeUnit === 'weekday') {

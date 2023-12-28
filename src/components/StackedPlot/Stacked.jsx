@@ -3,9 +3,8 @@ import * as d3 from "d3";
 import { dateTimeParser, getTimeSet } from "../utils/datetime_utils";
 import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 import "./Stacked.css"
-export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, setChosenYear, chosenMonth, setChosenMonth, plotTitle, svgWidthDecimal, id }) {
+export default function StackedPlot({ csvData, boroughFilter, timeUnit, yearFilter, setYearFilter, monthFilter, plotTitle, svgWidthDecimal, id }) {
   const svgRef = useRef(null);
-  const [hoverYear, setHoverYear] = useState('');
   const { clientHeight, clientWidth } = useContext(WindowContext);
 
 
@@ -42,12 +41,10 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
   const severityArray = useMemo(() => {
     return Array.from(groupByYearAndSeverity, ([, inner]) => [...inner.values()]).flat()
       .sort((a, b) => a.datetime - b.datetime);
-  }, [csvData]);
+  }, [groupByYearAndSeverity]);
 
-
-  
-  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth);
-
+  console.log(timeUnit)
+  const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter);
   
   const series =  useMemo(() => {
     const stack = d3.stack()
@@ -68,12 +65,11 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
       .rangeRound([height, 0])
   }, [series, height]);
 
-  const x = useMemo(() => {
-    return d3.scaleBand()
+  const x = d3.scaleBand()
       .domain(timeSet)
       .range([0, width])
       .padding(timeUnit !== 'hour'? 0.1: 0.05);
-  }, [csvData, width, timeSet]);
+
 
 
   const xAxisGen = d3.axisBottom(x)
@@ -92,16 +88,6 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
     xAxisGen.tickValues(d3.range(0, 22, 3))
   }
 
-  // for stacked plot
-  // const area = d3.area()
-  //   .x(d => x(d.data[0]))
-  //   .y0(d => y(d[0]))
-  //   .y1(d => y(d[1]));
-
-  // coordinates for plot interactivity
-  const [x1, x2] = x.range();
-  const [y1, y2] = y.range();
-  const yearsGridCoords = timeSet.map(d => x(d));
 
   useEffect(() => {
     let svg = d3.select(svgRef.current);
@@ -154,16 +140,9 @@ export default function StackedPlot({ csvData, boroHover, timeUnit, chosenYear, 
         svg.selectAll('text')
           .attr('stroke', '#D9D9D9')
           .attr('stroke-width', 0.1);
-    // svg.append('line')
-    //     .attr('id', 'follow-cursor')
-    //     .attr('y1', y1)
-    //     .attr('y2', y2)
-    //     .attr('x1', x1)
-    //     .attr('x2', x2)
-    //     .style('stroke', 'none')  
     
     return () => svg.selectAll("*").remove();
-  }, [clientWidth, timeUnit, csvData])
+  }, [clientWidth, timeUnit, csvData, timeSet, series, x])
 
 
 

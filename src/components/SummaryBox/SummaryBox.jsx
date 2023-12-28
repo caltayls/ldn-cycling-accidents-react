@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
 import './SummaryBox.css';
 
 
-export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityFilter, timeUnit, boroHover }) {
+export default function SummaryBox({ csvData, yearFilter, monthFilter, severityFilter, timeUnit, boroughFilter }) {
 
   const svgRefs = {
     All: useRef(null),
@@ -17,18 +17,20 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
   }
 
 
- const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
+ const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter); 
+ console.log(timeUnit)
+ console.log(timeSet)
 
   useEffect(() => {
     Object.keys(svgRefs).forEach(d => drawLine(d))
 
     return () => d3.selectAll('.summary-line g').remove();
 
-  }, [boroHover, chosenYear, chosenMonth])
+  }, [boroughFilter, yearFilter, monthFilter])
 
   return (
     <>
-      <h1>{boroHover}{chosenYear !== 'All Years' && ` | ${chosenYear}`}{chosenMonth !== 'All Months' && ` | ${new Date(2000, chosenMonth).toLocaleString('default', { month: 'long' })}`}</h1>
+      <h2>Summary</h2>
       <div className='table-container'>
         <table>
           <thead>
@@ -36,7 +38,7 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
               <th className='align-left'>Incident Type</th>
               <th>Count</th>
               <th >Trend</th>
-              {boroHover !== 'All Boroughs' && (            
+              {boroughFilter !== 'All Boroughs' && (            
                 <>
                 <th>Rank</th>
                 <th>% of Incident Type </th>
@@ -48,7 +50,7 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
             {Object.keys(svgRefs).map(d => {
               let { boroRanks } = getArrayAndCount(d, 'All Boroughs')
               if (d === 'All') boroRanks = boroRanks.filter(d => d.casualty_severity === 'Serious');
-              const { incidentCount } = getArrayAndCount(d, boroHover);
+              const { incidentCount } = getArrayAndCount(d, boroughFilter);
               const { incidentCount: allBoroIncidentCount} = getArrayAndCount(d, 'All Boroughs');
 
               return (
@@ -56,8 +58,8 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
                   <th>{d}</th>
                   <td>{incidentCount.toLocaleString()}</td>
                   <td><svg ref={svgRefs[d]}></svg></td>
-                  <td>{boroHover !== 'All Boroughs' && `#${boroRanks.findIndex(d => d.borough === boroHover)+1}`}</td>
-                  <td>{boroHover !== 'All Boroughs' && `${Math.round(incidentCount/allBoroIncidentCount*100*10)/10}%`}</td>
+                  <td>{boroughFilter !== 'All Boroughs' && `#${boroRanks.findIndex(d => d.borough === boroughFilter)+1}`}</td>
+                  <td>{boroughFilter !== 'All Boroughs' && `${Math.round(incidentCount/allBoroIncidentCount*100*10)/10}%`}</td>
                 </tr>
               )
             })}
@@ -81,7 +83,7 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
     const height = 20 - margin.top - margin.bottom;
 
     const svgRef = svgRefs[ref];
-    const { boroArray } = getArrayAndCount(ref, boroHover);
+    const { boroArray } = getArrayAndCount(ref, boroughFilter);
 
     const areaGen = d3.area()
     .x(d => x(d.datetime))
@@ -129,8 +131,7 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
 
   function getArrayAndCount(severity='All', borough) {
 
-    const  csvFiltered = filterCSV(csvData, chosenYear, chosenMonth, borough, severity !== 'All'? severity: '');
-    
+    const  csvFiltered = filterCSV(csvData, yearFilter, monthFilter, borough, severity !== 'All'? severity: '');
     const boroObj = d3.rollup(
       csvFiltered, 
       v=> ({
@@ -142,19 +143,22 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
       (d) => dateTimeParser(timeUnit, d.datetime),
     );
 
+
+
     const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))); 
     const boroYears = boroArray.flat().map(d => d.datetime);
     const yearsToAdd = timeSet.filter(d => !boroYears.includes(d) && d);
     
+    // add zero counts to times that have no accidents to make plots look nicer
     const boroArrayToAppend = yearsToAdd.map(d => {
-      return {borough: boroHover, datetime: d, count: 0}
+      return {borough: boroughFilter, datetime: d, count: 0}
     });
     const combinedArray = [...boroArray.flat(), ...boroArrayToAppend].sort((a, b) => a.datetime - b.datetime);
 
     let allBoroSummedArray, allBoroSummedObj, incidentArray;
-    if (borough === 'All Boroughs'){
+    if (borough === "All Boroughs"){
       allBoroSummedObj = d3.rollup(combinedArray, v => ({datetime: v[0].datetime, count: d3.sum(v, d => d.count)}), d => d.datetime);
-      allBoroSummedArray = Array.from(allBoroSummedObj, inner => inner[1])
+      allBoroSummedArray = Array.from(allBoroSummedObj, inner => inner[1]);
 
 
     // For borough ranks
@@ -165,20 +169,20 @@ export default function SummaryBox({ csvData, chosenYear, chosenMonth, severityF
           d => d.casualty_severity
         );
     
-      incidentArray = Array.from(incidentCount, ([, inner]) => [...inner.values()]).flat()
+      incidentArray = Array.from(incidentCount, ([, inner]) => [...inner.values()]).flat();
     
       // add overall count to array for ordering
-      const overallCounts = d3.rollups(incidentArray, v => ({borough: v[0].borough, overallCount: d3.sum(v, d => d.count)}), d => d.borough).map(d => d[1])
+      const overallCounts = d3.rollups(incidentArray, v => ({borough: v[0].borough, overallCount: d3.sum(v, d => d.count)}), d => d.borough).map(d => d[1]);
       
       incidentArray = incidentArray.map(d => {
         const overallCount = overallCounts.filter(x => x.borough === d.borough)[0].overallCount;
         return {...d, overallCount: overallCount}
-      }).sort((a, b) => b.overallCount - a.overallCount)
+      }).sort((a, b) => b.overallCount - a.overallCount);
     }
   return ({
-          boroArray: borough === 'All Boroughs'? allBoroSummedArray: combinedArray,
-          incidentCount: borough === 'All Boroughs'? d3.sum(allBoroSummedArray.flat(), d=> d.count): d3.sum(combinedArray.flat(), d=> d.count),
-          boroRanks: borough === 'All Boroughs' && incidentArray
+          boroArray: borough === "All Boroughs"? allBoroSummedArray: combinedArray,
+          incidentCount: borough === "All Boroughs"? d3.sum(allBoroSummedArray.flat(), d=> d.count): d3.sum(combinedArray.flat(), d=> d.count),
+          boroRanks: borough.length !== 0 && incidentArray
         })
     }
   

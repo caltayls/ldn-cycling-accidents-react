@@ -1,12 +1,10 @@
-body {
-  background: rgb(225, 224, 222);
-}
 
 /* * {
   outline: 1px solid red;
-} */
+}
 .title { 
   width: 100%;
+  color: rgb(8, 29, 88);
 }
 
 
@@ -18,11 +16,18 @@ body {
   }
 
   .filter-options {
-    display: flex;
-    justify-content: center;
-    background-color: #fff;
-    width: 100%;
-    /* text-align: left; */
+    .filter-options {
+      width: 100%;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 10000;
+      padding: 0 0;
+      background-color: transparent;
+    }
   }
   
   .grid-item.leaflet-map {
@@ -30,7 +35,7 @@ body {
     padding: 0;
     width: 100vw;
     margin: 0 auto;
-    height: 80vh;    
+    height: 100vh;    
   }
 
 
@@ -72,18 +77,16 @@ body {
     justify-content: center;
     z-index: 10000;
     padding: 20px 0;
-    background-color: #fff;
-    left: 50%;
-    transform: translate(-50%, 0);
+    background-color: rgb(8, 29, 88)
   }
   
   .split-container {
     display: flex;
     justify-content: space-evenly;
     gap: 10px;
-    height: 1470px; /*need to specify height for sticky to work*/
+    height: 1970px; /*need to specify height for sticky to work*/
     margin: 0 0;
-    background: rgb(225, 224, 222);
+    background: rgb(239, 238, 236);
     box-sizing: border-box;
   }
   
@@ -91,7 +94,7 @@ body {
     padding-top: 10px;
     box-sizing: border-box;
     width: 48%;
-    top: 78px; /*height of filter header*/
+    top: 90px; /*height of filter header*/
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -102,13 +105,18 @@ body {
     position: sticky;
     height: 100px
   }
+
+  .right-side {
+    position: relative;
+    top: 10px;
+  }
   
 
   
   .grid-item {
     width: 100%;
     border-radius: 5px; /* Adjust the border-radius for rounded corners */
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
+    box-shadow: 3px 3px 8px #8888881c;
     padding: 20px 0; /* Adjust the padding inside each cell */
     background-color: #fff; /* Background color for each cell */
     box-sizing: border-box;
@@ -125,14 +133,14 @@ body {
     position: relative;
     padding: 0;
     width: 100%;
-    min-height: 45vh;
+    min-height: 80vh;
     
   }
   
   .grid-item.summary {
     padding: 15px;
     width: 100%;
-    height: 35vh;
+    height: 100%;
   }
 
   .grid-item.population-pyramid {

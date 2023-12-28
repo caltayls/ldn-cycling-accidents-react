@@ -7,14 +7,14 @@ import { svg } from "leaflet";
 
 
 
-export default function MultiLinePlotVertical({ className, widthDecimal, heightDecimal, boroughHighlightedRef, csvData, chosenYear, chosenMonth, severityFilter, timeUnit, boroHover, setBoroHover}) {
+export default function MultiLinePlotVertical({ className, widthDecimal, heightDecimal, boroughHighlightedRef, csvData, yearFilter, monthFilter, severityFilter, timeUnit, boroughFilter}) {
   const divRef = useRef(null);
   const outerRef = useRef(null);
   const gRef = useRef(null);
-  const csvFiltered = filterCSV(csvData, chosenYear, chosenMonth);
+  const csvFiltered = filterCSV(csvData, yearFilter, monthFilter);
   const { clientHeight, clientWidth } = useContext(WindowContext);
   
-  const timeSet = getTimeSet(timeUnit, chosenYear, chosenMonth); 
+  const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter); 
   const boroObj = d3.rollup(
     csvFiltered, 
     v=> ({
@@ -40,11 +40,9 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
     return combinedArray.sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))
   });
 
-  console.log(clientWidth)
   const svgWidth = clientWidth * (clientWidth > 960? 0.17: 0.3); 
   const svgHeight = clientHeight * heightDecimal;
 
- console.log(svgWidth)
   const margin = {
     top: 17,
     bottom: 15,
@@ -133,7 +131,7 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
         .attr('d', lineGenerator)
         .attr('name', d => d[0].borough)
 
-    g.select(`[name="${boroHover}"]`).raise()
+    g.select(`[name="${boroughFilter}"]`).raise()
         .style('stroke', 'red')
         .style('stroke-width', 3)
         .style("mix-blend-mode", "normal");
@@ -141,7 +139,7 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
 
         
     return () => g.selectAll('*').remove();
-  }, [timeUnit, severityFilter, chosenMonth, chosenYear, clientWidth, boroHover]);
+  }, [timeUnit, severityFilter, monthFilter, yearFilter, clientWidth, boroughFilter]);
   
 
 
