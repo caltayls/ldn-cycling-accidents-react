@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useContext } from 'react';
 import { hexbin } from "d3-hexbin";
 import * as d3 from 'd3'; 
 import * as L from 'leaflet';
@@ -10,9 +10,12 @@ import { filterCSV } from '../utils/filterCSV';
 
 import './MapLeaflet.css'
 import HexLegend from '../HexLegend/HexLegend';
+import { WindowContext } from '../WindowContextProvider/WindowContextProvider';
 
 export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData, boroughFilter, setBoroughFilter, monthFilter, yearFilter, severityFilter, isBoroughFilterClicked, setIsBoroughFilterClicked }) {
   const [ map, setMap ] = useState('');
+
+  const { clientWidth } = useContext(WindowContext);
   
   // adjust hex state 
   const [hexRadius, setHexRadius] = useState(5);
@@ -114,10 +117,12 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
       };
     }
   }, [map, csvFiltered, hexRadius, colorScaleType]);
+
+  let hexToolsPosition = clientWidth < 961? {left: 3}: {right: 3};
  
   return (
     <>
-    <HexTools hexOpacity={hexOpacity} setHexOpacity={setHexOpacity} setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', right: 3,  zIndex:2}}></HexTools> 
+    <HexTools hexOpacity={hexOpacity} setHexOpacity={setHexOpacity} setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', ...hexToolsPosition,  zIndex:2}}></HexTools> 
     <HexLegend domainExtent={hexDomainExtent} style={{ position: 'absolute', left: 3, bottom: 1,  zIndex:3}}></HexLegend>
     <div id='map-container' ref={mapRef} style={{height: '100%', width:'100%', zIndex:1, margin:0}}></div>
     </>

@@ -1,12 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import * as L from 'leaflet';
 import * as d3 from 'd3';
+import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 
 export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
+ const { clientWidth } = useContext(WindowContext);
 
   useEffect(() => {
     const map = L.map(mapRef.current, {
       zoomSnap: 1,
+      zoomControl: clientWidth < 961? false: true,
       // crs: L.CRS.Simple,
     }).setView([51.505, -0.09], zoomInitial);
 
@@ -38,7 +41,7 @@ export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
     .attr('class', 'leaflet-zoom-hide');
 
     return () => map.remove()
-  }, [])
+  }, [clientWidth])
 
 }
      

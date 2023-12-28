@@ -30,12 +30,7 @@ export default function SummaryBox({ csvData, yearFilter, monthFilter, severityF
 
   return (
     <>
-      <h1>{boroughFilter}</h1>
-      <h2>
-      {yearFilter !== 'All Years' && ` ${yearFilter}`}
-      </h2>
-      <h2>{monthFilter.length !== 0 && monthFilter.map(d => new Date(2000, d).toLocaleString('default', { month: 'long' }))
-      }</h2>
+      <h2>Summary</h2>
       <div className='table-container'>
         <table>
           <thead>

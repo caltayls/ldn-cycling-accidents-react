@@ -10,6 +10,7 @@ import PopulationPyramid from './components/PopulationPyramid/PopulationPyramid'
 import BoroughContainer from './components/BoroughContainer/BoroughContainer';
 import { filterCSV } from './components/utils/filterCSV';
 import FilterBar from './components/FilterBar/FilterBar';
+import InfoContainer from './components/InfoContainer/InfoContainer';
 
 function App() {
   const [csvData, setCsvData] = useState([]);
@@ -19,14 +20,13 @@ function App() {
   const [isBoroughFilterClicked, setIsBoroughFilterClicked] = useState(false);
   const [yearFilter, setYearFilter] = useState([]);
   const [monthFilter, setMonthFilter] = useState([]);
-  const [severityFilter, setSeverityFilter] = useState([])
+  const [severityFilter, setSeverityFilter] = useState([]);
 
   // this allows data paths to be modified depending on if in production or development
   const isProduction = import.meta.env.MODE === 'production';
   const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
   
-  const csvFilterBySeverity = 
-  severityFilter.length === 0
+  const csvFilterBySeverity = severityFilter.length === 0
     ? csvData
     : csvData.filter(d => d.casualty_severity === severityFilter);
   
@@ -69,7 +69,7 @@ function App() {
               csvData={csvData}
               csvFilterBySeverity={csvFilterBySeverity} 
               boroughFilter={boroughFilter}
-              setboroughFilter={setBoroughFilter}
+              setBoroughFilter={setBoroughFilter}
               monthFilter={monthFilter}
               yearFilter={yearFilter}
               severityFilter={severityFilter}
@@ -78,6 +78,14 @@ function App() {
           ></MapAndSummary>
         </div>
         <div className='right-side split-grid'>
+          <div className='info-box grid-item'>
+            <InfoContainer
+              boroughFilter={boroughFilter}
+              yearFilter={yearFilter}
+              monthFilter={monthFilter}
+              severityFilter={severityFilter}
+            />
+          </div>
           <div className='summary grid-item'>
             <SummaryBox
               csvData={csvData} 
@@ -92,7 +100,7 @@ function App() {
             severityFilter={severityFilter}
             csvFilterBySeverity={csvFilterBySeverity}
             boroughFilter={boroughFilter}
-            setboroughFilter={setBoroughFilter}
+            setBoroughFilter={setBoroughFilter}
             yearFilter={yearFilter}
             monthFilter={monthFilter}
           />
@@ -103,7 +111,6 @@ function App() {
               yearFilter={yearFilter} 
               setYearFilter={setYearFilter}
               monthFilter={monthFilter}
-              setmonthFilter={setMonthFilter}
             />
           </div>
           <div className="population-pyramid grid-item">

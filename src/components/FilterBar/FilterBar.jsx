@@ -58,11 +58,15 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
           placeholder={'All Severities'}
         /> 
       </div>
+
     </div>
     <div className={`hamburger ${menuOpen? 'active': ''}`} onClick={handleHamburgerClick}>
-      <span className='bar'/>
-      <span className='bar'/>
-      <span className='bar'/>
+      <div className='hamburger-icon'>
+        <span className='bar'/>
+        <span className='bar'/>
+        <span className='bar'/>
+      </div>
+
   </div>
   </>
 
