@@ -122,14 +122,6 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
  
   return (
     <>
-        <div className='plot-svg' onClick={() => {
-          d3.select('.button-line').transition().attr('d', `M5 55 L24 ${6 + Math.random() * 48} L43 ${6 + Math.random() * 48} L62 ${6 + Math.random() * 48}`);
-        }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 60 60">
-            <path d="M5, 5 v50 h60" stroke='rgb(173, 173, 173)' strokeWidth="4" fill="transparent" />
-            <path className='button-line' d="M5 55 L24 30 L43 40 L62 20" stroke='rgb(173, 173, 173)' strokeWidth="4" fill="transparent" strokeLinecap='round' strokeLinejoin='round'/>
-          </svg>
-        </div>
     <HexTools hexOpacity={hexOpacity} setHexOpacity={setHexOpacity} setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', ...hexToolsPosition,  zIndex:2}}></HexTools> 
     <HexLegend domainExtent={hexDomainExtent} style={{ position: 'absolute', left: 3, bottom: 8,  zIndex:3}}></HexLegend>
     <div id='map-container' ref={mapRef} style={{height: '100%', width:'100%', zIndex:1, margin:0}}></div>

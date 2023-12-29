@@ -8,8 +8,8 @@ import { WindowContext } from "../WindowContextProvider/WindowContextProvider";
 export default function HorizontalBar({ csvData, timeUnit, monthFilter, yearFilter, severityFilter, boroughFilter, widthDecimal, heightDecimal }) {
 
   const gRef = useRef(null);
-  const boroughNames = new Set(csvData.map(d => d.borough));
-  const csvFiltered = filterCSV(csvData, yearFilter, monthFilter);
+  const boroughNames = useMemo(() => new Set(csvData.map(d => d.borough)), []);
+  const csvFiltered = useMemo(() => filterCSV(csvData, yearFilter, monthFilter), [csvData, yearFilter, monthFilter]);
   
 
   const margin = {
@@ -25,36 +25,24 @@ export default function HorizontalBar({ csvData, timeUnit, monthFilter, yearFilt
   const height = svgHeight - margin.top - margin.bottom;
   const width = svgWidth - margin.left - margin.right;
 
-  const incidentCount = d3.rollup(
+  const incidentCount = useMemo(() => (d3.rollup(
     csvFiltered, 
       v => ({borough: v[0].borough, casualty_severity: v[0].casualty_severity, count: v.length}), 
       d => d.borough, 
       d => d.casualty_severity
-    );
+    )), [csvFiltered]);
 
 
   let incidentArray = Array.from(incidentCount, ([, inner]) => [...inner.values()]).flat()
 
   // add overall count to array for ordering
-  const overallCounts = d3.rollups(incidentArray, v => ({borough: v[0].borough, overallCount: d3.sum(v, d => d.count)}), d => d.borough).map(d => d[1])
+  const overallCounts = useMemo(() => d3.rollups(incidentArray, v => ({borough: v[0].borough, overallCount: d3.sum(v, d => d.count)}), d => d.borough).map(d => d[1]), [incidentArray]);
   
   incidentArray = incidentArray.map(d => {
     const overallCount = overallCounts.filter(x => x.borough === d.borough)[0].overallCount;
     return {...d, overallCount: overallCount}
   }).sort((a, b) => a.overallCount - b.overallCount)
 
-
-  function getTimeSet(timeUnit, array, yearFilter=null, monthFilter=null) {
-    if (timeUnit === 'day') {
-      const firstDay = new Date(yearFilter, monthFilter, 1); 
-      const lastDay = new Date(yearFilter, monthFilter + 1, 0);
-      const dateArray = d3.range(firstDay.getDate(), lastDay.getDate()+1)
-      return dateArray
-    }
-    return [...new Set(array.map(d => d.datetime))];
-  }
-    
-  const timeSet = getTimeSet(timeUnit, incidentArray, yearFilter, monthFilter);
 
   const stack = d3.stack()
       .keys(['Slight', 'Serious', 'Fatal'])
@@ -66,17 +54,17 @@ export default function HorizontalBar({ csvData, timeUnit, monthFilter, yearFilt
     .domain(['Slight', 'Serious', 'Fatal'])
     .range(d3.schemeTableau10);
 
-  const x = d3.scaleLinear()
+  const x = useMemo(() => (d3.scaleLinear()
     .domain([0,d3.max(overallCounts, d => d.overallCount)])
-    .range([0, width]);
+    .range([0, width])), [overallCounts, width]);
 
   const xAxisGenerator = d3.axisBottom(x)
   .tickSize(-height);
 
-  const y = d3.scaleBand()
+  const y = useMemo(() => (d3.scaleBand()
     .domain([...new Set(incidentArray.map(d => d.borough))])
     .range([height, 0])
-    .paddingInner(0.2);
+    .paddingInner(0.2)), [incidentArray, height]);
 
   useEffect(() => {
     const svg = d3.select(gRef.current)

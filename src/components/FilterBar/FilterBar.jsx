@@ -1,15 +1,17 @@
 import Select from 'react-select';
 import * as d3 from 'd3';
 import './FilterBar.css';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { WindowContext } from '../WindowContextProvider/WindowContextProvider';
 
-export default function FilterBar({csvData, boroughFilter, setBoroughFilter, setIsBoroughFilterClicked, yearFilter, setYearFilter, monthFilter, setMonthFilter, severityFilter, setSeverityFilter}) {
+export default function FilterBar({csvData, boroughFilter, setBoroughFilter, setIsBoroughFilterClicked, yearFilter, setYearFilter, monthFilter, setMonthFilter, severityFilter, setSeverityFilter, setChartWindowOpen}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const yearArray = d3.range(2005, 2023);
   const monthNamesArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const monthArray = [d3.range(0, 12)];
   const severityFilterOptions = ['All Severities', 'Slight', 'Serious', 'Fatal'];
   const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))].sort();
+
+  const { clientWidth } = useContext(WindowContext);
   
   return (
     <>
@@ -68,7 +70,17 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
         <span className='bar'/>
       </div>
 
-  </div>
+    </div>
+
+    <div className='chart-page-button' onClick={() => {
+            d3.select('.button-line').transition().attr('d', `M5 55 L20 ${6 + Math.random() * 48} L39 ${6 + Math.random() * 48} L58 ${6 + Math.random() * 48}`);
+            setChartWindowOpen(true);
+          }}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 60 60">
+        <path d="M5, 5 v50 h60" stroke='rgb(173, 173, 173)' strokeWidth="4" fill="transparent" />
+        <path className='button-line' d="M5 55 L22 30 L41 40 L60 20" stroke='rgb(173, 173, 173)' strokeWidth="4" fill="transparent" strokeLinecap='round' strokeLinejoin='round'/>
+      </svg>
+    </div>
   </>
 
   )

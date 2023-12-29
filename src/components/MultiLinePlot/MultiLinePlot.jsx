@@ -15,7 +15,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
   const { clientHeight, clientWidth } = useContext(WindowContext);
   
   
-  const boroObj = d3.rollup(
+  const boroObj = useMemo(() => (d3.rollup(
     csvFiltered, 
     v=> ({
       borough: v[0].borough, 
@@ -24,13 +24,26 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
     }), 
     (d) => d.borough, 
     (d) => dateTimeParser(timeUnit, d.datetime),
-  );
+  )), [csvFiltered, timeUnit]);
 
-  const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime))));
+
   
-
-
   const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter); 
+
+   // create array from map then fill array with datetime intervals that have count of zero.
+   const boroArray = useMemo(() => (Array.from(boroObj, ([, inner]) => {
+    const boroArray = [...inner.values()];
+    const boroName = boroArray[0].borough;
+    const boroYears = boroArray.flat().map(d => d.datetime);
+    const yearsToAdd = timeSet.filter(d => !boroYears.includes(d) && d);
+    const boroArrayToAppend = yearsToAdd.map(d => {
+      return {borough: boroName, datetime: d, count: 0}
+    });
+    const combinedArray = [...boroArray.flat(), ...boroArrayToAppend]
+
+    return combinedArray.sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))
+  })), [boroObj]);
+
  
   const svgWidth = clientWidth * 0.95; 
   const svgHeight = clientHeight * 0.3;
@@ -51,7 +64,7 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
     return d3.scaleLinear()
       .domain(d3.extent(timeSet))
       .range([margin.left, width])
-  }, [timeUnit, severityFilter, clientWidth]);
+  }, [width, margin, timeSet]);
 
 
   const xAxisGen = d3.axisBottom(x)
@@ -71,17 +84,6 @@ export default function MultiLinePlot({className, boroughHighlightedRef, csvData
       .range([height, 0]).nice();
   let yAxisGen = d3.axisLeft(y);
 
-
-  // for interaction - convert year and count to x, y
-  const points = boroArray.map(boro => {
-    return boro.map(year => {
-      return {
-        borough: year.borough,
-        x: x(year.datetime),
-        y: y(year.count)
-      };
-    });
-  }).flat();
 
   // add lines
   let lineGenerator = d3.line()

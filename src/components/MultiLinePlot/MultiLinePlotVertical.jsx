@@ -15,7 +15,7 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
   const { clientHeight, clientWidth } = useContext(WindowContext);
   
   const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter); 
-  const boroObj = d3.rollup(
+  const boroObj = useMemo(() => (d3.rollup(
     csvFiltered, 
     v=> ({
       borough: v[0].borough, 
@@ -24,10 +24,10 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
     }), 
     (d) => d.borough, 
     (d) => dateTimeParser(timeUnit, d.datetime),
-  );
+  )) ,[csvFiltered, timeUnit]);
   
   // create array from map then fill array with datetime intervals that have count of zero.
-  const boroArray = Array.from(boroObj, ([, inner]) => {
+  const boroArray = useMemo(() => (Array.from(boroObj, ([, inner]) => {
     const boroArray = [...inner.values()];
     const boroName = boroArray[0].borough;
     const boroYears = boroArray.flat().map(d => d.datetime);
@@ -38,7 +38,7 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
     const combinedArray = [...boroArray.flat(), ...boroArrayToAppend]
 
     return combinedArray.sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))
-  });
+  })), [boroObj]);
 
   const svgWidth = clientWidth * (clientWidth > 960? 0.17: 0.3); 
   const svgHeight = clientHeight * heightDecimal;
@@ -70,23 +70,13 @@ export default function MultiLinePlotVertical({ className, widthDecimal, heightD
     });
 
   // x axis
-  let x = d3.scaleLinear()
+  let x = useMemo(() => (d3.scaleLinear()
       .domain([0, d3.max(boroArray.flat(), d => d.count)])
-      .range([width, 0]);
+      .range([width, 0])), [boroArray, width]);
 
   let xAxisGen = d3.axisTop(x);
 
 
-  // for interaction - convert year and count to x, y
-  const points = boroArray.map(boro => {
-    return boro.map(year => {
-      return {
-        borough: year.borough,
-        y: y(year.datetime),
-        x: x(year.count)
-      };
-    });
-  }).flat();
 
   // add lines
   let lineGenerator = d3.line()

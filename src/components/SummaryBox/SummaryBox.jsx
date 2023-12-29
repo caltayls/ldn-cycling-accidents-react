@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 
 import { filterCSV } from "../utils/filterCSV";
 import { dateTimeParser, getTimeSet } from '../utils/datetime_utils';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import './SummaryBox.css';
 
@@ -18,8 +18,63 @@ export default function SummaryBox({ csvData, yearFilter, monthFilter, severityF
 
 
  const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter); 
- console.log(timeUnit)
- console.log(timeSet)
+
+ 
+ const getArrayAndCount = useCallback((severity='All', borough) => {
+  const  csvFiltered = filterCSV(csvData, yearFilter, monthFilter, borough, severity !== 'All'? severity: '');
+  const boroObj = d3.rollup(
+    csvFiltered, 
+    v=> ({
+      borough: v[0].borough, 
+      datetime: dateTimeParser(timeUnit, v[0].datetime), 
+      count: v.length
+    }), 
+    (d) => d.borough, 
+    (d) => dateTimeParser(timeUnit, d.datetime),
+  );
+
+
+
+  const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))); 
+  const boroYears = boroArray.flat().map(d => d.datetime);
+  const yearsToAdd = timeSet.filter(d => !boroYears.includes(d) && d);
+  
+  // add zero counts to times that have no accidents to make plots look nicer
+  const boroArrayToAppend = yearsToAdd.map(d => {
+    return {borough: boroughFilter, datetime: d, count: 0}
+  });
+  const combinedArray = [...boroArray.flat(), ...boroArrayToAppend].sort((a, b) => a.datetime - b.datetime);
+
+  let allBoroSummedArray, allBoroSummedObj, incidentArray;
+  if (borough === "All Boroughs"){
+    allBoroSummedObj = d3.rollup(combinedArray, v => ({datetime: v[0].datetime, count: d3.sum(v, d => d.count)}), d => d.datetime);
+    allBoroSummedArray = Array.from(allBoroSummedObj, inner => inner[1]);
+
+
+  // For borough ranks
+    const incidentCount = d3.rollup(
+      csvFiltered, 
+        v => ({borough: v[0].borough, casualty_severity: v[0].casualty_severity, count: v.length}), 
+        d => d.borough, 
+        d => d.casualty_severity
+      );
+  
+    incidentArray = Array.from(incidentCount, ([, inner]) => [...inner.values()]).flat();
+  
+    // add overall count to array for ordering
+    const overallCounts = d3.rollups(incidentArray, v => ({borough: v[0].borough, overallCount: d3.sum(v, d => d.count)}), d => d.borough).map(d => d[1]);
+    
+    incidentArray = incidentArray.map(d => {
+      const overallCount = overallCounts.filter(x => x.borough === d.borough)[0].overallCount;
+      return {...d, overallCount: overallCount}
+    }).sort((a, b) => b.overallCount - a.overallCount);
+  }
+return ({
+        boroArray: borough === "All Boroughs"? allBoroSummedArray: combinedArray,
+        incidentCount: borough === "All Boroughs"? d3.sum(allBoroSummedArray.flat(), d=> d.count): d3.sum(combinedArray.flat(), d=> d.count),
+        boroRanks: borough.length !== 0 && incidentArray
+      })
+  }, [boroughFilter, csvData, monthFilter, timeSet, timeUnit, yearFilter]);
 
   useEffect(() => {
     Object.keys(svgRefs).forEach(d => drawLine(d))
@@ -129,61 +184,5 @@ export default function SummaryBox({ csvData, yearFilter, monthFilter, severityF
 }
 
 
-  function getArrayAndCount(severity='All', borough) {
-
-    const  csvFiltered = filterCSV(csvData, yearFilter, monthFilter, borough, severity !== 'All'? severity: '');
-    const boroObj = d3.rollup(
-      csvFiltered, 
-      v=> ({
-        borough: v[0].borough, 
-        datetime: dateTimeParser(timeUnit, v[0].datetime), 
-        count: v.length
-      }), 
-      (d) => d.borough, 
-      (d) => dateTimeParser(timeUnit, d.datetime),
-    );
-
-
-
-    const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))); 
-    const boroYears = boroArray.flat().map(d => d.datetime);
-    const yearsToAdd = timeSet.filter(d => !boroYears.includes(d) && d);
-    
-    // add zero counts to times that have no accidents to make plots look nicer
-    const boroArrayToAppend = yearsToAdd.map(d => {
-      return {borough: boroughFilter, datetime: d, count: 0}
-    });
-    const combinedArray = [...boroArray.flat(), ...boroArrayToAppend].sort((a, b) => a.datetime - b.datetime);
-
-    let allBoroSummedArray, allBoroSummedObj, incidentArray;
-    if (borough === "All Boroughs"){
-      allBoroSummedObj = d3.rollup(combinedArray, v => ({datetime: v[0].datetime, count: d3.sum(v, d => d.count)}), d => d.datetime);
-      allBoroSummedArray = Array.from(allBoroSummedObj, inner => inner[1]);
-
-
-    // For borough ranks
-      const incidentCount = d3.rollup(
-        csvFiltered, 
-          v => ({borough: v[0].borough, casualty_severity: v[0].casualty_severity, count: v.length}), 
-          d => d.borough, 
-          d => d.casualty_severity
-        );
-    
-      incidentArray = Array.from(incidentCount, ([, inner]) => [...inner.values()]).flat();
-    
-      // add overall count to array for ordering
-      const overallCounts = d3.rollups(incidentArray, v => ({borough: v[0].borough, overallCount: d3.sum(v, d => d.count)}), d => d.borough).map(d => d[1]);
-      
-      incidentArray = incidentArray.map(d => {
-        const overallCount = overallCounts.filter(x => x.borough === d.borough)[0].overallCount;
-        return {...d, overallCount: overallCount}
-      }).sort((a, b) => b.overallCount - a.overallCount);
-    }
-  return ({
-          boroArray: borough === "All Boroughs"? allBoroSummedArray: combinedArray,
-          incidentCount: borough === "All Boroughs"? d3.sum(allBoroSummedArray.flat(), d=> d.count): d3.sum(combinedArray.flat(), d=> d.count),
-          boroRanks: borough.length !== 0 && incidentArray
-        })
-    }
   
 }

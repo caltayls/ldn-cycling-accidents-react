@@ -21,6 +21,8 @@ function App() {
   const [yearFilter, setYearFilter] = useState([]);
   const [monthFilter, setMonthFilter] = useState([]);
   const [severityFilter, setSeverityFilter] = useState([]);
+  const [chartWindowOpen, setChartWindowOpen] = useState(false);
+  
 
   // this allows data paths to be modified depending on if in production or development
   const isProduction = import.meta.env.MODE === 'production';
@@ -32,6 +34,7 @@ function App() {
   
   const csvFiltered = filterCSV(csvFilterBySeverity, yearFilter, monthFilter, boroughFilter)
 
+  console.log(chartWindowOpen)
   useEffect(() => {
     Promise.all([
       d3.csv(urlBase + 'data/final_cycling_data_v2.csv', formatCSV),
@@ -48,6 +51,18 @@ function App() {
   return (
     <>
     <WindowContextProvider>
+
+      
+    <div className='chart-page-button' onClick={() => {
+            d3.select('.button-line').transition().attr('d', `M5 55 L20 ${6 + Math.random() * 48} L39 ${6 + Math.random() * 48} L58 ${6 + Math.random() * 48}`);
+            setChartWindowOpen(true);
+          }}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 60 60">
+        <path d="M5, 5 v50 h60" stroke='rgb(173, 173, 173)' strokeWidth="4" fill="transparent" />
+        <path className='button-line' d="M5 55 L22 30 L41 40 L60 20" stroke='rgb(173, 173, 173)' strokeWidth="4" fill="transparent" strokeLinecap='round' strokeLinejoin='round'/>
+      </svg>
+    </div>
+
       <header className='filter-options'>
         <FilterBar
           csvData={csvData}
@@ -60,6 +75,7 @@ function App() {
           setMonthFilter={setMonthFilter}
           severityFilter={severityFilter}
           setSeverityFilter={setSeverityFilter}
+          setChartWindowOpen={setChartWindowOpen}
         />
       </header>
       <div className='split-container'>
@@ -77,7 +93,16 @@ function App() {
               setIsBoroughFilterClicked={setIsBoroughFilterClicked}
           ></MapAndSummary>
         </div>
-        <div className='right-side split-grid'>
+        <div className={`right-side split-grid ${chartWindowOpen? 'active': ''}`}>
+
+          <div 
+            className={`map-page-return ${chartWindowOpen? 'active': ''}`}
+            onClick={() => setChartWindowOpen(false)}
+          >
+            <svg width="30px" height="30px" viewBox='0 0 100 100'>
+              <path d="M0 0 L100 100 L50 50 L100 0 L0 100" stroke='rgb(173, 173, 173)' strokeWidth="10" fill="transparent" strokeLinecap='round' strokeLinejoin='round'></path>
+            </svg>
+          </div>
           <div className='info-box grid-item'>
             <InfoContainer
               boroughFilter={boroughFilter}
@@ -87,14 +112,14 @@ function App() {
             />
           </div>
           <div className='summary grid-item'>
-            <SummaryBox
+            {/* <SummaryBox
               csvData={csvData} 
               timeUnit={yearFilter.length === 0? 'year': monthFilter.length === 0? 'month': 'day'} 
               severityFilter={severityFilter}
               monthFilter={monthFilter} 
               yearFilter={yearFilter}
               boroughFilter={boroughFilter}
-            />
+            /> */}
           </div>
           <BoroughContainer
             severityFilter={severityFilter}

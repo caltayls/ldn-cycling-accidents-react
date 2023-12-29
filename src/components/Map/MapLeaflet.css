@@ -1,24 +1,4 @@
 .leaflet-overlay-pane svg path{
   pointer-events: auto;
 }
-
-.plot-svg {
-  cursor: pointer;
-  display: block;
-  /* grid-template-columns: 150px 150px; */
-  padding: 10px;
-  margin: 1%;
-  text-align: left;
-  position: absolute;
-  right: 3px;
-  top: 80px;
-  z-index: 4;
-  height: 41px;
-  width: 37px;
-
-  border-radius: 5px; /* Adjust the border-radius for rounded corners */
-  border: 2px solid rgba(0,0,0,0.2);
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
-  font-size: 12px;
-}
+/*move element to main app and make sticky*/

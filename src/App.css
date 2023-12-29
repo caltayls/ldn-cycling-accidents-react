@@ -22,7 +22,6 @@
   }
 
   .filter-options {
-    .filter-options {
       width: 100%;
       box-sizing: border-box;
       position: absolute;
@@ -33,7 +32,6 @@
       z-index: 10000;
       padding: 0 0;
       background-color: transparent;
-    }
   }
   
   .grid-item.leaflet-map {
@@ -59,21 +57,56 @@
 
 
   .summary, .borough-data, .population-pyramid {
-    height: 100%;
     padding: 10px 20px 20px 20px;    
   }
 
+  .map-page-return {
+    visibility: none;
+    display: flex;
+    opacity: 0;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    left: 10px;
+    top: 10px;
+    z-index: 4;
+    height: 41px;
+    width: 37px;
+  
+    border-radius: 5px; /* Adjust the border-radius for rounded corners */
+    border: 2px solid rgba(0,0,0,0.2);
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    position: fixed;
+    transition: opacity 0s cubic-bezier(0.77,0.2,0.05,1.0);
+
+  }
+  .map-page-return.active {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+
+  }
+
   .right-side {
-    display: none;
+    display: absolute;
     position: fixed;
     top: 0;
     height: 100vh;
-    right: 0;
+    right: -100%;
     background-color: rgb(222, 222, 223);
     z-index: 10000;
     overflow-y: scroll;
+    transition: all 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
 
   }
+
+  .right-side.active {
+    right: 0;
+
+  }
+
 
 }
 @media only screen and (min-width: 961px) {
@@ -96,6 +129,10 @@
     z-index: 10000;
     padding: 20px 0;
     background-color: transparent;
+  }
+  
+  .map-page-return {
+    display: none;
   }
   
   .split-container {
