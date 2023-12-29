@@ -56,12 +56,13 @@
   }
 
 
-  .summary, .borough-data, .population-pyramid {
+  .borough-data, .population-pyramid {
     padding: 10px 20px 20px 20px;    
   }
 
-  .summary {
-    height: 100%;
+  .summary.grid-item {
+    height: 70%;
+    padding: 10px;
   }
 
   .map-page-return {
@@ -71,12 +72,12 @@
     cursor: pointer;
     justify-content: center;
     align-items: center;
-    padding: 16px;
+    padding: 12px;
     left: 10px;
     top: 10px;
     z-index: 4;
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     box-sizing: border-box;
   
     border-radius: 50px; /* Adjust the border-radius for rounded corners */

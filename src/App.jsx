@@ -97,7 +97,7 @@ function App() {
             onClick={() => setChartWindowOpen(false)}
           >
             <svg width="30px" height="30px" viewBox='0 0 100 100'>
-              <path d="M0 0 L100 100 L50 50 L100 0 L0 100" stroke='rgb(173, 173, 173)' strokeWidth="10" fill="transparent" strokeLinecap='round' strokeLinejoin='round'></path>
+              <path d="M10 10 L90 90 L50 50 L90 10 L10 90" stroke='rgb(173, 173, 173)' strokeWidth="10" fill="transparent" strokeLinecap='round' strokeLinejoin='round'></path>
             </svg>
           </div>
           <div className='summary grid-item'>
