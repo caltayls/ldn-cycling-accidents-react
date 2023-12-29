@@ -15,11 +15,11 @@
     margin: 0 0;
     height: 100%;
   }
-  html, body, #map {
+  /* html, body, #map {
     height: 100%;
     width: 100vw;
 
-  }
+  } */
 
   .filter-options {
       width: 100%;
@@ -85,8 +85,13 @@
   .map-page-return.active {
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+    transition: opacity 2s cubic-bezier(0.77,0.2,0.05,1.0);
 
+  }
+
+  .left-side {
+    position: absolute;
+    width: 100%;
   }
 
   .right-side {
@@ -94,6 +99,7 @@
     position: fixed;
     top: 0;
     height: 100vh;
+    width: 100%;
     right: -100%;
     background-color: rgb(222, 222, 223);
     z-index: 10000;
@@ -134,7 +140,7 @@
   .map-page-return {
     display: none;
   }
-  
+
   .split-container {
     display: flex;
     justify-content: space-evenly;
