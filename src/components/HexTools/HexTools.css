@@ -1,16 +1,13 @@
 .hexTools {
   display: block;
-  /* grid-template-columns: 150px 150px; */
   padding: 1%;
-  /* margin: 1%; */
   text-align: left;
-
-  border-radius: 5px; /* Adjust the border-radius for rounded corners */
-  border: 2px solid rgba(0,0,0,0.2);
+  border-radius: 5px;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0,0,0,0.1);
   background-color: #fff;
   border-bottom: 1px solid #ccc;
   font-size: 12px;
-
 }
 
 

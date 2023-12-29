@@ -117,7 +117,7 @@ return ({
                   <th>{d}</th>
                   <td>{incidentCount.toLocaleString()}</td>
                   <td><svg ref={svgRefs[d]}></svg></td>
-                  <td>{(boroughFilter !== 'All Boroughs' && incidentCount !== 0)? `#${thisBoroRank + 1}`: '-'}</td>
+                  <td>{(boroughFilter !== 'All Boroughs' && incidentCount !== 0)? `#${thisBoroRank + 1}`: boroughFilter !== 'All Boroughs' && '-'}</td>
                   <td>{boroughFilter !== 'All Boroughs' && `${countPercent}%`}</td>
                 </tr>
               )
