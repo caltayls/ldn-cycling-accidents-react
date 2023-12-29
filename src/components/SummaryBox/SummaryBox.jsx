@@ -19,8 +19,10 @@ export default function SummaryBox({ csvData, yearFilter, monthFilter, severityF
 
  const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter); 
 
- 
- const getArrayAndCount = useCallback((severity='All', borough) => {
+ const severityCountArrays = Object.keys(svgRefs);
+
+ // need to remove csvFiltered process out of func to prevent unnecessary processing - creating bottle neck
+ function getArrayAndCount(severity='All', borough) {
   const  csvFiltered = filterCSV(csvData, yearFilter, monthFilter, borough, severity !== 'All'? severity: '');
   const boroObj = d3.rollup(
     csvFiltered, 
@@ -37,7 +39,7 @@ export default function SummaryBox({ csvData, yearFilter, monthFilter, severityF
 
   const boroArray = Array.from(boroObj, ([, inner]) => [...inner.values()].sort((a, b) => timeUnit !== 'month'? (a.datetime - b.datetime): (parseInt(a.datetime) - parseInt(b.datetime)))); 
   const boroYears = boroArray.flat().map(d => d.datetime);
-  const yearsToAdd = timeSet.filter(d => !boroYears.includes(d) && d);
+  const yearsToAdd = timeSet.filter(d => !boroYears.includes(d));
   
   // add zero counts to times that have no accidents to make plots look nicer
   const boroArrayToAppend = yearsToAdd.map(d => {
@@ -72,9 +74,9 @@ export default function SummaryBox({ csvData, yearFilter, monthFilter, severityF
 return ({
         boroArray: borough === "All Boroughs"? allBoroSummedArray: combinedArray,
         incidentCount: borough === "All Boroughs"? d3.sum(allBoroSummedArray.flat(), d=> d.count): d3.sum(combinedArray.flat(), d=> d.count),
-        boroRanks: borough.length !== 0 && incidentArray
+        boroRanks: borough === "All Boroughs" && incidentArray
       })
-  }, [boroughFilter, csvData, monthFilter, timeSet, timeUnit, yearFilter]);
+  };
 
   useEffect(() => {
     Object.keys(svgRefs).forEach(d => drawLine(d))
@@ -85,14 +87,14 @@ return ({
 
   return (
     <>
-      <h2>Summary</h2>
+      <h2>{boroughFilter}</h2>
       <div className='table-container'>
         <table>
           <thead>
             <tr>
               <th className='align-left'>Incident Type</th>
               <th>Count</th>
-              <th >Trend</th>
+              <th ></th>
               {boroughFilter !== 'All Boroughs' && (            
                 <>
                 <th>Rank</th>
@@ -103,18 +105,20 @@ return ({
           </thead>
           <tbody>
             {Object.keys(svgRefs).map(d => {
-              let { boroRanks } = getArrayAndCount(d, 'All Boroughs')
-              if (d === 'All') boroRanks = boroRanks.filter(d => d.casualty_severity === 'Serious');
-              const { incidentCount } = getArrayAndCount(d, boroughFilter);
-              const { incidentCount: allBoroIncidentCount} = getArrayAndCount(d, 'All Boroughs');
+              let { boroRanks, incidentCount: allBoroIncidentCount } = getArrayAndCount(d, 'All Boroughs')
+              if (d === 'All') boroRanks = boroRanks.filter(d => d.casualty_severity === 'Serious'); //this so that only one of each boro exists in array
+              const { incidentCount } = getArrayAndCount(d, boroughFilter); // count of specific severity class
+              const thisBoroRank = boroughFilter !== 'All Boroughs' && boroRanks.findIndex(d => d.borough === boroughFilter);
+              const countPercent = Math.round(incidentCount/allBoroIncidentCount*100*10)/10
+
 
               return (
                 <tr key={d}>
                   <th>{d}</th>
                   <td>{incidentCount.toLocaleString()}</td>
                   <td><svg ref={svgRefs[d]}></svg></td>
-                  <td>{boroughFilter !== 'All Boroughs' && `#${boroRanks.findIndex(d => d.borough === boroughFilter)+1}`}</td>
-                  <td>{boroughFilter !== 'All Boroughs' && `${Math.round(incidentCount/allBoroIncidentCount*100*10)/10}%`}</td>
+                  <td>{(boroughFilter !== 'All Boroughs' && incidentCount !== 0)? `#${thisBoroRank + 1}`: '-'}</td>
+                  <td>{boroughFilter !== 'All Boroughs' && `${countPercent}%`}</td>
                 </tr>
               )
             })}

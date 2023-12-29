@@ -4,11 +4,11 @@ import './FilterBar.css';
 import { useContext, useState } from 'react';
 import { WindowContext } from '../WindowContextProvider/WindowContextProvider';
 
-export default function FilterBar({csvData, boroughFilter, setBoroughFilter, setIsBoroughFilterClicked, yearFilter, setYearFilter, monthFilter, setMonthFilter, severityFilter, setSeverityFilter, setChartWindowOpen}) {
+export default function FilterBar({csvData, boroughFilter, setBoroughFilter, setIsBoroughFilterClicked, yearFilter, setYearFilter, monthFilter, setMonthFilter, severityFilter, setSeverityFilter, chartWindowOpen, setChartWindowOpen}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const yearArray = d3.range(2005, 2023);
   const monthNamesArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const severityFilterOptions = ['All Severities', 'Slight', 'Serious', 'Fatal'];
+  const severityFilterOptions = ['Slight', 'Serious', 'Fatal'];
   const boroughs = ['All Boroughs', ...new Set(csvData.map(d => d.borough))].sort();
 
   const { clientWidth } = useContext(WindowContext);
@@ -72,8 +72,7 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
 
     </div>
 
-    <div className='chart-page-button' onClick={() => {
-            d3.select('.button-line').transition().attr('d', `M5 55 L20 ${6 + Math.random() * 48} L39 ${6 + Math.random() * 48} L58 ${6 + Math.random() * 48}`);
+    <div className={`chart-page-button ${chartWindowOpen? 'active': ''}`} onClick={() => {
             setChartWindowOpen(true);
           }}>
       <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 60 60">

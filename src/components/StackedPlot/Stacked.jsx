@@ -43,7 +43,6 @@ export default function StackedPlot({ csvData, boroughFilter, timeUnit, yearFilt
       .sort((a, b) => a.datetime - b.datetime);
   }, [groupByYearAndSeverity]);
 
-  console.log(timeUnit)
   const timeSet = getTimeSet(timeUnit, yearFilter, monthFilter);
   
   const series =  useMemo(() => {

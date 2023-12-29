@@ -29,7 +29,7 @@
       left: 0;
       display: flex;
       justify-content: center;
-      z-index: 10000;
+      z-index: 90000;
       padding: 0 0;
       background-color: transparent;
   }
@@ -39,7 +39,7 @@
     padding: 0;
     width: 100vw;
     margin: 0 auto;
-    height: 100vh;    
+    height: 100svh;    
   }
 
 
@@ -85,7 +85,7 @@
   .map-page-return.active {
     visibility: visible;
     opacity: 1;
-    transition: opacity 2s cubic-bezier(0.77,0.2,0.05,1.0);
+    transition: opacity 1.2s ease-in;
 
   }
 
@@ -98,7 +98,7 @@
     display: absolute;
     position: fixed;
     top: 0;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     right: -100%;
     background-color: rgb(222, 222, 223);
