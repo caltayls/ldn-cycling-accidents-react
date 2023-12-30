@@ -4,14 +4,13 @@ import { hexbin } from "d3-hexbin";
 import * as L from 'leaflet';
 
 
-export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hexOpacity, colorScaleType, setHexDomainExtent}) {
+export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hexOpacity, colorScaleType, setHexDomainExtent, zoomInitial}) {
   
 
   
   useEffect(() => {
     const g = d3.select('#overlay-g');
     if (map) {     
-      const zoomInitial = 10;
       const zoom = map.getZoom();
       const fixedMapRadius = hexRadius / 2 ** zoomInitial;
       const radius = fixedMapRadius * 2 ** zoom;
@@ -44,7 +43,7 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hex
 
       const quantColorScale = d3.scaleQuantize()
         .domain(domainExtent)
-        .range(['rgb(255, 240, 217)', 'rgb(179, 233, 180)', 'rgb(65, 182, 196)', 'rgb(34, 94, 168)', 'rgb(8, 29, 88)']);
+        .range(['rgb(205, 229, 148)', 'rgb(128, 198, 163)', 'rgb(65, 182, 196)', 'rgb(34, 94, 168)', 'rgb(8, 29, 88)']);
     
       g.append("g")
           .attr('class', 'hexagons')

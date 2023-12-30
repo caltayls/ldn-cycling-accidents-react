@@ -19,7 +19,7 @@ export default function HexLegend({ domainExtent, style }) {
 
     const quantColorScale = d3.scaleQuantize()
       .domain(domainExtent)
-      .range(['rgb(255, 240, 217)', 'rgb(179, 233, 180)', 'rgb(65, 182, 196)', 'rgb(34, 94, 168)', 'rgb(8, 29, 88)']);
+      .range(['rgb(205, 229, 148)', 'rgb(128, 198, 163)', 'rgb(65, 182, 196)', 'rgb(34, 94, 168)', 'rgb(8, 29, 88)']);
 
     const legendLabels = [domainExtent[0], ...quantColorScale.thresholds()];
     const x = d3.scaleLinear(d3.extent(domainExtent), [0, width]);

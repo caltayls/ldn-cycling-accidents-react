@@ -34,6 +34,20 @@ export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
 
     L.svg({clickable:true}).addTo(map);
 
+    const mapMaxBounds = L.latLngBounds(
+      L.latLng(51.1, -1), // Southwest corner
+      L.latLng(52, 1)   // Northeast corner
+    );
+
+    const greaterLondonBounds = L.latLngBounds(
+      L.latLng(51.2673087006417, -0.5358825347463732), // Southwest corner
+      L.latLng(51.736619676980894, 0.35812985281759285)   // Northeast corner
+    );
+
+    // map.fitBounds(greaterLondonBounds);
+    map.setMaxBounds(mapMaxBounds);
+  
+
     const overlay = d3.select(map.getPanes().overlayPane);
     const svg = overlay.select('svg').attr("pointer-events", "auto");
     const g = svg.append('g')

@@ -45,6 +45,7 @@
 
   .grid-item {
     width: 100%;
+    height: auto;
     background-color: #fff; /* Background color for each cell */
     box-sizing: border-box;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the shadow properties */
@@ -61,7 +62,7 @@
   }
 
   .summary.grid-item {
-    height: 70%;
+    height: auto;
     padding: 10px;
   }
 
@@ -182,6 +183,7 @@
   
   .grid-item {
     width: 100%;
+    height: auto;
     border-radius: 5px; /* Adjust the border-radius for rounded corners */
     box-shadow: 3px 3px 8px #8888881c;
     padding: 20px 0; /* Adjust the padding inside each cell */
