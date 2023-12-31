@@ -122,6 +122,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
  
   return (
     <>
+    <div className='leaflet-attribution'><p><i>i</i></p></div>
     <HexTools hexOpacity={hexOpacity} setHexOpacity={setHexOpacity} setHexRadius={setHexRadius} setColorScaleType={setColorScaleType} style={{ position: 'absolute', ...hexToolsPosition, top:10,  zIndex:2}}></HexTools> 
     <HexLegend domainExtent={hexDomainExtent} style={{ position: 'absolute', left: 3, bottom: 8,  zIndex:3}}></HexLegend>
     <div id='map-container' ref={mapRef} style={{height: '100%', width:'100%', zIndex:1, margin:0}}></div>

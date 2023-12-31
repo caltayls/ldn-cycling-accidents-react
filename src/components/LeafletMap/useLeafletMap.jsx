@@ -10,6 +10,7 @@ export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
     const map = L.map(mapRef.current, {
       zoomSnap: 1,
       zoomControl: clientWidth < 961? false: true,
+      attributionControl: false,
       // crs: L.CRS.Simple,
     }).setView([51.505, -0.09], zoomInitial);
 
@@ -21,7 +22,7 @@ export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
     // Add a TileLayer for the base map
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
      {
-        attribution: '©OpenStreetMap, ©CartoDB',
+        attribution: '',
         detectRetina: true,
     }).addTo(map);
 
