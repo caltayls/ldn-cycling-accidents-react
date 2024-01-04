@@ -62,6 +62,10 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
         /> 
       </div>
 
+      <div className='data-source'>
+        <a href='https://tfl.gov.uk/corporate/publications-and-reports/road-safety' target='_blank'>TfL data</a>
+      </div>
+
     </div>
     <div className={`hamburger ${menuOpen? 'active': ''}`} onClick={handleHamburgerClick}>
       <div className='hamburger-icon'>
@@ -69,7 +73,6 @@ export default function FilterBar({csvData, boroughFilter, setBoroughFilter, set
         <span className='bar'/>
         <span className='bar'/>
       </div>
-
     </div>
 
     <div className={`chart-page-button ${chartWindowOpen? 'active': ''}`} onClick={() => {

@@ -8,10 +8,47 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0;
   position: absolute;
   bottom: 10px;
   right: 10px;
   z-index: 1000;
+  height: 40px;
+  font-size: 10px;
+  width: auto;
+  cursor: pointer;
+  
+}
+
+
+
+.attribution-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: white;
+  padding: 0 10px;
+  visibility: hidden;
+  opacity: 0;
+  margin-right: -5px;
+  border-radius: 30px 0% 0% 30px;
+  height: 15px;
+  transition: all 0.5s ease;
+  z-index: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  
+}
+
+.attribution-info.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.info-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: rgb(20, 60, 91);
   color: white;
   height: 15px;
@@ -20,7 +57,8 @@
   box-sizing: border-box;
   font-size: 10px;
   font-weight: 650;
-  cursor: pointer;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 
 }
+

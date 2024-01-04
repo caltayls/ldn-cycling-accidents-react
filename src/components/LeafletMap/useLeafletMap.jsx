@@ -22,7 +22,7 @@ export default function useLeafletMap({ mapRef, setMap, zoomInitial }) {
     // Add a TileLayer for the base map
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
      {
-        attribution: '',
+        attribution: '©OpenStreetMap, ©CartoDB',
         detectRetina: true,
     }).addTo(map);
 

@@ -1,6 +1,6 @@
 {
   "name": "ldn_cycling_accidents",
-  // "homepage": "https://caltayls.github.io/ldn-cycling-accidents-react",
+  "homepage": "https://caltayls.github.io/ldn-cycling-accidents-react",
   "private": true,
   "version": "0.0.0",
   "type": "module",

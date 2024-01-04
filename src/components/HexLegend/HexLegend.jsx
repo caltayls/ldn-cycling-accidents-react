@@ -22,7 +22,7 @@ export default function HexLegend({ domainExtent, style }) {
       .range(['rgb(205, 229, 148)', 'rgb(128, 198, 163)', 'rgb(65, 182, 196)', 'rgb(34, 94, 168)', 'rgb(8, 29, 88)']);
 
     const legendLabels = [domainExtent[0], ...quantColorScale.thresholds()];
-    const x = d3.scaleLinear(d3.extent(domainExtent), [0, width]);
+    const x = d3.scaleLinear(domainExtent, [0, width]);
     const legendAxis = d3.axisBottom(x);
 
 
@@ -36,7 +36,7 @@ export default function HexLegend({ domainExtent, style }) {
     
       const axis = svg
         .append('g')
-        .call(legendAxis)
+        .call(legendAxis.tickValues([domainExtent[0], ...quantColorScale.thresholds(), domainExtent[1]]))
           .attr('transform', `translate(${margin.left+1}, ${20 +margin.bottom})`)
 
       axis.selectAll('text').attr('font-weight', '400');
