@@ -4,7 +4,7 @@ import { hexbin } from "d3-hexbin";
 import * as L from 'leaflet';
 
 
-export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hexOpacity, colorScaleType, setHexDomainExtent, zoomInitial}) {
+export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hexOpacity, colorScaleType, setHexDomainExtent, zoomInitial, boroughFilter}) {
   
 
   
@@ -21,7 +21,9 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hex
       .x(d => map.latLngToLayerPoint(new L.LatLng(+d.latitude, +d.longitude)).x)
       .y(d => map.latLngToLayerPoint(new L.LatLng(+d.latitude, +d.longitude)).y);
 
-      const hexCenters = bins(csvData).map(d => ({x: d.x, y: d.y}));
+      const csvFilteredByBorough = boroughFilter === 'All Boroughs'? csvData: csvData.filter(d => d.borough === boroughFilter);
+      console.log(csvFilteredByBorough)
+      const hexCenters = bins(csvFilteredByBorough).map(d => ({x: d.x, y: d.y}));
     
       const hexCoords =  hexCenters && hexCenters.map(d => {
         const { x, y } = d;
@@ -35,7 +37,8 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hex
       hexCoordsRef.current = hexCoords;
 
 
-      const domainExtent = d3.extent(bins(csvData), d => d.length);
+      const domainExtent = d3.extent(bins(csvFilteredByBorough), d => d.length);
+      console.log(domainExtent)
       setHexDomainExtent(domainExtent);
       // hex color scales
 
@@ -50,7 +53,7 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hex
           .style('opacity', hexOpacity)  
           // .attr("class", "hexagon")//.raise()
         .selectAll("path")
-        .data(bins(csvData))
+        .data(bins(csvFilteredByBorough))
         .join("path")
           .attr('class', 'hex')
           .attr('size', d => d.length)
@@ -62,5 +65,5 @@ export default function useMapHexBin({csvData, map, hexCoordsRef, hexRadius, hex
    
     return () => g.selectAll('.hexagons').remove()
 
-  }, [map, csvData, hexRadius, colorScaleType])
+  }, [map, csvData, hexRadius, colorScaleType, boroughFilter])
 }

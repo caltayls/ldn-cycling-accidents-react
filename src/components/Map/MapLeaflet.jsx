@@ -52,6 +52,7 @@ export default function MapLeaflet({ boroughHighlightedRef, geoJsonData, csvData
    useMapHexBin({
     csvData: csvFiltered,
     map: map,
+    boroughFilter: boroughFilter,
     zoomInitial: zoomInitial,
     hexCoordsRef: hexCoordsRef,
     hexRadius: hexRadius,

@@ -24,8 +24,8 @@ function App() {
   
 
   // this allows data paths to be modified depending on if in production or development
-  const isProduction = import.meta.env.MODE === 'production';
-  const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
+  // const isProduction = import.meta.env.MODE === 'production';
+  // const urlBase = isProduction ? import.meta.env.BASE_URL : '/';
   
   const csvFilterBySeverity = severityFilter.length === 0
     ? csvData
@@ -35,8 +35,8 @@ function App() {
 
   useEffect(() => {
     Promise.all([
-      d3.csv(urlBase + 'data/final_cycling_data_v2.csv', formatCSV),
-      d3.json(urlBase + 'data/ldn_boro_geojson.json')
+      d3.csv('/src/assets/final_cycling_data_v2.csv', formatCSV), // add url base to both to make work outside of s3
+      d3.json('/src/assets/ldn_boro_geojson.json')
     ]).then(([csvD, geoJ]) => {
       setGeoJsonData(geoJ);
       setCsvData(csvD);
@@ -80,7 +80,7 @@ function App() {
           <MapAndSummary
               geoJsonData={geoJsonData}
               csvData={csvData}
-              csvFilterBySeverity={csvFilterBySeverity} 
+              csvFilterBySeverity={csvFiltered} 
               boroughFilter={boroughFilter}
               setBoroughFilter={setBoroughFilter}
               monthFilter={monthFilter}
